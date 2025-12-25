@@ -22,7 +22,7 @@ export default function Header({
   isAuthenticated = false,
 }: HeaderProps = {}) {
   return (
-    <div className="bg-[#fcfbfd] shadow-2xl rounded-3xl z-50 mx-[30px] md:mx-[50px] lg:mx-[50px] xl:mx-[50px] 2xl:max-w-[1920px] 2xl:mx-auto 2xl:px-[50px] border-b border-gray-200 relative mt-4 mb-2">
+    <div className="bg-[#fcfbfd] shadow-2xl rounded-3xl z-50 mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k border border-gray-200 relative -mt-[5px] mb-2">
       <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-5">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center justify-between w-full lg:w-auto lg:order-3">

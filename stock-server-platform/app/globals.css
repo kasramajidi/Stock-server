@@ -38,3 +38,37 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+@media (min-width: 1080px) {
+  .header-1080 {
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+}
+
+@media (min-width: 1080px) {
+  .topbar-1080 {
+    margin-left: 80px;
+    margin-right: 80px;
+  }
+}
+
+@media (min-width: 2160px) {
+  .header-4k {
+    max-width: 2400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+}
+
+@media (min-width: 2160px) {
+  .topbar-4k {
+    max-width: 2600px;
+    margin-left: 120px;
+    margin-right: 120px;
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
