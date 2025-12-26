@@ -72,20 +72,3 @@ body {
     padding-right: 80px;
   }
 }
-
-@media (min-width: 1080px) {
-  .navigation-1080 {
-    margin-left: 80px;
-    margin-right: 80px;
-  }
-}
-
-@media (min-width: 2160px) {
-  .navigation-4k {
-    max-width: 2600px;
-    margin-left: 120px;
-    margin-right: 120px;
-    padding-left: 80px;
-    padding-right: 80px;
-  }
-}
