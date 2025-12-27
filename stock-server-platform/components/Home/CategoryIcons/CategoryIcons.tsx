@@ -118,8 +118,6 @@ export default function CategoryIcons() {
                     alt={category.name}
                     fill
                     className="object-contain group-hover:opacity-80 transition-opacity"
-                    quality={80}
-                    loading="lazy"
                   />
                 </div>
                 <span className="text-[10px] sm:text-xs md:text-sm text-center text-gray-700 font-medium max-w-[100px] sm:max-w-[120px] leading-tight">

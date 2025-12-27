@@ -23,9 +23,8 @@ export default function HeroSection({
           alt={bannerAlt}
           fill
           priority
-          quality={75}
-          loading="eager"
-          sizes="(max-width: 640px) calc(100vw - 60px), (max-width: 768px) calc(100vw - 100px), (max-width: 1080px) calc(100vw - 100px), (max-width: 1440px) calc(100vw - 100px), 1920px"
+          quality={95}
+          sizes="(max-width: 640px) calc(100vw - 60px), (max-width: 768px) calc(100vw - 100px), (max-width: 1080px) calc(100vw - 100px), (max-width: 1440px) calc(100vw - 100px), 2400px"
         />
       </div>
     </section>

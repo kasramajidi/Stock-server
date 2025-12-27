@@ -35,8 +35,6 @@ export default function Header({
                   fill
                   className="object-contain"
                   priority
-                  quality={85}
-                  loading="eager"
                 />
               </div>
             </Link>
@@ -87,8 +85,6 @@ export default function Header({
                 fill
                 className="object-contain"
                 priority
-                quality={85}
-                loading="eager"
               />
             </Link>
             <div className="flex-1 flex justify-center lg:px-6 xl:px-8">
