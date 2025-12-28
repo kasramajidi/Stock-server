@@ -75,3 +75,15 @@ body {
     padding-right: 80px;
   }
 }
+
+@media (min-width: 1440px) {
+  .object-cover-1440 {
+    object-fit: cover;
+  }
+}
+
+@media (min-width: 2160px) {
+  .object-cover-4k {
+    object-fit: cover;
+  }
+}

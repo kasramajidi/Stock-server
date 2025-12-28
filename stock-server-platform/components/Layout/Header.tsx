@@ -35,6 +35,7 @@ export default function Header({
                   fill
                   className="object-contain"
                   priority
+                  sizes="(max-width: 640px) 80px, (max-width: 768px) 96px, 112px"
                 />
               </div>
             </Link>
@@ -85,6 +86,7 @@ export default function Header({
                 fill
                 className="object-contain"
                 priority
+                sizes="(max-width: 1024px) 140px, (max-width: 1280px) 160px, (max-width: 1536px) 173px, 200px"
               />
             </Link>
             <div className="flex-1 flex justify-center lg:px-6 xl:px-8">
