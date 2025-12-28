@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { RxDoubleArrowDown } from "react-icons/rx";
-
+import PromotionalBanners from "../PromotionalBanners/PromotionalBanners";
 interface Category {
   id: string;
   name: string;
@@ -83,7 +83,7 @@ const categories: Category[] = [
 
 export default function CategoryIcons() {
   return (
-    <section className="bg-white rounded-3xl mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-6 mb-6">
+    <section className="bg-white rounded-3xl mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-6 mb-0">
       <div className="container mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8">
         <div className="relative mb-4 sm:mb-6 -mt-4 sm:-mt-6">
           <div className="flex justify-center">
@@ -118,6 +118,9 @@ export default function CategoryIcons() {
                     alt={category.name}
                     fill
                     className="object-contain group-hover:opacity-80 transition-opacity"
+                    sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, 96px"
+                    quality={75}
+                    loading="lazy"
                   />
                 </div>
                 <span className="text-[10px] sm:text-xs md:text-sm text-center text-gray-700 font-medium max-w-[100px] sm:max-w-[120px] leading-tight">
@@ -127,6 +130,9 @@ export default function CategoryIcons() {
             ))}
           </div>
         </div>
+      </div>
+      <div className="-mx-4 sm:-mx-6 md:-mx-8">
+        <PromotionalBanners />
       </div>
     </section>
   );
