@@ -14,14 +14,12 @@ interface PromotionalBanner {
 const defaultBanners: PromotionalBanner[] = [
   {
     id: "1",
-    image:
-      "/Images/PromotionalBanners/ChatGPT Image Dec 28, 2025, 09_44_40 PM.png",
+    image: "/Images/PromotionalBanners/Baner.png",
     alt: "بنر تبلیغاتی HPE - آموزش کامل تجهیزات",
   },
   {
     id: "2",
-    image:
-      "/Images/PromotionalBanners/ChatGPT Image Dec 28, 2025, 09_44_40 PM.png",
+    image: "/Images/PromotionalBanners/Baner.png",
     alt: "بنر گواهینامه‌ها و اعتبارات",
   },
 ];
@@ -38,7 +36,7 @@ async function fetchPromotionalBanners(): Promise<PromotionalBanner[] | null> {
 
     const data = await response.json();
     return data.banners || null;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -78,8 +76,8 @@ export default function PromotionalBanners() {
                   fill
                   className="object-cover-1440 object-cover-4k"
                   quality={index === 0 ? 95 : 85}
-                  loading="lazy"
                   sizes="(max-width: 640px) 100vw, 50vw"
+                  unoptimized
                 />
               </Link>
             ) : (
@@ -89,8 +87,8 @@ export default function PromotionalBanners() {
                 fill
                 className="object-cover-1440 object-cover-4k"
                 quality={index === 0 ? 95 : 85}
-                loading="lazy"
                 sizes="(max-width: 640px) 100vw, 50vw"
+                unoptimized
               />
             )}
           </article>
