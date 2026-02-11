@@ -1,0 +1,69 @@
+"use client";
+
+import { HiServer, HiClock, HiChartBar } from "react-icons/hi";
+
+const benefits = [
+  {
+    title: "آی‌پی خاص هلند برای دسترسی به خدمات اروپایی",
+    description:
+      "یکی از دلایل مهم خرید سرور مجازی (VPS) هلند، آی‌پی خاص این کشور است که دارای سرعت و ثبات بالایی است و از شهر آمستردام ارائه می‌گردد. کاربرانی که در حوزه تجارت الکترونیک فعال هستند، از علاقه‌مندان سرورهای مجازی می‌باشند.",
+    icon: <HiServer className="text-3xl" />,
+    iconColor: "text-[#ff5538]",
+  },
+  {
+    title: "کمترین حساسیت نسبت به کپی‌رایت",
+    description:
+      "سرور مجازی هلند کمترین حساسیت را نسبت به کپی‌رایت دارد. به همین دلیل با خرید VPS هلند و اتصال به آن، می‌توانید از تمام مزایای یک کاربر با آی‌پی هلندی در وب‌سایت‌های مختلف استفاده کنید.",
+    icon: <HiClock className="text-3xl" />,
+    iconColor: "text-[#1a3760]",
+  },
+  {
+    title: "سرعت بالا و کیفیت مناسب از آمستردام",
+    description:
+      "با سفارش سرور مجازی هلند از ريتكس، از سرعت بالا و کیفیت مناسب سرورهای آمستردام بهره‌مند گردید.",
+    icon: <HiChartBar className="text-3xl" />,
+    iconColor: "text-[#ff5538]",
+  },
+];
+
+export default function VPSNetherlandsBenefits() {
+  return (
+    <section
+      aria-labelledby="vps-netherlands-benefits-heading"
+      className="bg-gradient-to-b from-gray-50 to-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 mb-6"
+    >
+      <h2
+        id="vps-netherlands-benefits-heading"
+        className="text-lg md:text-xl font-bold text-gray-900 mb-2 text-center"
+      >
+        مزایای خرید سرور مجازی هلند
+      </h2>
+      <p className="text-sm text-gray-600 mb-6 text-center leading-relaxed">
+        چرا سرور مجازی هلند انتخاب مناسبی است؟
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {benefits.map((benefit, index) => (
+          <div
+            key={index}
+            className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:border-[#ff5538]/20 hover:shadow-md transition-all duration-200"
+          >
+            <div className="flex items-center justify-center mb-4">
+              <div
+                className="w-14 h-14 rounded-full bg-[#ff5538]/10 flex items-center justify-center"
+                aria-hidden
+              >
+                <span className={benefit.iconColor}>{benefit.icon}</span>
+              </div>
+            </div>
+            <h3 className="text-base font-bold text-gray-900 mb-2 text-center">
+              {benefit.title}
+            </h3>
+            <p className="text-sm text-gray-600 text-center leading-relaxed">
+              {benefit.description}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}

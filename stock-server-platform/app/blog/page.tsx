@@ -57,26 +57,28 @@ export default function BlogPage() {
   };
 
   return (
-    <main className="mx-auto my-8 w-[92%] max-w-6xl space-y-8 md:space-y-10">
-      <BlogHero featured={posts.slice(0, 2)} />
+    <main className="min-h-screen">
+      <div className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k py-8 sm:py-10 space-y-8 md:space-y-10">
+        <BlogHero featured={posts.slice(0, 2)} />
 
-      <BlogCategoryFilter
-        categories={categories}
-        selectedCategory={selectedCategory}
-        onChange={handleCategoryChange}
-      />
+        <BlogCategoryFilter
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onChange={handleCategoryChange}
+        />
 
-      <section className="flex flex-col gap-6 lg:flex-row">
-        <div className="flex-1 space-y-4">
-          <BlogList posts={currentItems} currentPage={currentPage} />
-          <BlogPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </div>
-        <BlogSidebar categories={categories} posts={blogPosts} />
-      </section>
+        <section className="flex flex-col gap-6 lg:flex-row">
+          <div className="flex-1 space-y-4">
+            <BlogList posts={currentItems} currentPage={currentPage} />
+            <BlogPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
+          <BlogSidebar categories={categories} posts={blogPosts} />
+        </section>
+      </div>
     </main>
   );
 }

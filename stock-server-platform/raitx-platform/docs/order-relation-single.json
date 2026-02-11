@@ -1,0 +1,18 @@
+{
+  "id": "ord-1001",
+  "orderNumber": "1001",
+  "shop": {
+    "productId": 3,
+    "title": "ثبت نام CFA",
+    "groups": "آزمون",
+    "price": 156690
+  },
+  "user": {
+    "userId": "usr-1",
+    "phone": "09121234567",
+    "name": "علی محمدی"
+  },
+  "quantity": 2,
+  "isPaid": true,
+  "paymentStatus": "paid"
+}

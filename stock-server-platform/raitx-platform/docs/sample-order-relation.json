@@ -1,0 +1,79 @@
+{
+  "description": "ساختار رابطهٔ سفارش با فروشگاه، کاربر، وضعیت پرداخت و تعداد",
+  "orders": [
+    {
+      "id": "ord-1001",
+      "orderNumber": "1001",
+      "createdAt": "2026-01-24T10:30:00Z",
+      "lastUpdate": "2026-01-24T11:00:00Z",
+
+      "shop": {
+        "productId": 3,
+        "title": "ثبت نام CFA",
+        "groups": "آزمون",
+        "price": 156690,
+        "img": "https://cms.tehranpayment.com/uploads/prdakht_hzynh_azmwn_CFA_1_67234293c8.jpg",
+        "value": 10
+      },
+
+      "user": {
+        "userId": "usr-1",
+        "phone": "09121234567",
+        "name": "علی محمدی",
+        "email": "ali@example.com"
+      },
+
+      "quantity": 2,
+      "isPaid": true,
+      "paymentStatus": "paid",
+      "amount": "۳۱۳٬۳۸۰",
+      "currencyAmount": "۳۱۳٬۳۸۰ تومان",
+      "status": "تکمیل شده"
+    },
+    {
+      "id": "ord-1002",
+      "orderNumber": "1002",
+      "createdAt": "2026-01-23T14:00:00Z",
+      "lastUpdate": "2026-01-23T14:00:00Z",
+
+      "shop": {
+        "productId": 20,
+        "title": "خرید اکانت ChatGPT شخصی",
+        "groups": "پرداخت ارزی",
+        "price": 156890,
+        "img": "https://cms.tehranpayment.com/uploads/Chat_GPT_Plus_feature_09bcb90291.jpg",
+        "value": 10
+      },
+
+      "user": {
+        "userId": "usr-2",
+        "phone": "09129876543",
+        "name": "مریم رضایی",
+        "email": "maryam@example.com"
+      },
+
+      "quantity": 1,
+      "isPaid": false,
+      "paymentStatus": "pending",
+      "amount": "۱۵۶٬۸۹۰",
+      "currencyAmount": "۱۵۶٬۸۹۰ تومان",
+      "status": "در انتظار پرداخت"
+    }
+  ],
+  "summary": {
+    "totalOrders": 2,
+    "paidCount": 1,
+    "unpaidCount": 1,
+    "totalQuantity": 3
+  },
+  "fieldDescriptions": {
+    "shop": "اطلاعات محصول/خدمت از فروشگاه (رابطه با action=shop)",
+    "user": "اطلاعات کاربر (رابطه با پروفایل/ورود)",
+    "quantity": "تعداد (عدد)",
+    "isPaid": "پرداخت شده؟ true/false",
+    "paymentStatus": "وضعیت پرداخت: paid | pending | failed | refunded",
+    "amount": "مبلغ (نمایشی)",
+    "currencyAmount": "مبلغ با واحد پول",
+    "status": "وضعیت سفارش (متن فارسی)"
+  }
+}
