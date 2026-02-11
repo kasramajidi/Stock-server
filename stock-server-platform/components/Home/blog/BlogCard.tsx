@@ -14,6 +14,7 @@ export default function BlogCard({ title }: BlogCardProps) {
         width={220}
         height={240}
         className="object-cover h-[140px]"
+        style={{ width: "auto", height: "auto" }}
       />
 
       <div className="p-4 flex flex-col  flex-1 text-center">
@@ -21,9 +22,9 @@ export default function BlogCard({ title }: BlogCardProps) {
           {title}
         </p>
 
-        <button className="text-sm text-indigo-600 hover:underline flex items-center justify-center gap-1">
+        <button className="text-sm text-[#00DDFF] hover:underline flex items-center justify-center gap-1">
           مشاهده
-          <span>‹</span>
+          <span>›</span>
         </button>
       </div>
     </div>

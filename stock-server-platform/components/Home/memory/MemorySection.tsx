@@ -6,7 +6,7 @@ export default function MemorySection() {
 
       {/* Header */}
       <div className="flex items-center mb-6">
-        <h2 className="text-base font-semibold text-gray-800 border-b-2 border-b-blue-400">
+        <h2 className="text-base font-semibold text-gray-800 border-b-2 border-b-[#00DDFF] pb-1">
           حافظه رم
         </h2>
       </div>

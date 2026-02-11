@@ -20,7 +20,7 @@ export default function ProductsTabsSection() {
         محصولات
       </h2>
 
-      {/* Tabs */}
+      {/* Tabs - pill شکل مثل تب سرور DL/ML */}
       <div className="flex justify-center gap-3 flex-wrap">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
@@ -29,14 +29,12 @@ export default function ProductsTabsSection() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`
-                px-5 py-2 rounded-lg text-sm transition
-                ${
-                  isActive
-                    ? "bg-[#4F46E5] text-white shadow"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }
-              `}
+              type="button"
+              className={`px-5 py-2.5 rounded-full text-sm font-medium transition cursor-pointer ${
+                isActive
+                  ? "bg-[#00DDFF] text-white shadow-sm hover:bg-[#00c4e6]"
+                  : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+              }`}
             >
               {tab.label}
             </button>

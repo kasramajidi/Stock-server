@@ -73,7 +73,7 @@ export function BlogList({ posts, currentPage }: BlogListProps) {
                   className="hidden sm:inline-flex items-center gap-1 rounded-full border border-[#17e2fe] px-3 py-1 text-[11px] text-[#0b1e28] bg-[#17e2fe]/5 hover:bg-[#17e2fe]/10"
                 >
                   ادامه مطالعه
-                  <span>‹</span>
+                  <span>›</span>
                 </Link>
               </footer>
             </div>

@@ -97,11 +97,16 @@ export default function CategoryIcons() {
         </div>
 
         <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-lg min-[400px]:text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-            دسته بندی محصولات
-          </h2>
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#00DDFF] text-white px-5 py-2.5 sm:px-6 sm:py-3 mb-2">
+            <h2 className="text-lg min-[400px]:text-xl sm:text-2xl font-bold">
+              دسته بندی محصولات
+            </h2>
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 shrink-0 opacity-90" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+              <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z" />
+            </svg>
+          </div>
           <div className="relative w-full h-0.5 bg-[#f7f7f7]">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 sm:w-48 md:w-56 h-full bg-[#ff5b5b]"></div>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 sm:w-48 md:w-56 h-full bg-[#00DDFF]"></div>
           </div>
         </div>
         <div className="overflow-x-auto scrollbar-hide">

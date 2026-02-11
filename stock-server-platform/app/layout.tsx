@@ -6,6 +6,7 @@ import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import Navigation from "@/components/Layout/Navigation";
 import FloatingCategoryMenu from "@/components/Layout/FloatingCategoryMenu";
+import { FloatingMenuProvider } from "@/components/Layout/FloatingMenuContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -97,12 +98,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TopBar />
-        <Header />
-        <Navigation />
-        <FloatingCategoryMenu />
-        {children}
-        <Footer />
+        <FloatingMenuProvider>
+          <TopBar />
+          <Header />
+          <Navigation />
+          <div className="relative">
+            <FloatingCategoryMenu />
+            {children}
+          </div>
+          <Footer />
+        </FloatingMenuProvider>
       </body>
     </html>
   );

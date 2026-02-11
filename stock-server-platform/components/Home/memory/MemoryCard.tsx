@@ -20,6 +20,7 @@ export default function MemoryCard({
           alt="HPE"
           width={70}
           height={24}
+          style={{ height: "auto" }}
         />
 
         <Image
@@ -27,12 +28,13 @@ export default function MemoryCard({
           alt="Asan Server"
           width={70}
           height={24}
+          style={{ height: "auto" }}
         />
       </div>
 
       {/* RAM Image */}
       <div className="relative h-[120px] mb-4">
-        <Image src={image} alt={title} fill className="object-contain" />
+        <Image src={image} alt={title} fill className="object-contain" sizes="280px" />
       </div>
 
       {/* Text */}
