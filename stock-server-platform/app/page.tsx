@@ -1,94 +1,68 @@
 import type { Metadata } from "next";
 import HeroSection from "@/components/Home/HeroSection/HeroSection";
 import CategoryIcons from "@/components/Home/CategoryIcons/CategoryIcons";
+import SpecialOffers from "@/components/Home/SpecialOffers/SpecialOffers";
+import DLServersSection from "@/components/Home/DLServers/DLServersSection";
+import ProductsTabsSection from "@/components/Home/DLServers/ProductsTabsSection";
+import ConsultConfigBanner from "@/components/Home/PromotionalBanners/ConsultConfigBanner";
+import BlogSection from "@/components/Home/blog/BlogSection";
 
-// TODO: جایگزین کنید با API endpoint واقعی
+import TrustBanner from "@/components/Home/TrustBanner/TrustBanner";
+
+
+import Baner from "@/components/Home/Baner/Baner";
+import { webSiteStructuredData, organizationStructuredData } from "@/lib/seo";
+import MemorySection from "@/components/Home/memory/MemorySection";
+
 async function getBannerImage() {
   try {
-    // مثال: const response = await fetch('YOUR_API_ENDPOINT/banner');
-    // const data = await response.json();
-    // return data.bannerImage || null;
-
-    // برای تست، null برمی‌گرداند (تصویر پیش‌فرض نمایش داده می‌شود)
     return null;
-  } catch (error) {
-    console.error("Error fetching banner:", error);
+  } catch {
     return null;
   }
 }
 
 export const metadata: Metadata = {
   title: "صفحه اصلی",
-  description:
-    "فروش سرور و تجهیزات شبکه با بهترین قیمت و کیفیت. خرید سرور، تجهیزات شبکه، رم سرور، هارد سرور و پردازنده با گارانتی معتبر.",
+  description: "فروش سرور و تجهیزات شبکه با بهترین قیمت و کیفیت. خرید سرور، تجهیزات شبکه، رم سرور، هارد سرور و پردازنده با گارانتی معتبر.",
   openGraph: {
     title: "استوک سرور | Stock Server - فروش سرور و تجهیزات شبکه",
     description: "فروش سرور و تجهیزات شبکه با بهترین قیمت و کیفیت",
     url: "/",
   },
-  alternates: {
-    canonical: "/",
-  },
+  alternates: { canonical: "/" },
 };
 
 export default async function Home() {
   const bannerImage = await getBannerImage();
 
-  // Structured Data (JSON-LD) for SEO
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "استوک سرور",
-    alternateName: "Stock Server",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://stock-server.ir",
-    description: "فروش سرور و تجهیزات شبکه با بهترین قیمت و کیفیت",
-    inLanguage: "fa-IR",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${
-          process.env.NEXT_PUBLIC_SITE_URL || "https://stock-server.ir"
-        }/search?q={search_term_string}`,
-      },
-      "query-input": "required name=search_term_string",
-    },
-  };
-
-  const organizationData = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "استوک سرور",
-    alternateName: "Stock Server",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://stock-server.ir",
-    logo: `${
-      process.env.NEXT_PUBLIC_SITE_URL || "https://stock-server.ir"
-    }/Images/Baner/Layer 5.png`,
-    description: "فروش سرور و تجهیزات شبکه",
-    address: {
-      "@type": "PostalAddress",
-      addressCountry: "IR",
-      addressLocality: "تهران",
-    },
-    sameAs: [
-      "https://t.me/stock-server",
-      "https://www.linkedin.com/company/stock-server",
-    ],
-  };
-
   return (
     <main>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteStructuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData) }} />
       <h1 className="sr-only">استوک سرور - فروش سرور و تجهیزات شبکه</h1>
       <HeroSection bannerImage={bannerImage} />
       <CategoryIcons />
+      <SpecialOffers />
+      <DLServersSection />
+      <section className="bg-white rounded-[18px] mx-3 sm:mx-[30px] md:mx-[50px] xl:mx-[50px] mt-6 mb-8 shadow-sm border border-gray-100">
+         <DLServersSection />
+      </section>
+      <section className="mx-3 sm:mx-[30px] md:mx-[50px] xl:mx-[50px] mt-6 mb-8">
+      <Baner/>
+      </section>
+      <MemorySection/>
+      <MemorySection/>
+      <MemorySection/>
+      <section className="bg-white rounded-[18px] mx-3 sm:mx-[30px] md:mx-[50px] xl:mx-[50px] mt-6 mb-8 shadow-sm border border-gray-100">
+         <ProductsTabsSection/>
+         <DLServersSection />
+
+      </section>
+      <ConsultConfigBanner />
+      <BlogSection />
+      <TrustBanner/>
+
     </main>
   );
 }

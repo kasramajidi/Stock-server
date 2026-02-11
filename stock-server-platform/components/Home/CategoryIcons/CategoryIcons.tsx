@@ -83,8 +83,8 @@ const categories: Category[] = [
 
 export default function CategoryIcons() {
   return (
-    <section className="bg-white rounded-3xl mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-6 mb-0">
-      <div className="container mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8">
+    <section className="bg-white rounded-2xl sm:rounded-3xl mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0">
+        <div className="container mx-auto px-3 min-[400px]:px-4 sm:px-6 md:px-8 py-4 min-[400px]:py-5 sm:py-6 md:py-8">
         <div className="relative mb-4 sm:mb-6 -mt-4 sm:-mt-6">
           <div className="flex justify-center">
             <div className="relative w-10 sm:w-16 h-3 sm:h-8">
@@ -97,7 +97,7 @@ export default function CategoryIcons() {
         </div>
 
         <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+          <h2 className="text-lg min-[400px]:text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2">
             دسته بندی محصولات
           </h2>
           <div className="relative w-full h-0.5 bg-[#f7f7f7]">
@@ -110,9 +110,9 @@ export default function CategoryIcons() {
               <Link
                 key={category.id}
                 href={category.href}
-                className="flex flex-col items-center gap-2 sm:gap-3 group hover:scale-105 transition-transform duration-200 min-w-[80px] sm:min-w-[100px]"
+                className="flex flex-col items-center gap-1.5 sm:gap-2 md:gap-3 group hover:scale-105 transition-transform duration-200 min-w-[70px] min-[400px]:min-w-[80px] sm:min-w-[100px]"
               >
-                <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
+                <div className="relative w-14 h-14 min-[400px]:w-16 min-[400px]:h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
                   <Image
                     src={category.image}
                     alt={category.name}
@@ -123,7 +123,7 @@ export default function CategoryIcons() {
                     loading="lazy"
                   />
                 </div>
-                <span className="text-[10px] sm:text-xs md:text-sm text-center text-gray-700 font-medium max-w-[100px] sm:max-w-[120px] leading-tight">
+                <span className="text-[9px] min-[400px]:text-[10px] sm:text-xs md:text-sm text-center text-gray-700 font-medium max-w-[90px] min-[400px]:max-w-[100px] sm:max-w-[120px] leading-tight">
                   {category.name}
                 </span>
               </Link>

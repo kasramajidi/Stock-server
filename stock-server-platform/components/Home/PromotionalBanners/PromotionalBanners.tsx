@@ -54,14 +54,14 @@ export default function PromotionalBanners() {
 
   return (
     <section
-      className="mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-0 mb-0"
+      className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-0 mb-0"
       aria-label="بنرهای تبلیغاتی"
     >
       <div className="flex flex-col sm:flex-row gap-0 sm:gap-6">
         {banners.map((banner, index) => (
           <article
             key={banner.id}
-            className="relative w-full sm:flex-1 h-[180px] sm:h-[220px] md:h-[250px] lg:h-[280px] rounded-3xl overflow-hidden"
+            className="relative w-full sm:flex-1 h-[140px] min-[400px]:h-[160px] sm:h-[200px] md:h-[240px] lg:h-[280px] xl:h-[300px] rounded-2xl sm:rounded-3xl overflow-hidden"
           >
             {banner.link ? (
               <Link
