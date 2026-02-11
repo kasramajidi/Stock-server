@@ -9,28 +9,37 @@ const contactItems = [
 
 export default function ContactIntro() {
   return (
-    <section>
-      <SectionHeader title="تماس با ما" subtitle="ما اینجاییم تا شبانه‌روزی پاسخگوی شما باشیم" />
-      <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-relaxed text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ. برای سفارش، استعلام یا هرگونه سؤال با ما در ارتباط باشید.
-      </p>
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5">
-        {contactItems.map((item, i) => {
-          const Icon = item.icon;
-          return (
-            <div key={i} className="flex-1 flex flex-col items-center justify-center text-center bg-white rounded-xl sm:rounded-2xl border border-gray-100 p-4 sm:p-5 hover:border-[#17e2fe]/40 hover:shadow-md transition-all group">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#17e2fe] group-hover:bg-[#14c8e0] flex items-center justify-center mb-2 sm:mb-3 transition-colors shrink-0">
-                <Icon className="text-white w-5 h-5 sm:w-6 sm:h-6" />
+    <section className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
+      <div className="absolute left-0 top-0 h-full w-1 bg-[var(--primary-hover)]" />
+      <div className="p-6 sm:p-8 md:p-10">
+        <SectionHeader
+          title="تماس با ما"
+          subtitle="ما اینجاییم تا شبانه‌روزی پاسخگوی شما باشیم"
+        />
+        <p className="text-center text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto mb-10">
+          برای سفارش، استعلام یا هرگونه سؤال با ما در ارتباط باشید.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+          {contactItems.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={i}
+                className="group relative rounded-xl border border-border bg-muted/30 p-5 sm:p-6 text-center transition-all hover:border-[var(--primary-hover)]/50 hover:shadow-md hover:bg-muted/50"
+              >
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--primary-hover)]/10 text-[var(--primary-hover)] mb-4 transition-colors group-hover:bg-[var(--primary-hover)] group-hover:text-white">
+                  <Icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-sm font-bold text-foreground mb-2">{item.title}</h3>
+                <div className="space-y-1 text-[13px] text-muted-foreground">
+                  {item.lines.map((line, j) => (
+                    <p key={j} className="break-all">{line}</p>
+                  ))}
+                </div>
               </div>
-              <h3 className="text-xs sm:text-sm md:text-base font-bold text-gray-800 mb-1.5 sm:mb-2">{item.title}</h3>
-              <div className="space-y-0.5 text-gray-600 text-[10px] min-[400px]:text-xs sm:text-sm">
-                {item.lines.map((line, j) => (
-                  <p key={j} className="break-all">{line}</p>
-                ))}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </section>
   );

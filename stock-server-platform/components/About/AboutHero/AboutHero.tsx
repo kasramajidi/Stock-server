@@ -1,30 +1,43 @@
 import Image from "next/image";
 import Link from "next/link";
-import { HiPlay } from "react-icons/hi";
 
 export default function AboutHero() {
   return (
-    <section className="relative">
-      <div className="relative w-full h-[200px] min-[400px]:h-[240px] sm:h-[280px] md:h-[320px] lg:h-[360px] rounded-t-2xl sm:rounded-t-3xl overflow-hidden">
-        <Image src="/Images/Baner/Layer 5.png" alt="درباره استوک سرور" fill className="object-cover object-center" quality={90} priority sizes="100vw" />
-        <div className="absolute inset-0 bg-gray-900/40" />
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-3 sm:px-4 md:px-6">
-          <p className="text-[#17e2fe] text-[10px] min-[400px]:text-xs sm:text-sm md:text-base font-medium tracking-wide mb-1.5 sm:mb-2">فروش سرور و تجهیزات شبکه</p>
-          <h1 className="text-lg min-[400px]:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white drop-shadow leading-tight">همه‌چیز درباره استوک سرور</h1>
+    <section className="relative overflow-hidden rounded-2xl border border-border shadow-xl">
+      <div className="relative h-[220px] min-[400px]:h-[260px] sm:h-[300px] md:h-[360px]">
+        <Image
+          src="/Images/Baner/Layer 5.png"
+          alt="درباره استوک سرور"
+          fill
+          className="object-cover object-center"
+          quality={90}
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8 md:p-10">
+          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-white/90 backdrop-blur-sm">
+            فروش سرور و تجهیزات شبکه
+          </span>
+          <h1 className="mt-4 text-2xl min-[400px]:text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white drop-shadow-lg">
+            همه‌چیز درباره استوک سرور
+          </h1>
         </div>
       </div>
-      <div className="relative -mt-5 sm:-mt-6 md:-mt-8 mx-3 sm:mx-4 md:mx-6 lg:mx-8 xl:mx-12 bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-5 md:p-6 lg:p-8">
-        <p className="text-gray-600 text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed text-center sm:text-right mb-4 sm:mb-5 md:mb-6 max-w-3xl mx-auto sm:ms-auto sm:me-0">
-          لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است. استوک سرور سال‌هاست در حوزه فروش سرور و قطعات سرور فعالیت می‌کند.
+      <div className="relative -mt-6 mx-4 sm:mx-6 md:mx-8 rounded-xl border border-border bg-card p-5 sm:p-6 md:p-8 shadow-lg">
+        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed text-center sm:text-right max-w-3xl mx-auto sm:ms-auto sm:me-0 mb-6">
+          استوک سرور سال‌هاست در حوزه فروش سرور و قطعات سرور فعالیت می‌کند. با تیم پشتیبانی و مشاوره فنی در خدمت شما هستیم.
         </p>
-        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center sm:justify-start">
-          <button type="button" className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 bg-[#17e2fe] hover:bg-[#14c8e0] text-white rounded-xl text-xs sm:text-sm md:text-base font-medium transition-colors">
-            <HiPlay className="text-sm sm:text-base" />
-            ویدئو معرفی
-          </button>
-          <Link href="/contact" className="inline-flex items-center px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 border-2 border-[#17e2fe] text-[#17e2fe] rounded-xl text-xs sm:text-sm md:text-base font-medium transition-all hover:bg-[#17e2fe] hover:text-white">
+        <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center rounded-xl bg-[var(--primary-hover)] px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-[var(--primary-dark)]"
+          >
             تماس با ما
           </Link>
+          <span className="inline-flex items-center justify-center rounded-xl border-2 border-border px-5 py-3 text-sm font-medium text-muted-foreground transition-colors hover:border-[var(--primary-hover)] hover:text-[var(--primary-hover)]">
+            ویدئو معرفی (به زودی)
+          </span>
         </div>
       </div>
     </section>

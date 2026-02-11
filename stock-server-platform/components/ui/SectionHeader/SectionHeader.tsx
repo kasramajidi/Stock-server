@@ -5,10 +5,16 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({ title, subtitle }: SectionHeaderProps) {
   return (
-    <div className="text-center mb-6 sm:mb-8 md:mb-10">
-      <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">{title}</h2>
-      {subtitle && <p className="text-xs sm:text-sm md:text-base text-gray-500">{subtitle}</p>}
-      <div className="w-12 sm:w-14 h-0.5 sm:h-1 bg-[#17e2fe] rounded-full mx-auto mt-3 sm:mt-4" />
+    <div className="text-center mb-8 sm:mb-10 md:mb-12">
+      <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-2">
+        {title}
+      </h2>
+      {subtitle && (
+        <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto mb-4">
+          {subtitle}
+        </p>
+      )}
+      <div className="w-14 sm:w-16 h-0.5 rounded-full mx-auto bg-[var(--primary-hover)]" />
     </div>
   );
 }

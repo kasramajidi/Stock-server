@@ -1,18 +1,72 @@
 export default function ContactForm() {
   return (
-    <form className="bg-white rounded-xl sm:rounded-2xl border border-gray-100 p-4 sm:p-5 md:p-6 shadow-sm space-y-3 sm:space-y-4 flex flex-col items-center [&_input:focus]:border-[#17e2fe] [&_input:focus]:ring-1 [&_input:focus]:ring-[#17e2fe] [&_textarea:focus]:border-[#17e2fe] [&_textarea:focus]:ring-1 [&_textarea:focus]:ring-[#17e2fe]">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
-        <input type="text" placeholder="نام" required className="w-full px-3 py-2.5 text-xs sm:text-sm md:text-base bg-gray-50 rounded-xl border border-gray-200 text-gray-800 placeholder-gray-500 focus:outline-none text-center" />
-        <input type="email" placeholder="آدرس ایمیل" required className="w-full px-3 py-2.5 text-xs sm:text-sm md:text-base bg-gray-50 rounded-xl border border-gray-200 text-gray-800 placeholder-gray-500 focus:outline-none text-center" />
+    <form className="space-y-4 sm:space-y-5 [&_input:focus]:border-[var(--primary-hover)] [&_input:focus]:ring-2 [&_input:focus]:ring-[var(--primary-hover)]/20 [&_textarea:focus]:border-[var(--primary-hover)] [&_textarea:focus]:ring-2 [&_textarea:focus]:ring-[var(--primary-hover)]/20">
+      <div>
+        <label htmlFor="contact-name" className="mb-1.5 block text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+          نام
+        </label>
+        <input
+          id="contact-name"
+          type="text"
+          placeholder="نام شما"
+          required
+          className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-colors"
+        />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
-        <input type="text" placeholder="موضوع پیام" required className="w-full px-3 py-2.5 text-xs sm:text-sm md:text-base bg-gray-50 rounded-xl border border-gray-200 text-gray-800 placeholder-gray-500 focus:outline-none text-center" />
-        <input type="tel" placeholder="شماره تماس" required className="w-full px-3 py-2.5 text-xs sm:text-sm md:text-base bg-gray-50 rounded-xl border border-gray-200 text-gray-800 placeholder-gray-500 focus:outline-none text-center" />
+      <div>
+        <label htmlFor="contact-email" className="mb-1.5 block text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+          ایمیل
+        </label>
+        <input
+          id="contact-email"
+          type="email"
+          placeholder="example@email.com"
+          required
+          className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-colors"
+        />
       </div>
-      <div className="min-h-[100px] sm:min-h-[120px] md:min-h-[140px] w-full">
-        <textarea placeholder="پیام شما" required className="w-full h-full min-h-[100px] sm:min-h-[120px] md:min-h-[140px] px-3 py-2.5 text-xs sm:text-sm md:text-base bg-gray-50 rounded-xl border border-gray-200 text-gray-800 placeholder-gray-500 focus:outline-none resize-none text-center" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="contact-subject" className="mb-1.5 block text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+            موضوع
+          </label>
+          <input
+            id="contact-subject"
+            type="text"
+            placeholder="موضوع پیام"
+            required
+            className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-colors"
+          />
+        </div>
+        <div>
+          <label htmlFor="contact-phone" className="mb-1.5 block text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+            شماره تماس
+          </label>
+          <input
+            id="contact-phone"
+            type="tel"
+            placeholder="۰۹۱۲۱۲۳۴۵۶۷"
+            required
+            className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-colors"
+          />
+        </div>
       </div>
-      <button type="submit" className="w-full max-w-xs py-2.5 sm:py-3 px-4 sm:px-5 bg-[#17e2fe] hover:bg-[#14c8e0] text-white text-xs sm:text-sm md:text-base font-medium rounded-xl transition-colors">
+      <div>
+        <label htmlFor="contact-message" className="mb-1.5 block text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+          پیام
+        </label>
+        <textarea
+          id="contact-message"
+          placeholder="متن پیام شما..."
+          required
+          rows={5}
+          className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none resize-none transition-colors"
+        />
+      </div>
+      <button
+        type="submit"
+        className="w-full rounded-xl border-2 border-[var(--primary-hover)] bg-[var(--primary-hover)] py-3.5 text-sm font-semibold text-white transition-all hover:bg-[var(--primary-dark)] hover:border-[var(--primary-dark)]"
+      >
         ارسال پیام
       </button>
     </form>
