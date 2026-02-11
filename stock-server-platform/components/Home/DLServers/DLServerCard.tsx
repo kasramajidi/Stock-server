@@ -16,7 +16,7 @@ export default function DLServerCard({ title, image, oldPrice, price }: DLServer
       style={{ scrollSnapAlign: "start" }}
     >
       {/* Image */}
-      <div className="relative h-[180px] sm:h-[200px] bg-[#4F46E5] rounded-t-xl w-full flex justify-center items-center overflow-hidden">
+      <div className="relative h-[180px] sm:h-[200px] bg-[#00DDFF] rounded-t-xl w-full flex justify-center items-center overflow-hidden">
         <Image
           src={image}
           alt={title}
@@ -48,7 +48,7 @@ export default function DLServerCard({ title, image, oldPrice, price }: DLServer
         {/* Button */}
         <button
           type="button"
-          className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#4F46E5] text-white"
+          className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#00DDFF] text-white hover:bg-[#00c4e6] transition-colors"
         >
           <svg
             className="w-4 h-4"

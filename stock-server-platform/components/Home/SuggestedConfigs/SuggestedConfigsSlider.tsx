@@ -21,10 +21,6 @@ const configs = [
 export default function SuggestedConfigsSlider() {
   const [index, setIndex] = useState(0);
 
-  const next = () => setIndex((prev) => (prev + 1) % configs.length);
-  const prev = () =>
-    setIndex((prev) => (prev - 1 + configs.length) % configs.length);
-
   return (
     <div className="h-full flex flex-col justify-between">
       {/* Header */}
@@ -32,7 +28,7 @@ export default function SuggestedConfigsSlider() {
         <h2 className="text-base font-semibold text-gray-800">
           کانفیگ‌های پیشنهادی
         </h2>
-        <div className="mx-auto mt-3 h-1 w-24 rounded-full bg-[#4F46E5]" />
+        <div className="mx-auto mt-3 h-1 w-24 rounded-full bg-[#00DDFF]" />
       </div>
 
       {/* Slider */}
@@ -65,19 +61,6 @@ export default function SuggestedConfigsSlider() {
           ))}
         </div>
 
-        {/* Controls */}
-        <button
-          onClick={prev}
-          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white shadow rounded-full w-8 h-8"
-        >
-          ‹
-        </button>
-        <button
-          onClick={next}
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white shadow rounded-full w-8 h-8"
-        >
-          ›
-        </button>
       </div>
     </div>
   );

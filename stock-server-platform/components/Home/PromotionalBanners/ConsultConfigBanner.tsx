@@ -13,13 +13,14 @@ export default function ConsultConfigBanner() {
             width={420}
             height={320}
             className="object-contain"
+            style={{ width: "auto", height: "auto" }}
             priority
           />
         </div>
 
         {/* Content - Right */}
         <div className="w-full md:w-[60%] px-6 py-8 text-right">
-          <h3 className="text-xl font-semibold text-[#2EE6C6] mb-4">
+          <h3 className="text-xl font-semibold text-[#00DDFF] mb-4">
             برای کانفیگ و استعلام قیمت به راهنمایی نیاز دارید؟
           </h3>
 
@@ -29,11 +30,11 @@ export default function ConsultConfigBanner() {
           </p>
 
           <div className="flex gap-4 flex-wrap">
-            <button className="px-6 py-2 rounded-lg bg-[#2EE6C6] text-[#062C3D] text-sm font-medium hover:opacity-90 transition">
+            <button className="px-6 py-2 rounded-lg bg-[#00DDFF] text-[#062C3D] text-sm font-medium hover:bg-[#00c4e6] transition">
               ثبت درخواست
             </button>
 
-            <button className="px-6 py-2 rounded-lg border border-[#2EE6C6] text-[#2EE6C6] text-sm hover:bg-[#2EE6C6]/10 transition">
+            <button className="px-6 py-2 rounded-lg border border-[#00DDFF] text-[#00DDFF] text-sm hover:bg-[#00DDFF]/10 transition">
               تماس با کارشناس
             </button>
           </div>

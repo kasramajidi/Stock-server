@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useRef } from "react";
 
 export interface SpecialOfferConfig {
   id: string;
@@ -13,7 +16,13 @@ const offers: SpecialOfferConfig[] = [
   { id: "1", title: "کانفیگ ویژه شماره ۱", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
   { id: "2", title: "کانفیگ ویژه شماره ۲", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
   { id: "3", title: "کانفیگ ویژه شماره ۳", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
+  { id: "4", title: "کانفیگ ویژه شماره ۴", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
+  { id: "5", title: "کانفیگ ویژه شماره ۵", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
+  { id: "6", title: "کانفیگ ویژه شماره ۶", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
 ];
+
+const CARD_WIDTH = 300;
+const GAP = 20;
 
 function OfferCard({ config }: { config: SpecialOfferConfig }) {
   const content = (
@@ -29,7 +38,7 @@ function OfferCard({ config }: { config: SpecialOfferConfig }) {
       <ul className="flex flex-col gap-2 sm:gap-3 w-full">
         {config.specs.map((spec, i) => (
           <li key={i} className="flex items-center gap-2 sm:gap-3 text-xs min-[400px]:text-sm">
-            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#17e2fe] shrink-0" />
+            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#00DDFF] shrink-0" />
             <span>{spec}</span>
           </li>
         ))}
@@ -37,7 +46,7 @@ function OfferCard({ config }: { config: SpecialOfferConfig }) {
     </>
   );
 
-  const className = "border-2 border-[#17e2fe]/40 hover:border-[#17e2fe] rounded-xl bg-white p-3 min-[400px]:p-4 sm:p-5 md:p-5 flex flex-col items-center gap-3 min-[400px]:gap-4 sm:gap-5 transition-colors w-full";
+  const className = "border-2 border-[#00DDFF]/40 hover:border-[#00DDFF] rounded-xl bg-white p-3 min-[400px]:p-4 sm:p-5 md:p-5 flex flex-col items-center gap-3 min-[400px]:gap-4 sm:gap-5 transition-colors w-full";
 
   if (config.href) {
     return <Link href={config.href} className={className}>{content}</Link>;
@@ -47,23 +56,36 @@ function OfferCard({ config }: { config: SpecialOfferConfig }) {
 }
 
 export default function SpecialOffers() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   return (
-    <section className="bg-white rounded-2xl sm:rounded-3xl mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0">
-      <div className="flex flex-col lg:flex-row items-center lg:items-stretch bg-blue-600 rounded-xl sm:rounded-2xl gap-4 min-[400px]:gap-5 sm:gap-6 md:gap-8 p-3 min-[400px]:p-4 sm:p-5 md:p-6">
+    <section className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0">
+      <div
+        className="flex flex-col lg:flex-row items-center lg:items-stretch rounded-xl sm:rounded-2xl gap-4 min-[400px]:gap-5 sm:gap-6 md:gap-8 p-3 min-[400px]:p-4 sm:p-5 md:p-6 shadow-lg overflow-hidden"
+        style={{
+          background: "linear-gradient(135deg, #0c1929 0%, #0f2847 25%, #0d3d5c 50%, #0a4d6e 75%, #00DDFF 100%)",
+        }}
+      >
         <h2 className="text-xl min-[400px]:text-2xl sm:text-2xl md:text-3xl text-white font-bold shrink-0 text-center lg:text-right">آفرهای ویژه</h2>
-        <div
-          className="flex gap-3 min-[400px]:gap-4 sm:gap-5 md:gap-6 w-full min-w-0 overflow-x-auto scrollbar-hide py-2 px-1"
-          style={{ scrollSnapType: "x mandatory" }}
-        >
-          {offers.map((config) => (
-            <div
-              key={config.id}
-              className="shrink-0 w-[280px] min-[400px]:w-[300px] sm:w-[320px] lg:w-[340px]"
-              style={{ scrollSnapAlign: "start" }}
-            >
-              <OfferCard config={config} />
-            </div>
-          ))}
+
+        <div className="relative w-full min-w-0 flex-1">
+          <div
+            ref={scrollRef}
+            className="overflow-x-auto scrollbar-hide flex gap-3 min-[400px]:gap-4 sm:gap-5 md:gap-6 py-2 px-2 sm:px-12"
+            style={{ scrollSnapType: "x mandatory", scrollBehavior: "smooth" }}
+          >
+            {offers.map((config, i) => (
+              <div
+                key={config.id}
+                ref={(el) => { cardRefs.current[i] = el; }}
+                className="shrink-0 w-[280px] min-[400px]:w-[300px] sm:w-[320px] lg:w-[340px]"
+                style={{ scrollSnapAlign: "start" }}
+              >
+                <OfferCard config={config} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
