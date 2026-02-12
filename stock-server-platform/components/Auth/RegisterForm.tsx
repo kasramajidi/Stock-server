@@ -13,20 +13,38 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
-
-    setTimeout(() => {
-      setLoading(false);
-      if (!fullName || !phone || !password) {
-        setError("نام، شماره موبایل و رمز عبور را کامل وارد کنید.");
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: fullName.trim(),
+          mobile: phone.trim().replace(/\s/g, ""),
+          email: email.trim(),
+          password,
+          acceptTerms,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(Array.isArray(data.errors) ? data.errors.join(" ") : data.message || "خطا در ثبت‌نام.");
+        return;
       }
-    }, 600);
+      setError(null);
+      onSwitchToLogin?.();
+    } catch {
+      setError("خطا در ارتباط با سرور.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,7 +72,7 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
       />
       <InputField
         id="register-email"
-        label="ایمیل (اختیاری)"
+        label="ایمیل"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -70,7 +88,12 @@ export default function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
       />
 
       <div className="flex items-start gap-2 text-xs text-slate-500">
-        <input type="checkbox" className="mt-1 w-3.5 h-3.5 rounded border-slate-300" />
+        <input
+          type="checkbox"
+          checked={acceptTerms}
+          onChange={(e) => setAcceptTerms(e.target.checked)}
+          className="mt-1 w-3.5 h-3.5 rounded border-slate-300"
+        />
         <span>
           با ثبت‌نام،{" "}
           <span className="text-[#17e2fe] font-medium cursor-pointer">
