@@ -159,6 +159,125 @@ export const openApiDoc = {
         },
       },
     },
+    "/users": {
+      get: {
+        summary: "لیست همه کاربران",
+        description: "فقط ادمین. نیاز به هدر Authorization: Bearer <token>",
+        operationId: "listUsers",
+        tags: ["Users"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "لیست کاربران",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    count: { type: "number" },
+                    users: { type: "array", items: { $ref: "#/components/schemas/UserPublic" } },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "توکن ارسال نشده یا نامعتبر" },
+          "403": { description: "فقط ادمین" },
+        },
+      },
+    },
+    "/users/{mobile}": {
+      get: {
+        summary: "دریافت یک کاربر با موبایل",
+        description: "ادمین یا خود کاربر. Authorization: Bearer <token>",
+        operationId: "getUserByMobile",
+        tags: ["Users"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "mobile", in: "path", required: true, schema: { type: "string", example: "09123456789" } }],
+        responses: { "200": { description: "کاربر" }, "401": { description: "توکن نامعتبر" }, "403": { description: "دسترسی غیرمجاز" }, "404": { description: "کاربر یافت نشد" } },
+      },
+      patch: {
+        summary: "بروزرسانی کاربر با موبایل",
+        description: "ادمین یا خود کاربر. فیلدهای اختیاری: fullName, email",
+        operationId: "updateUserByMobile",
+        tags: ["Users"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "mobile", in: "path", required: true, schema: { type: "string" } }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  fullName: { type: "string" },
+                  email: { type: "string", format: "email" },
+                },
+              },
+            },
+          },
+        },
+        responses: { "200": { description: "کاربر بروزرسانی شد" }, "400": { description: "بدنه نامعتبر" }, "401": { description: "توکن نامعتبر" }, "403": { description: "دسترسی غیرمجاز" }, "404": { description: "کاربر یافت نشد" } },
+      },
+      delete: {
+        summary: "حذف کاربر با موبایل",
+        description: "فقط ادمین. امکان حذف خود ادمین وجود ندارد.",
+        operationId: "deleteUserByMobile",
+        tags: ["Users"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "mobile", in: "path", required: true, schema: { type: "string" } }],
+        responses: { "200": { description: "کاربر حذف شد" }, "400": { description: "امکان حذف خودتان نیست" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "کاربر یافت نشد" } },
+      },
+    },
+    "/users/{mobile}/ban": {
+      patch: {
+        summary: "بن / آنبن کاربر با موبایل",
+        description: "فقط ادمین. Body: { banned: true | false }",
+        operationId: "banUserByMobile",
+        tags: ["Users"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "mobile", in: "path", required: true, schema: { type: "string" } }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: { banned: { type: "boolean", example: true } },
+              },
+            },
+          },
+        },
+        responses: { "200": { description: "وضعیت بن بروزرسانی شد" }, "400": { description: "امکان بن خودتان نیست" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "کاربر یافت نشد" } },
+      },
+    },
   },
-  tags: [{ name: "Auth", description: "ثبت‌نام و ورود" }],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+        description: "توکن دریافتی از login یا signup",
+      },
+    },
+    schemas: {
+      UserPublic: {
+        type: "object",
+        properties: {
+          id: { type: "string" },
+          fullName: { type: "string" },
+          mobile: { type: "string" },
+          email: { type: "string" },
+          role: { type: "string", enum: ["user", "admin"] },
+          isBanned: { type: "boolean" },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+    },
+  },
+  tags: [
+    { name: "Auth", description: "ثبت‌نام و ورود" },
+    { name: "Users", description: "مدیریت کاربران (نیاز به JWT)" },
+  ],
 } as const;

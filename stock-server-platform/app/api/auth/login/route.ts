@@ -29,6 +29,12 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
+    if (user.isBanned) {
+      return NextResponse.json(
+        { success: false, errors: ["حساب کاربری شما مسدود شده است."] },
+        { status: 403 }
+      );
+    }
 
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) {

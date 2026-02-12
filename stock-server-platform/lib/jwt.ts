@@ -55,7 +55,10 @@ export async function verifyToken(token: string): Promise<JwtPayload | null> {
       iss: payload.iss ?? ISSUER,
       aud: payload.aud as string ?? AUDIENCE,
     };
-  } catch {
+  } catch (err) {
+    if (process.env.NODE_ENV === "development" && err instanceof Error) {
+      console.warn("[JWT verify]", err.message);
+    }
     return null;
   }
 }
