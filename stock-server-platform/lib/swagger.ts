@@ -80,6 +80,85 @@ export const openApiDoc = {
         },
       },
     },
+    "/auth/login": {
+      post: {
+        summary: "ورود",
+        description: "ورود با شماره موبایل و رمز عبور — توکن JWT با انقضای ۱۵ روز برمی‌گردد.",
+        operationId: "login",
+        tags: ["Auth"],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["mobile", "password"],
+                properties: {
+                  mobile: { type: "string", example: "09123456789" },
+                  password: { type: "string", example: "********" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "ورود موفق",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    message: { type: "string" },
+                    token: { type: "string", description: "JWT (۱۵ روز اعتبار)" },
+                    expiresInDays: { type: "number", example: 15 },
+                    user: {
+                      type: "object",
+                      properties: {
+                        id: { type: "string" },
+                        fullName: { type: "string" },
+                        mobile: { type: "string" },
+                        email: { type: "string" },
+                        createdAt: { type: "string", format: "date-time" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": {
+            description: "خطای اعتبارسنجی",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: false },
+                    errors: { type: "array", items: { type: "string" } },
+                  },
+                },
+              },
+            },
+          },
+          "401": {
+            description: "موبایل یا رمز اشتباه",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: false },
+                    errors: { type: "array", items: { type: "string" } },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   tags: [{ name: "Auth", description: "ثبت‌نام و ورود" }],
 } as const;

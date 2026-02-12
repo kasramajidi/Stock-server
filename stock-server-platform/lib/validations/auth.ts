@@ -34,3 +34,16 @@ export const signupSchema = z
   .strict();
 
 export type SignupInput = z.infer<typeof signupSchema>;
+
+export const loginSchema = z
+  .object({
+    mobile: z
+      .string()
+      .min(1, "شماره موبایل الزامی است.")
+      .transform((s) => normalizeMobile(s.trim()))
+      .refine((s) => mobileRegex.test(s), "شماره موبایل معتبر نیست."),
+    password: z.string().min(1, "رمز عبور الزامی است."),
+  })
+  .strict();
+
+export type LoginInput = z.infer<typeof loginSchema>;
