@@ -4,12 +4,15 @@ import { requireAuth, requireAdmin } from "@/lib/auth";
 import { commentUpdateSchema, commentReviewSchema } from "@/lib/validations/comment";
 
 /**
- * GET /api/product-comments/[id] — دریافت یک کامنت محصول (با جزئیات محصول و کاربر)
+ * GET /api/product-comments/[id] — دریافت یک کامنت محصول (ادمین یا صاحب کامنت)
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAuth(request);
+  if (auth instanceof NextResponse) return auth;
+
   const { id } = await params;
   try {
     const comment = await prisma.productComment.findUnique({
@@ -27,6 +30,16 @@ export async function GET(
       return NextResponse.json(
         { success: false, errors: ["کامنت یافت نشد."] },
         { status: 404 }
+      );
+    }
+    const isAdmin = await prisma.user
+      .findUnique({ where: { id: auth.userId }, select: { role: true } })
+      .then((u) => u?.role === "admin");
+    const isOwner = comment.userId === auth.userId;
+    if (!isAdmin && !isOwner) {
+      return NextResponse.json(
+        { success: false, errors: ["دسترسی غیرمجاز."] },
+        { status: 403 }
       );
     }
     return NextResponse.json({ success: true, comment });

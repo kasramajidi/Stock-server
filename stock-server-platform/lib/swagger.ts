@@ -544,11 +544,12 @@ export const openApiDoc = {
     "/comments/{id}": {
       get: {
         summary: "دریافت یک کامنت مقاله",
-        description: "**برای چی:** گرفتن جزئیات یک کامنت مقاله (کاربر، مقاله، پاسخ‌ها). برای کامنت محصول از GET /api/product-comments/[id] استفاده کن.",
+        description: "**برای چی:** گرفتن جزئیات یک کامنت مقاله (کاربر، مقاله، پاسخ‌ها). فقط ادمین یا صاحب کامنت. برای کامنت محصول از GET /api/product-comments/[id] استفاده کن.",
         operationId: "getComment",
         tags: ["Comments"],
+        security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه کامنت مقاله" }],
-        responses: { "200": { description: "کامنت مقاله" }, "404": { description: "کامنت یافت نشد" } },
+        responses: { "200": { description: "کامنت مقاله" }, "401": { description: "توکن نامعتبر" }, "403": { description: "دسترسی غیرمجاز" }, "404": { description: "کامنت یافت نشد" } },
       },
       patch: {
         summary: "ویرایش کامنت مقاله / تایید یا رد توسط ادمین",
@@ -624,11 +625,12 @@ export const openApiDoc = {
     "/product-comments/{id}": {
       get: {
         summary: "دریافت یک کامنت محصول",
-        description: "**برای چی:** گرفتن جزئیات یک کامنت محصول (کاربر، محصول، پاسخ‌ها).",
+        description: "**برای چی:** گرفتن جزئیات یک کامنت محصول (کاربر، محصول، پاسخ‌ها). فقط ادمین یا صاحب کامنت.",
         operationId: "getProductComment",
         tags: ["ProductComments"],
+        security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه کامنت محصول" }],
-        responses: { "200": { description: "کامنت محصول" }, "404": { description: "کامنت یافت نشد" } },
+        responses: { "200": { description: "کامنت محصول" }, "401": { description: "توکن نامعتبر" }, "403": { description: "دسترسی غیرمجاز" }, "404": { description: "کامنت یافت نشد" } },
       },
       patch: {
         summary: "ویرایش کامنت محصول / تایید یا رد توسط ادمین",
