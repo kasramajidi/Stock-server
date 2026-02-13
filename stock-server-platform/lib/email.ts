@@ -184,6 +184,94 @@ export async function notifyCompanyNewProductComment(data: {
   });
 }
 
+/** ایمیل تأیید به کاربر بعد از ثبت درخواست سبد خرید */
+export async function sendCartRequestConfirmationToUser(data: {
+  to: string;
+  fullName: string;
+}): Promise<boolean> {
+  const text = [
+    `سلام ${data.fullName}،`,
+    ``,
+    `درخواست شما با موفقیت ثبت شد.`,
+    ``,
+    `به زودی با شما تماس گرفته می‌شود.`,
+    ``,
+    `با احترام،`,
+    `تیم ${SITE_NAME}`,
+    ``,
+    SITE_FOOTER,
+  ].join("\n");
+  const html = [
+    `<p>سلام <strong>${escapeHtml(data.fullName)}</strong>،</p>`,
+    `<p>درخواست شما با <strong>موفقیت ثبت شد</strong>.</p>`,
+    `<p>به زودی با شما تماس گرفته می‌شود.</p>`,
+    `<p>با احترام،<br>تیم ${SITE_NAME}</p>`,
+    `<p style="color:#888;font-size:12px;">${SITE_FOOTER}</p>`,
+  ].join("");
+  return sendEmail({
+    to: data.to,
+    subject: `[${SITE_NAME}] درخواست شما ثبت شد`,
+    text,
+    html,
+  });
+}
+
+/** ایمیل به ادمین/کارفرما: این شخص با این شماره و ایمیل این محصولات را درخواست کرده */
+export async function notifyCompanyNewCartRequest(data: {
+  userFullName: string;
+  userId: string;
+  userEmail: string;
+  userMobile: string;
+  note?: string | null;
+  itemsSummary: string;
+  cartRequestId: string;
+}): Promise<boolean> {
+  const date = new Date().toLocaleDateString("fa-IR", { dateStyle: "long" });
+  const time = new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" });
+  const text = [
+    `درخواست سبد خرید جدید`,
+    ``,
+    `این شخص با شماره و ایمیل زیر، محصولات زیر را درخواست کرده است:`,
+    ``,
+    `────────────────────────────`,
+    `نام و نام خانوادگی: ${data.userFullName}`,
+    `شناسه کاربر (ID): ${data.userId}`,
+    `شماره موبایل: ${data.userMobile}`,
+    `ایمیل: ${data.userEmail}`,
+    `────────────────────────────`,
+    ``,
+    `محصولات درخواستی:`,
+    data.itemsSummary,
+    ...(data.note ? ["", `توضیح کاربر: ${data.note}`] : []),
+    ``,
+    `شناسه درخواست: ${data.cartRequestId}`,
+    `تاریخ و زمان: ${date} - ${time}`,
+    ``,
+    SITE_FOOTER,
+  ].join("\n");
+  const html = [
+    `<p><strong>درخواست سبد خرید جدید</strong></p>`,
+    `<p>این شخص با شماره و ایمیل زیر، محصولات زیر را درخواست کرده است:</p>`,
+    `<hr style="border:0;border-top:1px solid #eee;">`,
+    `<p><strong>نام و نام خانوادگی:</strong> ${escapeHtml(data.userFullName)}</p>`,
+    `<p><strong>شناسه کاربر (ID):</strong> <code>${escapeHtml(data.userId)}</code></p>`,
+    `<p><strong>شماره موبایل:</strong> <a href="tel:${escapeHtml(data.userMobile)}">${escapeHtml(data.userMobile)}</a></p>`,
+    `<p><strong>ایمیل:</strong> <a href="mailto:${escapeHtml(data.userEmail)}">${escapeHtml(data.userEmail)}</a></p>`,
+    `<hr style="border:0;border-top:1px solid #eee;">`,
+    `<p><strong>محصولات درخواستی:</strong></p>`,
+    `<pre style="background:#f5f5f5;padding:12px;border-radius:8px;white-space:pre-wrap;">${escapeHtml(data.itemsSummary)}</pre>`,
+    ...(data.note ? [`<p><strong>توضیح کاربر:</strong></p><p style="white-space:pre-wrap;background:#f0f9ff;padding:12px;border-radius:8px;">${escapeHtml(data.note)}</p>`] : []),
+    `<p style="color:#666;font-size:13px;">شناسه درخواست: <code>${escapeHtml(data.cartRequestId)}</code> — ${date}، ${time}</p>`,
+    `<p style="color:#888;font-size:12px;">${SITE_FOOTER}</p>`,
+  ].join("");
+  return sendEmail({
+    to: COMPANY_EMAIL,
+    subject: `[${SITE_NAME}] درخواست سبد خرید جدید از ${data.userFullName}`,
+    text,
+    html,
+  });
+}
+
 /** اطلاع‌رسانی مقاله جدید به همه اعضای ثبت‌نام‌شده — هر کاربر یک ایمیل جدا دریافت می‌کند */
 export async function notifyUsersNewArticle(options: {
   fullName: string;

@@ -632,6 +632,92 @@ export const openApiDoc = {
         responses: { "200": { description: "کامنت حذف شد" }, "401": { description: "توکن نامعتبر" }, "403": { description: "دسترسی غیرمجاز" }, "404": { description: "کامنت یافت نشد" } },
       },
     },
+    "/cart-requests": {
+      get: {
+        summary: "لیست درخواست‌های سبد خرید",
+        description: "**برای چی:** کاربر درخواست‌های خودش را می‌بیند؛ ادمین همه درخواست‌ها را. با توکن احراز هویت.",
+        operationId: "listCartRequests",
+        tags: ["CartRequests"],
+        security: [{ bearerAuth: [] }],
+        responses: { "200": { description: "لیست درخواست‌ها با items و user" }, "401": { description: "توکن نامعتبر" } },
+      },
+      post: {
+        summary: "ثبت درخواست سبد خرید",
+        description: "**برای چی:** کاربر لاگین‌شده لیست محصولات موردنظر (productId + quantity) و در صورت تمایل یک note ارسال می‌کند. بعد از ثبت، ایمیل به کارفرما ارسال می‌شود.",
+        operationId: "createCartRequest",
+        tags: ["CartRequests"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["items"],
+                properties: {
+                  items: {
+                    type: "array",
+                    minItems: 1,
+                    items: {
+                      type: "object",
+                      required: ["productId", "quantity"],
+                      properties: {
+                        productId: { type: "string", description: "شناسه (cuid) محصول" },
+                        quantity: { type: "integer", minimum: 1, description: "تعداد" },
+                      },
+                    },
+                  },
+                  note: { type: "string", maxLength: 2000, description: "توضیح یا درخواست اختیاری کاربر" },
+                },
+              },
+            },
+          },
+        },
+        responses: { "201": { description: "درخواست ثبت شد و ایمیل به کارفرما ارسال شد" }, "400": { description: "خطای اعتبارسنجی یا محصول یافت نشد" }, "401": { description: "توکن نامعتبر" }, "403": { description: "حساب مسدود" } },
+      },
+    },
+    "/cart-requests/{id}": {
+      get: {
+        summary: "دریافت جزئیات یک درخواست سبد خرید",
+        description: "**برای چی:** کاربر جزئیات درخواست خودش؛ ادمین هر درخواستی را می‌بیند.",
+        operationId: "getCartRequest",
+        tags: ["CartRequests"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه درخواست" }],
+        responses: { "200": { description: "درخواست با items و user" }, "401": { description: "توکن نامعتبر" }, "403": { description: "دسترسی غیرمجاز" }, "404": { description: "درخواست یافت نشد" } },
+      },
+      patch: {
+        summary: "بروزرسانی وضعیت یا یادداشت ادمین (فقط ادمین)",
+        description: "**برای چی:** ادمین وضعیت درخواست (pending | in_progress | completed | cancelled) یا adminNote را بروزرسانی می‌کند.",
+        operationId: "updateCartRequest",
+        tags: ["CartRequests"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه درخواست" }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  status: { type: "string", enum: ["pending", "in_progress", "completed", "cancelled"] },
+                  adminNote: { type: "string", maxLength: 2000 },
+                },
+              },
+            },
+          },
+        },
+        responses: { "200": { description: "درخواست بروزرسانی شد" }, "400": { description: "بدنه نامعتبر" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "درخواست یافت نشد" } },
+      },
+      delete: {
+        summary: "حذف درخواست سبد خرید",
+        description: "**برای چی:** کاربر فقط درخواست خودش را حذف می‌کند؛ ادمین هر درخواستی را می‌تواند حذف کند.",
+        operationId: "deleteCartRequest",
+        tags: ["CartRequests"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه درخواست" }],
+        responses: { "200": { description: "درخواست حذف شد" }, "401": { description: "توکن نامعتبر" }, "403": { description: "دسترسی غیرمجاز" }, "404": { description: "درخواست یافت نشد" } },
+      },
+    },
     "/products": {
       get: {
         summary: "لیست محصولات",
@@ -853,6 +939,7 @@ export const openApiDoc = {
     { name: "Articles", description: "مقالات — لیست، جستجو، ایجاد، ویرایش، حذف" },
     { name: "Comments", description: "کامنت مقالات — ثبت، لیست، تایید/رد، پاسخ ادمین، پاسخ تو در تو" },
     { name: "ProductComments", description: "کامنت محصولات — ثبت، لیست، تایید/رد، پاسخ ادمین، پاسخ تو در تو (جدا از کامنت مقاله)" },
+    { name: "CartRequests", description: "درخواست سبد خرید — کاربر ثبت درخواست (لیست محصول + تعداد)، ادمین مشاهده و بروزرسانی وضعیت؛ ایمیل به کارفرما" },
     { name: "Products", description: "محصولات فروشگاه — لیست، جستجو، فیلتر، ایجاد، ویرایش، حذف" },
   ],
 } as const;

@@ -23,6 +23,7 @@ model User {
   updatedAt    DateTime @updatedAt @map("updated_at")
   comments         Comment[]
   productComments  ProductComment[]
+  cartRequests     CartRequest[]  // درخواست‌های سبد خرید این کاربر
   productsCreated  Product[]  @relation("ProductCreatedBy")
   articlesCreated  Article[]  @relation("ArticleCreatedBy")
 
@@ -120,6 +121,37 @@ model Product {
   updatedAt         DateTime @updatedAt @map("updated_at")
   createdBy         User?    @relation("ProductCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
   productComments   ProductComment[]
+  cartRequestItems  CartRequestItem[]  // ردیف‌های سبد خریدی که این محصول در آن‌هاست
 
   @@map("products")
+}
+
+// درخواست سبد خرید — هر درخواست متعلق به یک کاربر (User) و شامل چند آیتم (CartRequestItem) است.
+model CartRequest {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id") // رابط با User: درخواست‌دهنده
+  status    String   @default("pending") // pending | in_progress | completed | cancelled
+  note      String?  @db.Text // توضیح یا درخواست کاربر
+  adminNote String?  @map("admin_note") @db.Text // یادداشت ادمین
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user  User              @relation(fields: [userId], references: [id], onDelete: Cascade) // هر درخواست → یک کاربر
+  items CartRequestItem[]  // هر درخواست → چند آیتم (هر آیتم به یک محصول وصل است)
+
+  @@map("cart_requests")
+}
+
+// هر ردیف در سبد: یک محصول (Product) با تعداد (quantity) — رابط با CartRequest و Product
+model CartRequestItem {
+  id             String      @id @default(cuid())
+  cartRequestId  String      @map("cart_request_id") // رابط با CartRequest
+  productId      String      @map("product_id")      // رابط با Product: کدام محصول
+  quantity       Int         @default(1)             // تعداد
+  createdAt      DateTime    @default(now()) @map("created_at")
+
+  cartRequest CartRequest @relation(fields: [cartRequestId], references: [id], onDelete: Cascade) // آیتم → یک درخواست
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)      // آیتم → یک محصول
+
+  @@map("cart_request_items")
 }
