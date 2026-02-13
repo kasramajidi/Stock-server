@@ -14,6 +14,7 @@ export async function GET(
   try {
     const article = await prisma.article.findUnique({
       where: { id },
+      include: { createdBy: { select: { id: true, fullName: true, mobile: true, email: true } } },
     });
     if (!article) {
       return NextResponse.json(
@@ -32,6 +33,7 @@ export async function GET(
       article: {
         ...article,
         viewCount: article.viewCount + 1,
+        createdBy: article.createdBy ?? null,
       },
     });
   } catch (e) {

@@ -33,6 +33,18 @@ export async function GET(request: NextRequest) {
             article: { select: { id: true, title: true } },
           },
         },
+        productComments: {
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            content: true,
+            status: true,
+            createdAt: true,
+            productId: true,
+            parentId: true,
+            product: { select: { id: true, title: true } },
+          },
+        },
       },
     });
     return NextResponse.json({

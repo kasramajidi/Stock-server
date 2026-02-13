@@ -21,7 +21,10 @@ model User {
   isBanned     Boolean  @default(false) @map("is_banned")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
-  comments     Comment[]
+  comments         Comment[]
+  productComments  ProductComment[]
+  productsCreated  Product[]  @relation("ProductCreatedBy")
+  articlesCreated  Article[]  @relation("ArticleCreatedBy")
 
   @@map("users")
 }
@@ -49,9 +52,11 @@ model Article {
   content     String    @db.Text // rich text (HTML یا Markdown)
   category    String    // دسته‌بندی
   excerpt     String    @db.Text // متن کوتاه برای معرفی
+  createdById String?   @map("created_by_id") // ادمینی که مقاله را ایجاد کرده
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   comments    Comment[]
+  createdBy   User?     @relation("ArticleCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
 
   @@map("articles")
 }
@@ -60,10 +65,10 @@ model Comment {
   id          String   @id @default(cuid())
   articleId   String   @map("article_id")
   userId      String   @map("user_id")
-  parentId    String?  @map("parent_id") // پاسخ به کدام کامنت
+  parentId    String?  @map("parent_id")
   content     String   @db.Text
   status      String   @default("pending") // pending | approved | rejected
-  adminReply  String?  @map("admin_reply") @db.Text // پاسخ ادمین به کامنت
+  adminReply  String?  @map("admin_reply") @db.Text
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
@@ -73,4 +78,48 @@ model Comment {
   replies     Comment[] @relation("CommentReplies")
 
   @@map("comments")
+}
+
+model ProductComment {
+  id          String   @id @default(cuid())
+  productId   String   @map("product_id")
+  userId      String   @map("user_id")
+  parentId    String?  @map("parent_id")
+  content     String   @db.Text
+  status      String   @default("pending") // pending | approved | rejected
+  adminReply  String?  @map("admin_reply") @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent      ProductComment? @relation("ProductCommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies     ProductComment[] @relation("ProductCommentReplies")
+
+  @@map("product_comments")
+}
+
+model Product {
+  id                String   @id @default(cuid())
+  slug              String   @unique // برای URL
+  title             String
+  shortDescription  String   @map("short_description") @db.Text
+  content           String   @db.Text // توضیحات کامل (HTML)
+  category          String
+  brand             String
+  partNumbers       String[] @default([]) @map("part_numbers")
+  priceLabel        String   @map("price_label") // مثلاً «برای استعلام موجودی تماس بگیرید»
+  inStock           Boolean  @default(true) @map("in_stock")
+  statusLabel       String   @map("status_label") // مثلاً «آماده ارسال»
+  rating            Int?     // امتیاز ۱–۵ یا null
+  image             String?
+  specs             Json?    // مشخصات فنی (آبجکت یا آرایه key/value)
+  viewCount         Int      @default(0) @map("view_count")
+  createdById       String?  @map("created_by_id") // ادمینی که محصول را ایجاد کرده
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  createdBy         User?    @relation("ProductCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  productComments   ProductComment[]
+
+  @@map("products")
 }

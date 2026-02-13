@@ -30,6 +30,8 @@ export async function GET(request: NextRequest) {
         viewCount: true,
         category: true,
         excerpt: true,
+        createdById: true,
+        createdBy: { select: { id: true, fullName: true, mobile: true, email: true } },
         createdAt: true,
         updatedAt: true,
         comments: {
@@ -104,6 +106,7 @@ export async function POST(request: NextRequest) {
         category: data.category,
         content: data.content,
         excerpt: data.excerpt,
+        createdById: auth.userId,
       },
     });
 
@@ -131,6 +134,11 @@ export async function POST(request: NextRequest) {
       console.warn("[POST /api/articles] برخی ایمیل‌های اطلاع‌رسانی ارسال نشد:", failed.length, "از", users.length);
     }
 
+    const articleWithCreator = await prisma.article.findUnique({
+      where: { id: article.id },
+      include: { createdBy: { select: { id: true, fullName: true, mobile: true, email: true } } },
+    });
+
     return NextResponse.json(
       {
         success: true,
@@ -144,6 +152,8 @@ export async function POST(request: NextRequest) {
           viewCount: article.viewCount,
           category: article.category,
           excerpt: article.excerpt,
+          createdById: article.createdById,
+          createdBy: articleWithCreator?.createdBy ?? null,
           createdAt: article.createdAt,
           updatedAt: article.updatedAt,
         },

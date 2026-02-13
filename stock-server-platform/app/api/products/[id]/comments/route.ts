@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 import { commentCreateSchema } from "@/lib/validations/comment";
+import { notifyCompanyNewProductComment } from "@/lib/email";
 
-/** شکل خروجی یک کامنت مقاله با کاربر و پاسخ‌ها */
+/** شکل خروجی یک کامنت محصول با کاربر و پاسخ‌ها */
 function commentToJson(c: {
   id: string;
   content: string;
@@ -29,37 +30,40 @@ function commentToJson(c: {
 }
 
 /**
- * GET /api/articles/[id]/comments
+ * GET /api/products/[id]/comments
  * - عمومی: فقط کامنت‌های approved (با پاسخ‌های تو در تو)
- * - ادمین: همه با هر status؛ اگر query approvedOnly=true فقط approved
+ * - ادمین: با approvedOnly=false همه را می‌بیند.
+ * - id می‌تواند cuid یا slug محصول باشد.
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id: articleId } = await params;
+  const { id: productIdOrSlug } = await params;
   const { searchParams } = new URL(request.url);
-  const approvedOnly = searchParams.get("approvedOnly") !== "false"; // پیش‌فرض فقط تأیید شده
+  const approvedOnly = searchParams.get("approvedOnly") !== "false";
 
   try {
-    const article = await prisma.article.findUnique({
-      where: { id: articleId },
+    const product = await prisma.product.findFirst({
+      where: {
+        OR: [{ id: productIdOrSlug }, { slug: productIdOrSlug }],
+      },
       select: { id: true },
     });
-    if (!article) {
+    if (!product) {
       return NextResponse.json(
-        { success: false, errors: ["مقاله یافت نشد."] },
+        { success: false, errors: ["محصول یافت نشد."] },
         { status: 404 }
       );
     }
 
-    const where: { articleId: string; parentId: null; status?: string } = {
-      articleId,
+    const where: { productId: string; parentId: null; status?: string } = {
+      productId: product.id,
       parentId: null,
     };
     if (approvedOnly) where.status = "approved";
 
-    const topLevel = await prisma.comment.findMany({
+    const topLevel = await prisma.productComment.findMany({
       where,
       orderBy: { createdAt: "desc" },
       include: {
@@ -87,7 +91,7 @@ export async function GET(
       comments,
     });
   } catch (e) {
-    console.error("Comments GET error:", e);
+    console.error("Product comments GET error:", e);
     return NextResponse.json(
       { success: false, errors: ["خطا در دریافت کامنت‌ها."] },
       { status: 500 }
@@ -96,7 +100,8 @@ export async function GET(
 }
 
 /**
- * POST /api/articles/[id]/comments — ثبت کامنت یا پاسخ (نیاز به لاگین)
+ * POST /api/products/[id]/comments — ثبت کامنت یا پاسخ (نیاز به لاگین)
+ * - id می‌تواند cuid یا slug محصول باشد.
  */
 export async function POST(
   request: NextRequest,
@@ -105,15 +110,17 @@ export async function POST(
   const auth = await requireAuth(request);
   if (auth instanceof NextResponse) return auth;
 
-  const { id: articleId } = await params;
+  const { id: productIdOrSlug } = await params;
   try {
-    const article = await prisma.article.findUnique({
-      where: { id: articleId },
-      select: { id: true },
+    const product = await prisma.product.findFirst({
+      where: {
+        OR: [{ id: productIdOrSlug }, { slug: productIdOrSlug }],
+      },
+      select: { id: true, title: true, category: true },
     });
-    if (!article) {
+    if (!product) {
       return NextResponse.json(
-        { success: false, errors: ["مقاله یافت نشد."] },
+        { success: false, errors: ["محصول یافت نشد."] },
         { status: 404 }
       );
     }
@@ -132,8 +139,8 @@ export async function POST(
 
     const { content, parentId } = parsed.data;
     if (parentId) {
-      const parent = await prisma.comment.findFirst({
-        where: { id: parentId, articleId },
+      const parent = await prisma.productComment.findFirst({
+        where: { id: parentId, productId: product.id },
       });
       if (!parent) {
         return NextResponse.json(
@@ -145,7 +152,7 @@ export async function POST(
 
     const user = await prisma.user.findUnique({
       where: { id: auth.userId },
-      select: { isBanned: true },
+      select: { isBanned: true, fullName: true },
     });
     if (user?.isBanned) {
       return NextResponse.json(
@@ -154,9 +161,9 @@ export async function POST(
       );
     }
 
-    const comment = await prisma.comment.create({
+    const comment = await prisma.productComment.create({
       data: {
-        articleId,
+        productId: product.id,
         userId: auth.userId,
         parentId: parentId ?? undefined,
         content,
@@ -165,6 +172,14 @@ export async function POST(
       include: {
         user: { select: { id: true, fullName: true } },
       },
+    });
+
+    await notifyCompanyNewProductComment({
+      userFullName: user?.fullName ?? "کاربر",
+      productTitle: product.title,
+      productCategory: product.category,
+      commentContent: content,
+      productId: product.id,
     });
 
     return NextResponse.json(
@@ -176,7 +191,7 @@ export async function POST(
       { status: 201 }
     );
   } catch (e) {
-    console.error("Comment POST error:", e);
+    console.error("Product comment POST error:", e);
     return NextResponse.json(
       { success: false, errors: ["خطا در ثبت کامنت."] },
       { status: 500 }

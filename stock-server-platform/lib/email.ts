@@ -136,6 +136,54 @@ export async function sendResponseToUser(options: {
   });
 }
 
+/** ایمیل به کارفرما/شرکت هنگام ثبت کامنت جدید روی یک محصول */
+export async function notifyCompanyNewProductComment(data: {
+  userFullName: string;
+  productTitle: string;
+  productCategory?: string;
+  commentContent: string;
+  productId: string;
+}): Promise<boolean> {
+  const date = new Date().toLocaleDateString("fa-IR", { dateStyle: "long" });
+  const time = new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" });
+  const text = [
+    `کامنت جدید روی محصول`,
+    ``,
+    `تاریخ: ${date} - ساعت: ${time}`,
+    `────────────────────────────`,
+    `کاربر: ${data.userFullName}`,
+    `محصول: ${data.productTitle}`,
+    ...(data.productCategory ? [`دسته: ${data.productCategory}`] : []),
+    ``,
+    `متن کامنت:`,
+    data.commentContent,
+    ``,
+    `────────────────────────────`,
+    `برای مشاهده و تایید/رد به پنل مدیریت مراجعه کنید. (محصول: ${data.productId})`,
+    ``,
+    SITE_FOOTER,
+  ].join("\n");
+  const html = [
+    `<p><strong>کامنت جدید روی محصول</strong></p>`,
+    `<p>تاریخ: ${date} — ساعت: ${time}</p>`,
+    `<hr style="border:0;border-top:1px solid #eee;">`,
+    `<p><strong>کاربر:</strong> ${escapeHtml(data.userFullName)}</p>`,
+    `<p><strong>محصول:</strong> ${escapeHtml(data.productTitle)}</p>`,
+    ...(data.productCategory ? [`<p><strong>دسته:</strong> ${escapeHtml(data.productCategory)}</p>`] : []),
+    `<p><strong>متن کامنت:</strong></p>`,
+    `<p style="white-space:pre-wrap;background:#f5f5f5;padding:12px;border-radius:8px;">${escapeHtml(data.commentContent)}</p>`,
+    `<hr style="border:0;border-top:1px solid #eee;">`,
+    `<p style="color:#666;font-size:13px;">برای مشاهده و تایید/رد به پنل مدیریت مراجعه کنید.</p>`,
+    `<p style="color:#888;font-size:12px;">${SITE_FOOTER}</p>`,
+  ].join("");
+  return sendEmail({
+    to: COMPANY_EMAIL,
+    subject: `[${SITE_NAME}] کامنت جدید روی محصول: ${data.productTitle}`,
+    text,
+    html,
+  });
+}
+
 /** اطلاع‌رسانی مقاله جدید به همه اعضای ثبت‌نام‌شده — هر کاربر یک ایمیل جدا دریافت می‌کند */
 export async function notifyUsersNewArticle(options: {
   fullName: string;
