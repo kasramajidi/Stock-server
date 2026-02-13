@@ -357,6 +357,29 @@ export const openApiDoc = {
         responses: { "200": { description: "وضعیت بن بروزرسانی شد" }, "400": { description: "امکان بن خودتان نیست" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "کاربر یافت نشد" } },
       },
     },
+    "/users/{mobile}/role": {
+      patch: {
+        summary: "تنظیم نقش کاربر (ادمین کردن با موبایل)",
+        description: "**برای چی:** ادمین با ارسال شماره موبایل و نقش (admin یا user)، آن کاربر را ادمین می‌کند یا به کاربر عادی برمی‌گرداند. ادمین نمی‌تواند نقش خودش را تغییر دهد.",
+        operationId: "setUserRoleByMobile",
+        tags: ["Users"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "mobile", in: "path", required: true, schema: { type: "string" }, description: "شماره موبایل کاربر" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["role"],
+                properties: { role: { type: "string", enum: ["admin", "user"], description: "admin = ادمین کردن، user = برگرداندن به کاربر عادی" } },
+              },
+            },
+          },
+        },
+        responses: { "200": { description: "نقش بروزرسانی شد و کاربر برگردانده می‌شود" }, "400": { description: "نقش نامعتبر یا تغییر نقش خودتان" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "کاربر یافت نشد" } },
+      },
+    },
     "/articles": {
       get: {
         summary: "لیست مقالات",
