@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { articleCreateSchema } from "@/lib/validations/article";
+import { notifyUsersNewArticle } from "@/lib/email";
 
 /**
  * GET /api/articles
@@ -31,6 +32,30 @@ export async function GET(request: NextRequest) {
         excerpt: true,
         createdAt: true,
         updatedAt: true,
+        comments: {
+          where: { parentId: null },
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            content: true,
+            status: true,
+            createdAt: true,
+            parentId: true,
+            adminReply: true,
+            user: { select: { id: true, fullName: true } },
+            replies: {
+              orderBy: { createdAt: "asc" },
+              select: {
+                id: true,
+                content: true,
+                status: true,
+                createdAt: true,
+                adminReply: true,
+                user: { select: { id: true, fullName: true } },
+              },
+            },
+          },
+        },
       },
     });
 
@@ -81,6 +106,30 @@ export async function POST(request: NextRequest) {
         excerpt: data.excerpt,
       },
     });
+
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "https://stockserver.ir";
+    const articleUrl = `${baseUrl.replace(/\/$/, "")}/article/${article.id}`;
+
+    const users = await prisma.user.findMany({
+      where: { isBanned: false },
+      select: { email: true, fullName: true },
+    });
+
+    const sendResults = await Promise.allSettled(
+      users.map((u) =>
+        notifyUsersNewArticle({
+          fullName: u.fullName,
+          to: u.email,
+          articleTitle: article.title,
+          articleExcerpt: article.excerpt,
+          articleUrl,
+        })
+      )
+    );
+    const failed = sendResults.filter((r) => r.status === "rejected" || (r.status === "fulfilled" && !r.value));
+    if (failed.length > 0) {
+      console.warn("[POST /api/articles] برخی ایمیل‌های اطلاع‌رسانی ارسال نشد:", failed.length, "از", users.length);
+    }
 
     return NextResponse.json(
       {

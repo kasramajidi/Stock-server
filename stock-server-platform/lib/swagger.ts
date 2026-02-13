@@ -459,6 +459,120 @@ export const openApiDoc = {
         responses: { "200": { description: "مقاله حذف شد" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "مقاله یافت نشد" } },
       },
     },
+    "/articles/{id}/comments": {
+      get: {
+        summary: "لیست کامنت‌های یک مقاله",
+        description: "عمومی. پیش‌فرض فقط approved. برای دیدن همه: ?approvedOnly=false (ادمین). پاسخ‌ها به صورت تو در تو (replies).",
+        operationId: "listArticleComments",
+        tags: ["Comments"],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه مقاله" },
+          { name: "approvedOnly", in: "query", required: false, schema: { type: "string", enum: ["true", "false"] }, description: "پیش‌فرض true" },
+        ],
+        responses: { "200": { description: "لیست کامنت‌ها با user و replies" }, "404": { description: "مقاله یافت نشد" } },
+      },
+      post: {
+        summary: "ثبت کامنت یا پاسخ",
+        description: "نیاز به لاگین. Body: { content, parentId? } — parentId برای پاسخ به یک کامنت.",
+        operationId: "createComment",
+        tags: ["Comments"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه مقاله" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["content"],
+                properties: {
+                  content: { type: "string", maxLength: 2000 },
+                  parentId: { type: "string", description: "ایدی کامنتی که داریم بهش جواب می‌دیم (برای پاسخ تو در تو)" },
+                },
+              },
+            },
+          },
+        },
+        responses: { "201": { description: "کامنت ثبت شد (pending تا تایید)" }, "400": { description: "خطای اعتبارسنجی" }, "401": { description: "توکن نامعتبر" }, "403": { description: "حساب مسدود" }, "404": { description: "مقاله یافت نشد" } },
+      },
+    },
+    "/comments": {
+      get: {
+        summary: "لیست کامنت‌ها (بر اساس دسته‌بندی مقاله)",
+        description: "فقط ادمین. Query: category= برای فیلتر بر اساس دسته‌بندی مقاله.",
+        operationId: "listCommentsByCategory",
+        tags: ["Comments"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "category", in: "query", required: false, schema: { type: "string" } }],
+        responses: { "200": { description: "لیست کامنت‌ها با user و article" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" } },
+      },
+    },
+    "/comments/{id}": {
+      get: {
+        summary: "دریافت یک کامنت",
+        description: "با جزئیات کاربر، مقاله و پاسخ‌ها.",
+        operationId: "getComment",
+        tags: ["Comments"],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        responses: { "200": { description: "کامنت" }, "404": { description: "کامنت یافت نشد" } },
+      },
+      patch: {
+        summary: "ویرایش کامنت / تایید یا رد کامنت توسط ادمین",
+        description: [
+          "**ادمین — تایید یا رد کامنت:** با ارسال فقط status (و در صورت نیاز adminReply) کامنت را تایید یا رد کنید تا در صفحه مقاله نمایش داده شود یا نشود. مثال تایید: { \"status\": \"approved\" }. مثال رد با پاسخ: { \"status\": \"rejected\", \"adminReply\": \"دلیل رد\" }.",
+          "**ادمین — پاسخ به کامنت:** برای گذاشتن پاسخ زیر کامنت: { \"status\": \"approved\", \"adminReply\": \"متن پاسخ کارشناس\" }.",
+          "**صاحب کامنت:** فقط می‌تواند content (متن کامنت) را ویرایش کند؛ ارسال status یا adminReply برای کاربر عادی اعمال نمی‌شود.",
+        ].join("\n\n"),
+        operationId: "updateComment",
+        tags: ["Comments"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه کامنت" }],
+        requestBody: {
+          required: false,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                description: "ادمین: برای تایید/رد و پاسخ از status و adminReply استفاده کنید. صاحب کامنت: فقط content.",
+                properties: {
+                  content: { type: "string", maxLength: 2000, description: "ویرایش متن کامنت (صاحب کامنت)" },
+                  status: {
+                    type: "string",
+                    enum: ["approved", "rejected"],
+                    description: "فقط ادمین. approved = تایید و نمایش در صفحه مقاله؛ rejected = رد و عدم نمایش.",
+                  },
+                  adminReply: {
+                    type: "string",
+                    maxLength: 2000,
+                    description: "فقط ادمین. متن پاسخ کارشناس به کامنت (اختیاری).",
+                  },
+                },
+                example: {
+                  status: "approved",
+                  adminReply: "پاسخ کارشناس به کامنت کاربر.",
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "کامنت بروزرسانی شد (تایید/رد یا ویرایش متن)." },
+          "400": { description: "بدنه نامعتبر" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "دسترسی غیرمجاز" },
+          "404": { description: "کامنت یافت نشد" },
+        },
+      },
+      delete: {
+        summary: "حذف کامنت",
+        description: "صاحب کامنت یا ادمین.",
+        operationId: "deleteComment",
+        tags: ["Comments"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        responses: { "200": { description: "کامنت حذف شد" }, "401": { description: "توکن نامعتبر" }, "403": { description: "دسترسی غیرمجاز" }, "404": { description: "کامنت یافت نشد" } },
+      },
+    },
   },
   components: {
     securitySchemes: {
@@ -534,5 +648,6 @@ export const openApiDoc = {
     { name: "Contact", description: "پرسش و تماس (ارسال به شرکت + تایید/رد ادمین)" },
     { name: "Users", description: "مدیریت کاربران (نیاز به JWT)" },
     { name: "Articles", description: "مقالات — لیست، جستجو، ایجاد، ویرایش، حذف" },
+    { name: "Comments", description: "کامنت مقالات — ثبت، لیست، تایید/رد، پاسخ ادمین، پاسخ تو در تو" },
   ],
 } as const;

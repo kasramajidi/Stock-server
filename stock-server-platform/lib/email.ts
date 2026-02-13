@@ -135,3 +135,49 @@ export async function sendResponseToUser(options: {
     html,
   });
 }
+
+/** اطلاع‌رسانی مقاله جدید به همه اعضای ثبت‌نام‌شده — هر کاربر یک ایمیل جدا دریافت می‌کند */
+export async function notifyUsersNewArticle(options: {
+  fullName: string;
+  to: string;
+  articleTitle: string;
+  articleExcerpt: string;
+  articleUrl?: string;
+}): Promise<boolean> {
+  const { fullName, to, articleTitle, articleExcerpt, articleUrl } = options;
+  const text = [
+    `سلام ${fullName}،`,
+    ``,
+    `مقاله جدیدی در ${SITE_NAME} منتشر شده است.`,
+    ``,
+    `عنوان: ${articleTitle}`,
+    ``,
+    `خلاصه:`,
+    articleExcerpt,
+    ``,
+    ...(articleUrl ? [`برای مطالعه به لینک زیر مراجعه کنید:\n${articleUrl}`] : ["برای مطالعه به سایت مراجعه کنید."]),
+    ``,
+    `با احترام،`,
+    `تیم ${SITE_NAME}`,
+    ``,
+    SITE_FOOTER,
+  ].join("\n");
+  const html = [
+    `<p>سلام <strong>${escapeHtml(fullName)}</strong>،</p>`,
+    `<p>مقاله جدیدی در <strong>${SITE_NAME}</strong> منتشر شده است.</p>`,
+    `<p><strong>عنوان:</strong> ${escapeHtml(articleTitle)}</p>`,
+    `<p><strong>خلاصه:</strong></p>`,
+    `<p style="background:#f5f5f5;padding:12px;border-radius:8px;">${escapeHtml(articleExcerpt)}</p>`,
+    articleUrl
+      ? `<p><a href="${escapeHtml(articleUrl)}" style="display:inline-block;background:#0ea5e9;color:#fff;padding:10px 20px;text-decoration:none;border-radius:8px;">مشاهده مقاله</a></p>`
+      : `<p>برای مطالعه به سایت مراجعه کنید.</p>`,
+    `<p>با احترام،<br>تیم ${SITE_NAME}</p>`,
+    `<p style="color:#888;font-size:12px;">${SITE_FOOTER}</p>`,
+  ].join("");
+  return sendEmail({
+    to,
+    subject: `[${SITE_NAME}] مقاله جدید: ${articleTitle}`,
+    text,
+    html,
+  });
+}

@@ -21,6 +21,18 @@ export async function GET(request: NextRequest) {
         isBanned: true,
         createdAt: true,
         updatedAt: true,
+        comments: {
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            content: true,
+            status: true,
+            createdAt: true,
+            articleId: true,
+            parentId: true,
+            article: { select: { id: true, title: true } },
+          },
+        },
       },
     });
     return NextResponse.json({
