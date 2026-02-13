@@ -159,6 +159,104 @@ export const openApiDoc = {
         },
       },
     },
+    "/contact": {
+      post: {
+        summary: "ارسال پرسش / تماس",
+        description: "عمومی. پس از ثبت، ایمیل به شرکت (kasramajidy81@gmail.com) ارسال می‌شود.",
+        operationId: "submitContact",
+        tags: ["Contact"],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["fullName", "email", "message"],
+                properties: {
+                  fullName: { type: "string", example: "علی رضایی" },
+                  email: { type: "string", format: "email", example: "user@example.com" },
+                  message: { type: "string", example: "متن نظر یا پرسش" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "201": { description: "پیام ارسال شد و ایمیل به شرکت رفت" },
+          "400": { description: "خطای اعتبارسنجی" },
+        },
+      },
+      get: {
+        summary: "لیست پرسش‌ها",
+        description: "فقط ادمین. Authorization: Bearer <token>",
+        operationId: "listContactInquiries",
+        tags: ["Contact"],
+        security: [{ bearerAuth: [] }],
+        responses: { "200": { description: "لیست پرسش‌ها" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" } },
+      },
+    },
+    "/contact/approved": {
+      get: {
+        summary: "لیست پرسش‌های تایید شده",
+        description: "فقط ادمین. فقط رکوردهایی که status آن‌ها approved است.",
+        operationId: "listContactApproved",
+        tags: ["Contact"],
+        security: [{ bearerAuth: [] }],
+        responses: { "200": { description: "لیست پرسش‌های تایید شده" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" } },
+      },
+    },
+    "/contact/not-approved": {
+      get: {
+        summary: "لیست پرسش‌های تایید نشده",
+        description: "فقط ادمین. وضعیت pending و rejected.",
+        operationId: "listContactNotApproved",
+        tags: ["Contact"],
+        security: [{ bearerAuth: [] }],
+        responses: { "200": { description: "لیست پرسش‌های تایید نشده (در انتظار + رد شده)" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" } },
+      },
+    },
+    "/contact/{id}": {
+      get: {
+        summary: "دریافت یک پرسش",
+        description: "فقط ادمین",
+        operationId: "getContactInquiry",
+        tags: ["Contact"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        responses: { "200": { description: "پرسش" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "یافت نشد" } },
+      },
+      patch: {
+        summary: "تایید/رد پرسش و ارسال پاسخ به ایمیل کاربر",
+        description: "فقط ادمین. Body: { status: \"approved\" | \"rejected\", adminResponse?: string }",
+        operationId: "reviewContactInquiry",
+        tags: ["Contact"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  status: { type: "string", enum: ["approved", "rejected"] },
+                  adminResponse: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+        responses: { "200": { description: "بروزرسانی شد و ایمیل به کاربر ارسال شد" }, "400": { description: "وضعیت نامعتبر" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "یافت نشد" } },
+      },
+      delete: {
+        summary: "حذف پرسش",
+        description: "فقط ادمین",
+        operationId: "deleteContactInquiry",
+        tags: ["Contact"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        responses: { "200": { description: "حذف شد" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" } },
+      },
+    },
     "/users": {
       get: {
         summary: "لیست همه کاربران",
@@ -278,6 +376,7 @@ export const openApiDoc = {
   },
   tags: [
     { name: "Auth", description: "ثبت‌نام و ورود" },
+    { name: "Contact", description: "پرسش و تماس (ارسال به شرکت + تایید/رد ادمین)" },
     { name: "Users", description: "مدیریت کاربران (نیاز به JWT)" },
   ],
 } as const;

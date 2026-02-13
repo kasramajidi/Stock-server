@@ -1,0 +1,24 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/auth";
+
+/**
+ * GET /api/contact/approved — لیست پرسش‌های تایید شده (فقط ادمین)
+ */
+export async function GET(request: NextRequest) {
+  const auth = await requireAdmin(request);
+  if (auth instanceof NextResponse) return auth;
+  try {
+    const list = await prisma.contactInquiry.findMany({
+      where: { status: "approved" },
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json({ success: true, count: list.length, inquiries: list });
+  } catch (e) {
+    console.error("Contact approved GET error:", e);
+    return NextResponse.json(
+      { success: false, errors: ["خطا در دریافت لیست."] },
+      { status: 500 }
+    );
+  }
+}
