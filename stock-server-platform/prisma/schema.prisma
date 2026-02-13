@@ -37,3 +37,19 @@ model ContactInquiry {
 
   @@map("contact_inquiries")
 }
+
+model Article {
+  id          String   @id @default(cuid())
+  image       String?  // URL تصویر
+  title       String
+  publishedAt DateTime @default(now()) @map("published_at") // تاریخ انتشار
+  tags        String[]  @default([]) // برچسب‌ها
+  viewCount   Int       @default(0) @map("view_count")
+  content     String    @db.Text // rich text (HTML یا Markdown)
+  category    String    // دسته‌بندی
+  excerpt     String    @db.Text // متن کوتاه برای معرفی
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("articles")
+}

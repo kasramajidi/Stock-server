@@ -348,6 +348,117 @@ export const openApiDoc = {
         responses: { "200": { description: "وضعیت بن بروزرسانی شد" }, "400": { description: "امکان بن خودتان نیست" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "کاربر یافت نشد" } },
       },
     },
+    "/articles": {
+      get: {
+        summary: "لیست مقالات",
+        description: "عمومی. مرتب‌سازی از جدیدترین به قدیمی‌ترین. Query: search= برای جستجو در عنوان.",
+        operationId: "listArticles",
+        tags: ["Articles"],
+        parameters: [
+          { name: "search", in: "query", required: false, schema: { type: "string" }, description: "جستجو در عنوان" },
+        ],
+        responses: {
+          "200": {
+            description: "لیست مقالات (بدون فیلد content در لیست)",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    count: { type: "number" },
+                    articles: { type: "array", items: { $ref: "#/components/schemas/ArticleListItem" } },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      post: {
+        summary: "ایجاد مقاله",
+        description: "فقط ادمین. فیلدها: image (URL)، title، publishedAt (اختیاری)، tags (آرایه)، category، content (rich text)، excerpt.",
+        operationId: "createArticle",
+        tags: ["Articles"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/ArticleCreate" },
+            },
+          },
+        },
+        responses: {
+          "201": { description: "مقاله ایجاد شد" },
+          "400": { description: "خطای اعتبارسنجی" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+        },
+      },
+    },
+    "/articles/{id}": {
+      get: {
+        summary: "دریافت یک مقاله",
+        description: "عمومی. با هر بار فراخوانی، تعداد بازدید (viewCount) یکی افزایش می‌یابد.",
+        operationId: "getArticle",
+        tags: ["Articles"],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        responses: {
+          "200": {
+            description: "مقاله به‌همراه محتوا و viewCount بروزشده",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    article: { $ref: "#/components/schemas/Article" },
+                  },
+                },
+              },
+            },
+          },
+          "404": { description: "مقاله یافت نشد" },
+        },
+      },
+      patch: {
+        summary: "ویرایش مقاله",
+        description: "فقط ادمین. فیلدهای اختیاری برای بروزرسانی.",
+        operationId: "updateArticle",
+        tags: ["Articles"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  image: { type: "string", format: "uri" },
+                  title: { type: "string" },
+                  publishedAt: { type: "string", format: "date-time" },
+                  tags: { type: "array", items: { type: "string" } },
+                  category: { type: "string" },
+                  content: { type: "string" },
+                  excerpt: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+        responses: { "200": { description: "مقاله بروزرسانی شد" }, "400": { description: "بدنه نامعتبر" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "مقاله یافت نشد" } },
+      },
+      delete: {
+        summary: "حذف مقاله",
+        description: "فقط ادمین",
+        operationId: "deleteArticle",
+        tags: ["Articles"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        responses: { "200": { description: "مقاله حذف شد" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "مقاله یافت نشد" } },
+      },
+    },
   },
   components: {
     securitySchemes: {
@@ -372,11 +483,56 @@ export const openApiDoc = {
           updatedAt: { type: "string", format: "date-time" },
         },
       },
+      ArticleListItem: {
+        type: "object",
+        properties: {
+          id: { type: "string" },
+          image: { type: "string", nullable: true },
+          title: { type: "string" },
+          publishedAt: { type: "string", format: "date-time" },
+          tags: { type: "array", items: { type: "string" } },
+          viewCount: { type: "integer" },
+          category: { type: "string" },
+          excerpt: { type: "string" },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+      Article: {
+        type: "object",
+        properties: {
+          id: { type: "string" },
+          image: { type: "string", nullable: true },
+          title: { type: "string" },
+          publishedAt: { type: "string", format: "date-time" },
+          tags: { type: "array", items: { type: "string" } },
+          viewCount: { type: "integer" },
+          content: { type: "string", description: "rich text" },
+          category: { type: "string" },
+          excerpt: { type: "string" },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+      ArticleCreate: {
+        type: "object",
+        required: ["title", "category", "content", "excerpt"],
+        properties: {
+          image: { type: "string", format: "uri", nullable: true },
+          title: { type: "string" },
+          publishedAt: { type: "string", format: "date-time" },
+          tags: { type: "array", items: { type: "string" }, default: [] },
+          category: { type: "string" },
+          content: { type: "string", description: "rich text" },
+          excerpt: { type: "string", description: "متن کوتاه برای معرفی" },
+        },
+      },
     },
   },
   tags: [
     { name: "Auth", description: "ثبت‌نام و ورود" },
     { name: "Contact", description: "پرسش و تماس (ارسال به شرکت + تایید/رد ادمین)" },
     { name: "Users", description: "مدیریت کاربران (نیاز به JWT)" },
+    { name: "Articles", description: "مقالات — لیست، جستجو، ایجاد، ویرایش، حذف" },
   ],
 } as const;
