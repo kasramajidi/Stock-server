@@ -159,6 +159,15 @@ export const openApiDoc = {
         },
       },
     },
+    "/auth/logout": {
+      post: {
+        summary: "خروج",
+        description: "**برای چی:** برای یکدستی با کلاینت؛ خروج واقعی با پاک کردن توکن و کوکی در سمت کلاینت (clearAuth) انجام می‌شود. این endpoint همیشه 200 برمی‌گردد.",
+        operationId: "logout",
+        tags: ["Auth"],
+        responses: { "200": { description: "خروج با موفقیت انجام شد." } },
+      },
+    },
     "/contact": {
       post: {
         summary: "ارسال پرسش / تماس",

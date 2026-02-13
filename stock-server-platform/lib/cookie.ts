@@ -35,3 +35,19 @@ export function deleteAuthCookie(): void {
   document.cookie =
     AUTH_COOKIE_NAME + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
 }
+
+/** کلیدهای localStorage برای احراز هویت (هماهنگ با داشبورد) */
+export const AUTH_USER_KEY = "user";
+export const AUTH_TOKEN_KEY = "token";
+
+/** خروج: پاک کردن کوکی و داده‌های کاربر از localStorage. بعد از آن کاربر را به /auth هدایت کن. */
+export function clearAuth(): void {
+  if (typeof window === "undefined") return;
+  deleteAuthCookie();
+  try {
+    localStorage.removeItem(AUTH_USER_KEY);
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+  } catch {
+    // ignore
+  }
+}

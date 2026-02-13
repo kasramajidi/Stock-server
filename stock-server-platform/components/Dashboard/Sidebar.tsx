@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { clearAuth } from "@/lib/cookie";
 
 const items: { id: string; label: string; href: string }[] = [
   { id: "dashboard", label: "پیشخوان", href: "/dashboard" },
@@ -16,6 +18,13 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ active, onSectionChange }: SidebarProps) {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    clearAuth();
+    router.push("/auth", { scroll: false });
+  };
+
   return (
     <nav className="flex flex-col gap-1 rounded-xl border border-border bg-card p-2">
       {items.map((item) => {
@@ -35,6 +44,13 @@ export default function Sidebar({ active, onSectionChange }: SidebarProps) {
           </Link>
         );
       })}
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="mt-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition text-right"
+      >
+        خروج
+      </button>
     </nav>
   );
 }

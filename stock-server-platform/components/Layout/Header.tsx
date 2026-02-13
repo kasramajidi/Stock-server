@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import SearchBar from "./SearchBar";
 import { MdOutlineShoppingBag } from "react-icons/md";
+import { clearAuth } from "@/lib/cookie";
 
 interface HeaderProps {
   cartCount?: number;
@@ -22,6 +24,13 @@ export default function Header({
   balance,
   isAuthenticated = false,
 }: HeaderProps = {}) {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    clearAuth();
+    router.push("/auth", { scroll: false });
+  };
+
   return (
     <div className="bg-[#fcfbfd] shadow-md rounded-3xl z-50 mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k border border-gray-200 relative -mt-[5px]">
       <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-5">
@@ -70,6 +79,13 @@ export default function Header({
                       </span>
                     </div>
                   )}
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="text-gray-700 hover:text-[#17e2fe] transition-colors font-medium text-xs sm:text-sm md:text-base"
+                  >
+                    خروج
+                  </button>
                 </>
               )}
             </div>
