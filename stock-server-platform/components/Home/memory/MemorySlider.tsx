@@ -36,8 +36,8 @@ export default function MemorySlider() {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="right-auto left-0 sm:-left-12 md:-left-16 lg:-left-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
-      <CarouselNext className="right-0 sm:-right-12 md:-right-16 lg:-right-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+      <CarouselPrevious className="right-auto -left-8 sm:-left-12 md:-left-16 lg:-left-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+      <CarouselNext className=" -right-8 sm:-right-12 md:-right-16 lg:-right-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
     </Carousel>
   );
 }

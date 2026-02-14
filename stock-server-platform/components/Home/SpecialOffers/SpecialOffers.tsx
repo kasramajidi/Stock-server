@@ -88,8 +88,8 @@ export default function SpecialOffers() {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="right-auto left-0 sm:-left-12 md:-left-16 lg:-left-20 z-10 size-10 sm:size-11 bg-white text-gray-900 border-2 border-white shadow-lg hover:bg-gray-100 hover:border-gray-200 [&_svg]:size-5 sm:[&_svg]:size-6" />
-            <CarouselNext className="right-0 sm:-right-12 md:-right-16 lg:-right-20 z-10 size-10 sm:size-11 bg-white text-gray-900 border-2 border-white shadow-lg hover:bg-gray-100 hover:border-gray-200 [&_svg]:size-5 sm:[&_svg]:size-6" />
+            <CarouselPrevious className="right-auto -left-5 sm:-left-12 md:-left-16 lg:-left-20 z-10 size-10 sm:size-11 bg-white text-gray-900 border-2 border-white shadow-lg hover:bg-gray-100 hover:border-gray-200 [&_svg]:size-5 sm:[&_svg]:size-6" />
+            <CarouselNext className=" -right-5 sm:-right-12 md:-right-16 lg:-right-20 z-10 size-10 sm:size-11 bg-white text-gray-900 border-2 border-white shadow-lg hover:bg-gray-100 hover:border-gray-200 [&_svg]:size-5 sm:[&_svg]:size-6" />
           </Carousel>
         </div>
       </div>

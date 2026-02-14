@@ -4,11 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import SearchBar from "./SearchBar";
-import { MdOutlineShoppingBag } from "react-icons/md";
+import { MdOutlineShoppingBag, MdOutlineFavoriteBorder } from "react-icons/md";
 import { clearAuth } from "@/lib/cookie";
 
 interface HeaderProps {
   cartCount?: number;
+  cartTotal?: number;
   currency?: string;
   balance?: number;
   isAuthenticated?: boolean;
@@ -20,6 +21,7 @@ const formatNumber = (num: number): string => {
 
 export default function Header({
   cartCount = 0,
+  cartTotal = 0,
   currency = "تومان",
   balance,
   isAuthenticated = false,
@@ -50,6 +52,13 @@ export default function Header({
             </Link>
 
             <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+              <Link
+                href="/favorites"
+                className="text-gray-700 hover:text-[#17e2fe] transition-colors p-1"
+                aria-label="علاقه‌مندی‌ها"
+              >
+                <MdOutlineFavoriteBorder className="w-5 h-5 sm:w-6 sm:h-6" />
+              </Link>
               {!isAuthenticated ? (
                 <Link
                   href="/auth"
@@ -60,18 +69,6 @@ export default function Header({
                 </Link>
               ) : (
                 <>
-                  <Link
-                    href="/cart"
-                    className="relative text-gray-700 hover:text-[#17e2fe] transition-colors"
-                    aria-label="سبد خرید"
-                  >
-                    <MdOutlineShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
-                    {cartCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-[#17e2fe] text-white text-[8px] sm:text-[10px] rounded-full w-3 h-3 sm:w-4 sm:h-4 flex items-center justify-center font-medium">
-                        {cartCount > 99 ? "99+" : cartCount}
-                      </span>
-                    )}
-                  </Link>
                   {balance !== undefined && (
                     <div className="hidden sm:flex items-center gap-1.5">
                       <span className="text-gray-700 font-medium text-sm md:text-base">
@@ -88,6 +85,21 @@ export default function Header({
                   </button>
                 </>
               )}
+              <Link
+                href="/cart"
+                className="relative flex items-center gap-1.5 text-gray-700 hover:text-[#17e2fe] transition-colors"
+                aria-label="سبد خرید"
+              >
+                <MdOutlineShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
+                <span className="text-xs sm:text-sm font-medium whitespace-nowrap">
+                  {formatNumber(cartTotal)} {currency}
+                </span>
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#17e2fe] text-white text-[8px] sm:text-[10px] rounded-full w-3 h-3 sm:w-4 sm:h-4 flex items-center justify-center font-medium">
+                    {cartCount > 99 ? "99+" : cartCount}
+                  </span>
+                )}
+              </Link>
             </div>
           </div>
 
