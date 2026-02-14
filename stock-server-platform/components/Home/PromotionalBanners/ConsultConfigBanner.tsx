@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function ConsultConfigBanner() {
   return (
-    <section className="mx-[20px] sm:mx-[30px] md:mx-[50px] my-10">
+    <section className="mx-3 sm:mx-[30px] md:mx-[50px] my-10">
       <div className="bg-[#062C3D] rounded-xl overflow-hidden flex flex-col md:flex-row items-center">
 
         {/* Image - Left */}

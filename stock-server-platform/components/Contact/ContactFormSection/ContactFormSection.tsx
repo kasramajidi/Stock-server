@@ -4,7 +4,7 @@ import ContactSocial from "../ContactSocial/ContactSocial";
 export default function ContactFormSection() {
   return (
     <section className="space-y-8 sm:space-y-10">
-      <div className="text-center sm:text-right">
+      <div className="text-center">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
           پرسشی دارید؟ پاسختان را خواهیم داد.
         </h2>

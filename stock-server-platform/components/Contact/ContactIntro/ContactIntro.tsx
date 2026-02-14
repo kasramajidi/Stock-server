@@ -1,6 +1,6 @@
 export default function ContactIntro() {
   return (
-    <header className="flex items-center gap-2">
+    <header className="flex items-center justify-center gap-2">
       <span className="text-2xl sm:text-3xl font-bold text-gray-800">
         ارتباط با ما
       </span>
