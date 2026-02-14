@@ -3,7 +3,7 @@ import BlogSlider from "./BlogSlider";
 
 export default function BlogSection() {
   return (
-    <section className="bg-white mx-3 sm:mx-[30px] md:mx-[50px] my-10 rounded-xl shadow p-4 sm:p-6">
+    <section className="bg-white mx-3 sm:mx-[30px] md:mx-[50px] my-10 rounded-xl shadow p-4 sm:p-6 w-full">
 
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -20,8 +20,10 @@ export default function BlogSection() {
         </Link>
       </div>
 
-      {/* Slider */}
-      <BlogSlider />
+      {/* Slider - فضای کناری برای دکمه‌های چپ/راست */}
+      <div className="relative px-0 sm:px-12 md:px-16 lg:px-20">
+        <BlogSlider />
+      </div>
     </section>
   );
 }

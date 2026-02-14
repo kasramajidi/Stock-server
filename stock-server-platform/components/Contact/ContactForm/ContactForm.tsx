@@ -1,74 +1,66 @@
+"use client";
+
 export default function ContactForm() {
   return (
-    <form className="space-y-4 sm:space-y-5 [&_input:focus]:border-[var(--primary-hover)] [&_input:focus]:ring-2 [&_input:focus]:ring-[var(--primary-hover)]/20 [&_textarea:focus]:border-[var(--primary-hover)] [&_textarea:focus]:ring-2 [&_textarea:focus]:ring-[var(--primary-hover)]/20">
-      <div>
-        <label htmlFor="contact-name" className="mb-1.5 block text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
-          نام
-        </label>
-        <input
-          id="contact-name"
-          type="text"
-          placeholder="نام شما"
-          required
-          className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-colors"
-        />
-      </div>
-      <div>
-        <label htmlFor="contact-email" className="mb-1.5 block text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
-          ایمیل
-        </label>
-        <input
-          id="contact-email"
-          type="email"
-          placeholder="example@email.com"
-          required
-          className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-colors"
-        />
-      </div>
+    <form
+      className="space-y-4 sm:space-y-5"
+      onSubmit={(e) => e.preventDefault()}
+    >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="contact-subject" className="mb-1.5 block text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
-            موضوع
+          <label
+            htmlFor="contact-email"
+            className="mb-1.5 block text-sm font-medium text-gray-700"
+          >
+            ایمیل
           </label>
           <input
-            id="contact-subject"
-            type="text"
-            placeholder="موضوع پیام"
+            id="contact-email"
+            type="email"
+            placeholder="ایمیل شما"
             required
-            className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-colors"
+            className="w-full rounded-2xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-[#17e2fe] focus:ring-2 focus:ring-[#17e2fe]/20 focus:outline-none transition-colors"
           />
         </div>
         <div>
-          <label htmlFor="contact-phone" className="mb-1.5 block text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
-            شماره تماس
+          <label
+            htmlFor="contact-name"
+            className="mb-1.5 block text-sm font-medium text-gray-700"
+          >
+            نام و نام خانوادگی
           </label>
           <input
-            id="contact-phone"
-            type="tel"
-            placeholder="۰۹۱۲۱۲۳۴۵۶۷"
+            id="contact-name"
+            type="text"
+            placeholder="نام و نام خانوادگی"
             required
-            className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none transition-colors"
+            className="w-full rounded-2xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-[#17e2fe] focus:ring-2 focus:ring-[#17e2fe]/20 focus:outline-none transition-colors"
           />
         </div>
       </div>
       <div>
-        <label htmlFor="contact-message" className="mb-1.5 block text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
-          پیام
+        <label
+          htmlFor="contact-message"
+          className="mb-1.5 block text-sm font-medium text-gray-700"
+        >
+          نظر شما
         </label>
         <textarea
           id="contact-message"
-          placeholder="متن پیام شما..."
+          placeholder="متن نظر"
           required
           rows={5}
-          className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none resize-none transition-colors"
+          className="w-full rounded-2xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-[#17e2fe] focus:ring-2 focus:ring-[#17e2fe]/20 focus:outline-none resize-none transition-colors"
         />
       </div>
-      <button
-        type="submit"
-        className="w-full rounded-xl border-2 border-[var(--primary-hover)] bg-[var(--primary-hover)] py-3.5 text-sm font-semibold text-white transition-all hover:bg-[var(--primary-dark)] hover:border-[var(--primary-dark)]"
-      >
-        ارسال پیام
-      </button>
+      <div className="flex justify-center pt-1">
+        <button
+          type="submit"
+          className="px-8 py-3.5 rounded-2xl bg-[#17e2fe] hover:bg-[#14c8e0] text-white font-semibold text-sm transition-colors"
+        >
+          ارسال
+        </button>
+      </div>
     </form>
   );
 }

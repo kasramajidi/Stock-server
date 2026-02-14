@@ -1,8 +1,14 @@
 "use client";
 
-import { useRef } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import BlogCard from "./BlogCard";
-
+  
 const blogs = [
   "بررسی مفهوم Hot‑Swap و Hot‑Plug در سرور و استوریج",
   "NVMe در سرورها چیست و چه تفاوتی با SSD معمولی دارد؟",
@@ -18,31 +24,26 @@ const blogs = [
   "خنک‌کاری سرور و اهمیت آن در دیتاسنتر",
 ];
 
-const CARD_WIDTH = 220;
-const GAP = 16;
-
 export default function BlogSlider() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
   return (
-    <div className="relative flex items-center">
-      <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto pb-2 px-2 scrollbar-hide sm:px-12"
-        style={{ scrollSnapType: "x mandatory", scrollBehavior: "smooth" }}
-      >
+    <Carousel
+      opts={{ align: "start", loop: false, containScroll: "trimSnaps" }}
+      className="w-full"
+    >
+      <CarouselContent className="-ms-4">
         {blogs.map((title, index) => (
-          <div
+          <CarouselItem
             key={index}
-            ref={(el) => { cardRefs.current[index] = el; }}
-            className="shrink-0"
-            style={{ scrollSnapAlign: "start" }}
+            className="ps-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/5"
           >
-            <BlogCard title={title} />
-          </div>
+            <div className="flex justify-center w-full">
+              <BlogCard title={title} />
+            </div>
+          </CarouselItem>
         ))}
-      </div>
-    </div>
+      </CarouselContent>
+      <CarouselPrevious className="right-auto left-0 sm:-left-12 md:-left-16 lg:-left-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+      <CarouselNext className="right-0 sm:-right-12 md:-right-16 lg:-right-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+    </Carousel>
   );
 }

@@ -6,10 +6,7 @@ import DLServersSection from "@/components/Home/DLServers/DLServersSection";
 import ProductsTabsSection from "@/components/Home/DLServers/ProductsTabsSection";
 import ConsultConfigBanner from "@/components/Home/PromotionalBanners/ConsultConfigBanner";
 import BlogSection from "@/components/Home/blog/BlogSection";
-
 import TrustBanner from "@/components/Home/TrustBanner/TrustBanner";
-
-
 import Baner from "@/components/Home/Baner/Baner";
 import { webSiteStructuredData, organizationStructuredData } from "@/lib/seo";
 import MemorySection from "@/components/Home/memory/MemorySection";
@@ -33,6 +30,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+const sectionClass = "mx-3 sm:mx-[30px] md:mx-[50px] xl:mx-[50px]";
+
 export default async function Home() {
   const bannerImage = await getBannerImage();
 
@@ -41,28 +40,35 @@ export default async function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteStructuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData) }} />
       <h1 className="sr-only">استوک سرور - فروش سرور و تجهیزات شبکه</h1>
+
       <HeroSection bannerImage={bannerImage} />
       <CategoryIcons />
       <SpecialOffers />
-      <DLServersSection />
-      <section className="bg-white rounded-[18px] mx-3 sm:mx-[30px] md:mx-[50px] xl:mx-[50px] mt-6 mb-8 shadow-sm border border-gray-100">
-         <DLServersSection />
-      </section>
-      <section className="mx-3 sm:mx-[30px] md:mx-[50px] xl:mx-[50px] mt-6 mb-8">
-      <Baner/>
-      </section>
-      <MemorySection/>
-      <MemorySection/>
-      <MemorySection/>
-      <section className="bg-white rounded-[18px] mx-3 sm:mx-[30px] md:mx-[50px] xl:mx-[50px] mt-6 mb-8 shadow-sm border border-gray-100">
-         <ProductsTabsSection/>
-         <DLServersSection />
 
+      <section className={`${sectionClass} mt-6 mb-8`}>
+        <DLServersSection />
       </section>
+
+      <section className={`${sectionClass} mt-6 mb-8`}>
+        <Baner />
+      </section>
+
+      <section className={`${sectionClass} mt-6 mb-8`}>
+        <MemorySection />
+      </section>
+
+      <section className={`${sectionClass} mt-6 mb-8`}>
+        <div className="bg-white rounded-[18px] shadow-sm border border-gray-100 overflow-hidden">
+          <ProductsTabsSection />
+          <DLServersSection />
+        </div>
+      </section>
+
       <ConsultConfigBanner />
-      <BlogSection />
-      <TrustBanner/>
-
+      <section className={`${sectionClass} my-10`}>
+        <BlogSection />
+      </section>
+      <TrustBanner />
     </main>
   );
 }

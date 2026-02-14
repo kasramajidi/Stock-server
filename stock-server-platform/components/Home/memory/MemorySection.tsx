@@ -2,7 +2,7 @@ import MemorySlider from "./MemorySlider";
 
 export default function MemorySection() {
   return (
-    <section className="bg-white rounded-2xl shadow-sm border border-gray-100 mx-3 sm:mx-[30px] md:mx-[50px] mt-10 mb-10 p-4 sm:p-6">
+    <section className="bg-white rounded-[18px] shadow-sm border border-gray-100 w-full p-4 sm:p-6 overflow-visible">
 
       {/* Header */}
       <div className="flex items-center mb-6">
@@ -11,8 +11,10 @@ export default function MemorySection() {
         </h2>
       </div>
 
-      {/* Slider */}
-      <MemorySlider />
+      {/* Slider - فاصله فلش‌ها از کارت در دسکتاپ بیشتر */}
+      <div className="relative px-0 sm:px-12 md:px-16 lg:px-20">
+        <MemorySlider />
+      </div>
     </section>
   );
 }

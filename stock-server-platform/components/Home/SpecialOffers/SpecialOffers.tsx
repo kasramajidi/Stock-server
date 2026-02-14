@@ -2,7 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 export interface SpecialOfferConfig {
   id: string;
@@ -20,9 +26,6 @@ const offers: SpecialOfferConfig[] = [
   { id: "5", title: "کانفیگ ویژه شماره ۵", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
   { id: "6", title: "کانفیگ ویژه شماره ۶", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
 ];
-
-const CARD_WIDTH = 300;
-const GAP = 20;
 
 function OfferCard({ config }: { config: SpecialOfferConfig }) {
   const content = (
@@ -56,9 +59,6 @@ function OfferCard({ config }: { config: SpecialOfferConfig }) {
 }
 
 export default function SpecialOffers() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
   return (
     <section className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0">
       <div
@@ -69,23 +69,28 @@ export default function SpecialOffers() {
       >
         <h2 className="text-xl min-[400px]:text-2xl sm:text-2xl md:text-3xl text-white font-bold shrink-0 text-center lg:text-right">آفرهای ویژه</h2>
 
-        <div className="relative w-full min-w-0 flex-1">
-          <div
-            ref={scrollRef}
-            className="overflow-x-auto scrollbar-hide flex gap-3 min-[400px]:gap-4 sm:gap-5 md:gap-6 py-2 px-2 sm:px-12"
-            style={{ scrollSnapType: "x mandatory", scrollBehavior: "smooth" }}
+        <div className="relative w-full min-w-0 flex-1 max-w-[300px] min-[400px]:max-w-[624px] sm:max-w-[948px] md:max-w-[1272px] lg:max-w-[1432px] mx-auto px-0 sm:px-12 md:px-16 lg:px-20">
+          <Carousel
+            opts={{ align: "start", loop: false, containScroll: "trimSnaps" }}
+            className="w-full"
           >
-            {offers.map((config, i) => (
-              <div
-                key={config.id}
-                ref={(el) => { cardRefs.current[i] = el; }}
-                className="shrink-0 w-[280px] min-[400px]:w-[300px] sm:w-[320px] lg:w-[340px]"
-                style={{ scrollSnapAlign: "start" }}
-              >
-                <OfferCard config={config} />
-              </div>
-            ))}
-          </div>
+            <CarouselContent className="-ms-4 min-[400px]:-ms-5 sm:-ms-6 md:-ms-8">
+              {offers.map((config) => (
+                <CarouselItem
+                  key={config.id}
+                  className="ps-4 min-[400px]:ps-5 sm:ps-6 md:ps-8 basis-full min-[500px]:basis-1/2 md:basis-1/3 lg:basis-1/3"
+                >
+                  <div className="flex justify-center w-full sm:justify-start">
+                    <div className="w-[280px] min-[400px]:w-[300px] sm:w-[320px] lg:w-[340px]">
+                      <OfferCard config={config} />
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="right-auto left-0 sm:-left-12 md:-left-16 lg:-left-20 z-10 size-10 sm:size-11 bg-white text-gray-900 border-2 border-white shadow-lg hover:bg-gray-100 hover:border-gray-200 [&_svg]:size-5 sm:[&_svg]:size-6" />
+            <CarouselNext className="right-0 sm:-right-12 md:-right-16 lg:-right-20 z-10 size-10 sm:size-11 bg-white text-gray-900 border-2 border-white shadow-lg hover:bg-gray-100 hover:border-gray-200 [&_svg]:size-5 sm:[&_svg]:size-6" />
+          </Carousel>
         </div>
       </div>
     </section>

@@ -1,6 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import MemoryCard from "./MemoryCard";
 
 const memories = [
@@ -12,31 +18,26 @@ const memories = [
   { image: "/Images/Baner/Layer 5.png", title: "HPE 32GB Dual Rank x4 DDR4-2933 Registered", description: "برای استعلام موجودی تماس بگیرید" },
 ];
 
-const CARD_WIDTH = 280;
-const GAP = 24;
-
 export default function MemorySlider() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
   return (
-    <div className="relative flex items-center">
-      <div
-        ref={scrollRef}
-        className="flex gap-6 overflow-x-auto scrollbar-hide py-2 px-2 sm:px-12"
-        style={{ scrollSnapType: "x mandatory", scrollBehavior: "smooth" }}
-      >
+    <Carousel
+      opts={{ align: "start", loop: false, containScroll: "trimSnaps" }}
+      className="relative w-full max-w-[280px] sm:max-w-[584px] md:max-w-[888px] lg:max-w-[1192px] mx-auto min-w-0"
+    >
+      <CarouselContent className="-ms-4">
         {memories.map((item, index) => (
-          <div
+          <CarouselItem
             key={index}
-            ref={(el) => { cardRefs.current[index] = el; }}
-            className="shrink-0"
-            style={{ scrollSnapAlign: "start" }}
+            className="ps-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 min-w-0"
           >
-            <MemoryCard {...item} />
-          </div>
+            <div className="flex justify-center w-full sm:justify-start">
+              <MemoryCard {...item} />
+            </div>
+          </CarouselItem>
         ))}
-      </div>
-    </div>
+      </CarouselContent>
+      <CarouselPrevious className="right-auto left-0 sm:-left-12 md:-left-16 lg:-left-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+      <CarouselNext className="right-0 sm:-right-12 md:-right-16 lg:-right-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+    </Carousel>
   );
 }

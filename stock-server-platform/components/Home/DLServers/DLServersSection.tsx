@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, useEffect } from "react";
+import { useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import DLServerCard from "./DLServerCard";
 
 const dlServersData = [
@@ -31,82 +38,71 @@ const mlServersData = [
 
 export default function DLServersSection() {
   const [activeTab, setActiveTab] = useState<"dl" | "ml">("dl");
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
   const serversData = activeTab === "dl" ? dlServersData : mlServersData;
 
-  useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollLeft = 0;
-  }, [activeTab]);
-
   return (
-    <section className="bg-white rounded-[18px] mx-3 sm:mx-[30px] md:mx-[50px] xl:mx-[50px] mt-6 mb-8 shadow-sm border border-gray-100">
-      <div className="p-4 sm:p-6 md:p-8">
-        
-        {/* Tabs - عین تصویر: pill شکل، فیروزه فعال، خاکستری غیرفعال */}
-        <div className="flex items-center justify-center mb-6">
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setActiveTab("dl")}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition cursor-pointer ${
-                activeTab === "dl"
-                  ? "bg-[#00DDFF] text-white shadow-sm hover:bg-[#00c4e6]"
-                  : "bg-gray-200 text-gray-600 hover:bg-gray-300"
-              }`}
-            >
-              سرور DL
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("ml")}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition cursor-pointer ${
-                activeTab === "ml"
-                  ? "bg-[#00DDFF] text-white shadow-sm hover:bg-[#00c4e6]"
-                  : "bg-gray-200 text-gray-600 hover:bg-gray-300"
-              }`}
-            >
-              سرور ML
-            </button>
-          </div>
-        </div>
+    <section className="bg-white rounded-[18px] shadow-sm border border-gray-100 w-full p-4 sm:p-6 overflow-visible">
+      {/* تب‌ها */}
+      <div className="flex items-center justify-center gap-3 mb-4">
+        <button
+          type="button"
+          onClick={() => setActiveTab("dl")}
+          className={`px-5 py-2.5 rounded-full text-sm font-medium transition cursor-pointer ${
+            activeTab === "dl"
+              ? "bg-[#00DDFF] text-white shadow-sm hover:bg-[#00c4e6]"
+              : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+          }`}
+        >
+          سرور DL
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("ml")}
+          className={`px-5 py-2.5 rounded-full text-sm font-medium transition cursor-pointer ${
+            activeTab === "ml"
+              ? "bg-[#00DDFF] text-white shadow-sm hover:bg-[#00c4e6]"
+              : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+          }`}
+        >
+          سرور ML
+        </button>
+      </div>
 
-        {/* Title & Button */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 border-b border-gray-200 pb-4">
-          <h2 className="text-base sm:text-lg font-semibold text-gray-800 text-center sm:text-right">
-            {activeTab === "dl" ? "سرورهای DL" : "سرورهای ML"}
-          </h2>
-          <Link
-            href="/shop"
-            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#00DDFF] text-white text-sm font-medium hover:bg-[#00c4e6] transition-colors"
-          >
-            <span>مشاهده همه</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19l7-7-7-7" />
-            </svg>
-          </Link>
-        </div>
+      {/* هدر مثل حافظه رم */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-base font-semibold text-gray-800 border-b-2 border-b-[#00DDFF] pb-1">
+          {activeTab === "dl" ? "سرورهای DL" : "سرورهای ML"}
+        </h2>
+        <Link
+          href="/shop"
+          className="text-sm text-[#00DDFF] hover:underline flex items-center gap-1"
+        >
+          مشاهده همه
+          <span>›</span>
+        </Link>
+      </div>
 
-        {/* Slider */}
-        <div className="relative flex items-center">
-          <div
-            ref={scrollRef}
-            className="overflow-x-auto scrollbar-hide flex gap-4 sm:gap-5 md:gap-6 py-2 px-2 sm:px-12 md:px-14"
-            style={{ scrollSnapType: "x mandatory", scrollBehavior: "smooth" }}
-          >
+      {/* کاروسل — موبایل ۱ کارت، دسکتاپ ۴ کارت در هر اسلاید */}
+      <div className="relative w-full max-w-[1260px] mx-auto">
+        <Carousel
+          opts={{ align: "start", loop: false, containScroll: "trimSnaps" }}
+          className="relative w-full"
+        >
+          <CarouselContent className="-ms-4">
             {serversData.map((server, i) => (
-              <div
+              <CarouselItem
                 key={`${activeTab}-${i}`}
-                ref={(el) => { cardRefs.current[i] = el; }}
-                style={{ scrollSnapAlign: "start" }}
-                className="shrink-0"
+                className="ps-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 min-w-0"
               >
-                <DLServerCard {...server} />
-              </div>
+                <div className="flex justify-center lg:justify-start">
+                  <DLServerCard {...server} />
+                </div>
+              </CarouselItem>
             ))}
-          </div>
-        </div>
+          </CarouselContent>
+          <CarouselPrevious className="right-auto left-0 sm:-left-12 md:-left-16 lg:-left-20 z-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+          <CarouselNext className="right-0 sm:-right-12 md:-right-16 lg:-right-20 z-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+        </Carousel>
       </div>
     </section>
   );

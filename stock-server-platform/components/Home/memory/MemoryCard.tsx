@@ -12,7 +12,7 @@ export default function MemoryCard({
   description,
 }: MemoryCardProps) {
   return (
-    <div className="shrink-0 w-[280px] bg-white rounded-xl p-4 text-center">
+    <div className="w-full min-w-[200px] max-w-[280px] mx-auto bg-white rounded-xl p-4 text-center">
       {/* Logos */}
       <div className="flex justify-between gap-3 mb-3">
         <Image

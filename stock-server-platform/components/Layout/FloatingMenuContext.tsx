@@ -12,7 +12,7 @@ type FloatingMenuContextValue = {
 const FloatingMenuContext = createContext<FloatingMenuContextValue | null>(null);
 
 export function FloatingMenuProvider({ children }: { children: ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen((prev) => !prev), []);

@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = getPostBySlug(slug);
-  if (!post) return { title: "دمطلب یافت نشد" };
+  if (!post) return { title: "مطلب یافت نشد" };
   return {
     title: post.title,
     description: post.summary,
@@ -44,7 +44,7 @@ export default async function BlogPostPage({ params }: Props) {
           aria-label="مسیر"
         >
           <Link href="/" className="hover:text-[#17e2fe] transition-colors">
-          i  خانه
+            خانه
           </Link>
           <span aria-hidden>/</span>
           <Link href="/blog" className="hover:text-[#17e2fe] transition-colors">
@@ -193,7 +193,7 @@ export default async function BlogPostPage({ params }: Props) {
         {related.length > 0 && (
           <section className="mt-12">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">
+              <h2 className="text-lg font-semibold text-gray-800">
                 مطالب مرتبط
               </h2>
               <Link

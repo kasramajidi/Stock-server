@@ -28,6 +28,7 @@ type CarouselContextProps = {
   scrollNext: () => void
   canScrollPrev: boolean
   canScrollNext: boolean
+  isRtl: boolean
 } & CarouselProps
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
@@ -51,10 +52,15 @@ function Carousel({
   children,
   ...props
 }: React.ComponentProps<"div"> & CarouselProps) {
+  const [isRtl] = React.useState(
+    () => (typeof document !== "undefined" ? document.documentElement.getAttribute("dir") === "rtl" : true)
+  )
+
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
       axis: orientation === "horizontal" ? "x" : "y",
+      direction: isRtl ? "rtl" : "ltr",
     },
     plugins
   )
@@ -116,6 +122,7 @@ function Carousel({
         scrollNext,
         canScrollPrev,
         canScrollNext,
+        isRtl,
       }}
     >
       <div
@@ -133,18 +140,19 @@ function Carousel({
 }
 
 function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
-  const { carouselRef, orientation } = useCarousel()
+  const { carouselRef, orientation, isRtl } = useCarousel()
 
   return (
     <div
       ref={carouselRef}
+      dir={isRtl ? "rtl" : "ltr"}
       className="overflow-hidden"
       data-slot="carousel-content"
     >
       <div
         className={cn(
           "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+          orientation === "horizontal" ? "-ms-4" : "-mt-4 flex-col",
           className
         )}
         {...props}
@@ -163,7 +171,7 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="carousel-item"
       className={cn(
         "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
+        orientation === "horizontal" ? "ps-4" : "pt-4",
         className
       )}
       {...props}
@@ -177,7 +185,9 @@ function CarouselPrevious({
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+  const { orientation, scrollPrev, scrollNext, canScrollPrev, canScrollNext, isRtl } = useCarousel()
+  const goPrev = isRtl ? scrollNext : scrollPrev
+  const canGo = isRtl ? canScrollNext : canScrollPrev
 
   return (
     <Button
@@ -191,12 +201,12 @@ function CarouselPrevious({
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
-      disabled={!canScrollPrev}
-      onClick={scrollPrev}
+      disabled={!canGo}
+      onClick={goPrev}
       {...props}
     >
       <ArrowLeft />
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only">{isRtl ? "اسلاید بعدی" : "Previous slide"}</span>
     </Button>
   )
 }
@@ -207,7 +217,9 @@ function CarouselNext({
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { orientation, scrollNext, canScrollNext } = useCarousel()
+  const { orientation, scrollPrev, scrollNext, canScrollPrev, canScrollNext, isRtl } = useCarousel()
+  const goNext = isRtl ? scrollPrev : scrollNext
+  const canGo = isRtl ? canScrollPrev : canScrollNext
 
   return (
     <Button
@@ -221,12 +233,12 @@ function CarouselNext({
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
-      disabled={!canScrollNext}
-      onClick={scrollNext}
+      disabled={!canGo}
+      onClick={goNext}
       {...props}
     >
       <ArrowRight />
-      <span className="sr-only">Next slide</span>
+      <span className="sr-only">{isRtl ? "اسلاید قبلی" : "Next slide"}</span>
     </Button>
   )
 }
