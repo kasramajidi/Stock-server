@@ -65,7 +65,7 @@ export function RichTextEditor({
     if (!editor) return;
     const current = getHTML();
     if (value !== current && (value || "").trim() !== (current || "").trim()) {
-      editor.commands.setContent(value || "", false);
+      editor.commands.setContent(value || "", { emitUpdate: false });
     }
   }, [value, editor, getHTML]);
 
