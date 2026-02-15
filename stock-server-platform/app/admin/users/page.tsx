@@ -44,7 +44,7 @@ export default function AdminUsersPage() {
     load();
   }, []);
 
-  const setRole = async (mobile: string, role: "admin" | "user") => {
+  const setRole = async (mobile: string, role: "user" | "admin" | "super_admin") => {
     setActionLoading(mobile);
     const res = await fetch(`/api/users/${encodeURIComponent(mobile)}/role`, {
       method: "PATCH",
