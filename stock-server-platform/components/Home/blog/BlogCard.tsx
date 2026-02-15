@@ -12,9 +12,8 @@ export default function BlogCard({ title }: BlogCardProps) {
         src="/Images/Baner/Layer 5.png"
         alt={title}
         width={220}
-        height={240}
+        height={140}
         className="object-cover h-[140px]"
-        style={{ width: "auto", height: "auto" }}
       />
 
       <div className="p-4 flex flex-col  flex-1 text-center">
