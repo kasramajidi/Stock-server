@@ -17,7 +17,7 @@ model User {
   email        String   @unique
   passwordHash String   @map("password_hash")
   acceptTerms  Boolean  @default(false) @map("accept_terms")
-  role         String   @default("user") // user | admin
+  role         String   @default("user") // user | admin | super_admin
   isBanned     Boolean  @default(false) @map("is_banned")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")

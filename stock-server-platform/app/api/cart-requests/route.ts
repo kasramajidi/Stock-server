@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, requireAdmin } from "@/lib/auth";
+import { requireAuth, requireAdmin, isAdminRole } from "@/lib/auth";
 import { cartRequestCreateSchema } from "@/lib/validations/cart-request";
 import { notifyCompanyNewCartRequest, sendCartRequestConfirmationToUser } from "@/lib/email";
 
@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
       where: { id: auth.userId },
       select: { role: true },
     })
-    .then((u) => u?.role === "admin");
+    .then((u) => isAdminRole(u?.role));
 
   const where = isAdmin ? undefined : { userId: auth.userId };
 

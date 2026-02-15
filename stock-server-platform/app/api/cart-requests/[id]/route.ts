@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, requireAdmin } from "@/lib/auth";
+import { requireAuth, requireAdmin, isAdminRole } from "@/lib/auth";
 import { cartRequestUpdateSchema } from "@/lib/validations/cart-request";
 
 /**
@@ -39,7 +39,7 @@ export async function GET(
       where: { id: auth.userId },
       select: { role: true },
     })
-    .then((u) => u?.role === "admin");
+    .then((u) => isAdminRole(u?.role));
 
   if (!isAdmin && cartRequest.userId !== auth.userId) {
     return NextResponse.json(
@@ -69,7 +69,7 @@ export async function PATCH(
       where: { id: auth.userId },
       select: { role: true },
     })
-    .then((u) => u?.role === "admin");
+    .then((u) => isAdminRole(u?.role));
 
   if (!isAdmin) {
     return NextResponse.json(
@@ -163,7 +163,7 @@ export async function DELETE(
       where: { id: auth.userId },
       select: { role: true },
     })
-    .then((u) => u?.role === "admin");
+    .then((u) => isAdminRole(u?.role));
   const isOwner = cartRequest.userId === auth.userId;
 
   if (!isOwner && !isAdmin) {

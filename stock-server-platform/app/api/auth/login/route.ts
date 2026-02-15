@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
         fullName: user.fullName,
         mobile: user.mobile,
         email: user.email,
+        role: user.role,
         createdAt: user.createdAt,
       },
     });

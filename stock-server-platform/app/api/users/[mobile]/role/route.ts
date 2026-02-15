@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin, normalizeMobile } from "@/lib/auth";
+import { requireSuperAdmin, normalizeMobile } from "@/lib/auth";
 
 /**
- * PATCH /api/users/[mobile]/role — تنظیم نقش کاربر (ادمین کردن یا برگرداندن به کاربر عادی)
- * فقط ادمین می‌تواند فراخوانی کند. ادمین نمی‌تواند نقش خودش را تغییر دهد.
- * Body: { role: "admin" | "user" }
+ * PATCH /api/users/[mobile]/role — تنظیم نقش کاربر با شماره موبایل
+ * فقط ادمین کل (super_admin) دسترسی دارد. می‌تواند نقش را user، admin یا super_admin قرار دهد.
+ * Body: { role: "user" | "admin" | "super_admin" }
  */
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ mobile: string }> }
 ) {
-  const auth = await requireAdmin(request);
+  const auth = await requireSuperAdmin(request);
   if (auth instanceof NextResponse) return auth;
 
   const { mobile } = await params;
@@ -28,13 +28,6 @@ export async function PATCH(
     );
   }
 
-  if (target.id === auth.userId) {
-    return NextResponse.json(
-      { success: false, errors: ["امکان تغییر نقش خودتان وجود ندارد."] },
-      { status: 400 }
-    );
-  }
-
   let body: { role?: string };
   try {
     body = await request.json();
@@ -45,10 +38,11 @@ export async function PATCH(
     );
   }
 
-  const role = body.role === "admin" ? "admin" : body.role === "user" ? "user" : null;
+  const role =
+    body.role === "super_admin" ? "super_admin" : body.role === "admin" ? "admin" : body.role === "user" ? "user" : null;
   if (role === null) {
     return NextResponse.json(
-      { success: false, errors: ["نقش باید admin یا user باشد."] },
+      { success: false, errors: ["نقش باید user، admin یا super_admin باشد."] },
       { status: 400 }
     );
   }
@@ -68,9 +62,14 @@ export async function PATCH(
     },
   });
 
+  const messages: Record<string, string> = {
+    user: "نقش به کاربر عادی تغییر کرد.",
+    admin: "نقش به ادمین تغییر کرد.",
+    super_admin: "نقش به ادمین کل تغییر کرد.",
+  };
   return NextResponse.json({
     success: true,
-    message: role === "admin" ? "کاربر به ادمین تغییر کرد." : "نقش کاربر به کاربر عادی تغییر کرد.",
+    message: messages[role] ?? "نقش بروزرسانی شد.",
     user: updated,
   });
 }

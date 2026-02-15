@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, requireAdmin } from "@/lib/auth";
+import { requireAuth, requireAdmin, isAdminRole } from "@/lib/auth";
 import { commentUpdateSchema, commentReviewSchema } from "@/lib/validations/comment";
 
 /**
@@ -34,7 +34,7 @@ export async function GET(
     }
     const isAdmin = await prisma.user
       .findUnique({ where: { id: auth.userId }, select: { role: true } })
-      .then((u) => u?.role === "admin");
+      .then((u) => isAdminRole(u?.role));
     const isOwner = comment.userId === auth.userId;
     if (!isAdmin && !isOwner) {
       return NextResponse.json(
@@ -82,7 +82,7 @@ export async function PATCH(
         where: { id: auth.userId },
         select: { role: true },
       })
-      .then((u) => u?.role === "admin");
+      .then((u) => isAdminRole(u?.role));
 
     const body = await request.json();
 
@@ -181,7 +181,7 @@ export async function DELETE(
       where: { id: auth.userId },
       select: { role: true },
     });
-    const isAdmin = user?.role === "admin";
+    const isAdmin = isAdminRole(user?.role);
     const isOwner = comment.userId === auth.userId;
 
     if (!isOwner && !isAdmin) {

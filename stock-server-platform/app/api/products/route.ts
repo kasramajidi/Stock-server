@@ -5,7 +5,7 @@ import { productCreateSchema } from "@/lib/validations/product";
 
 /**
  * GET /api/products
- * - لیست محصولات؛ Query: search (عنوان)، category، brand، order (newest|views)
+ * - لیست محصولات؛ Query: search، category، brand، order (newest|views)، page، limit
  */
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +13,10 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search")?.trim() || undefined;
     const category = searchParams.get("category")?.trim() || undefined;
     const brand = searchParams.get("brand")?.trim() || undefined;
-    const order = searchParams.get("order") || "newest"; // newest | views
+    const order = searchParams.get("order") || "newest";
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") || "10", 10)));
+    const skip = (page - 1) * limit;
 
     const where: { title?: { contains: string; mode: "insensitive" }; category?: string; brand?: string } = {};
     if (search) where.title = { contains: search, mode: "insensitive" };
@@ -25,19 +28,28 @@ export async function GET(request: NextRequest) {
         ? [{ viewCount: "desc" as const }, { createdAt: "desc" as const }]
         : [{ createdAt: "desc" as const }];
 
-    const products = await prisma.product.findMany({
-      where,
-      orderBy,
-      include: {
-        createdBy: {
-          select: { id: true, fullName: true, mobile: true, email: true },
+    const [total, products] = await Promise.all([
+      prisma.product.count({ where }),
+      prisma.product.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limit,
+        include: {
+          createdBy: {
+            select: { id: true, fullName: true, mobile: true, email: true },
+          },
         },
-      },
-    });
+      }),
+    ]);
 
     return NextResponse.json({
       success: true,
       count: products.length,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
       products,
     });
   } catch (e) {

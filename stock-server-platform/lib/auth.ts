@@ -3,11 +3,21 @@ import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/jwt";
 
 const BEARER_PREFIX = "Bearer ";
+const AUTH_COOKIE_NAME = "loginval";
 
 export function getTokenFromRequest(request: NextRequest): string | null {
   const auth = request.headers.get("authorization");
-  if (!auth?.startsWith(BEARER_PREFIX)) return null;
-  return auth.slice(BEARER_PREFIX.length).trim() || null;
+  if (auth?.startsWith(BEARER_PREFIX)) {
+    const token = auth.slice(BEARER_PREFIX.length).trim();
+    if (token) return token;
+  }
+  const cookie = request.headers.get("cookie");
+  if (cookie) {
+    const match = cookie.match(new RegExp("(?:^|;\\s*)" + AUTH_COOKIE_NAME + "=([^;]*)"));
+    const value = match?.[1];
+    if (value) return decodeURIComponent(value.trim());
+  }
+  return null;
 }
 
 export type AuthResult = { userId: string; tokenPayload: Awaited<ReturnType<typeof verifyToken>> };
@@ -33,9 +43,12 @@ export async function requireAuth(request: NextRequest): Promise<AuthResult | Ne
   return { userId: payload.sub, tokenPayload: payload };
 }
 
-/**
- * فقط ادمین — در غیر این صورت 403 برمی‌گرداند.
- */
+/** آیا نقش جزو ادمین (یا ادمین کل) است */
+export function isAdminRole(role: string | null | undefined): boolean {
+  return role === "admin" || role === "super_admin";
+}
+
+/** فقط ادمین یا ادمین کل — در غیر این صورت 403 برمی‌گرداند. */
 export async function requireAdmin(request: NextRequest): Promise<{ userId: string } | NextResponse> {
   const auth = await requireAuth(request);
   if (auth instanceof NextResponse) return auth;
@@ -43,9 +56,26 @@ export async function requireAdmin(request: NextRequest): Promise<{ userId: stri
     where: { id: auth.userId },
     select: { role: true },
   });
-  if (!user || user.role !== "admin") {
+  if (!user || !isAdminRole(user.role)) {
     return NextResponse.json(
       { success: false, errors: ["دسترسی غیرمجاز. فقط ادمین."] },
+      { status: 403 }
+    );
+  }
+  return { userId: auth.userId };
+}
+
+/** فقط ادمین کل — برای عملیات‌هایی مثل ادمین اضافه کردن. */
+export async function requireSuperAdmin(request: NextRequest): Promise<{ userId: string } | NextResponse> {
+  const auth = await requireAuth(request);
+  if (auth instanceof NextResponse) return auth;
+  const user = await prisma.user.findUnique({
+    where: { id: auth.userId },
+    select: { role: true },
+  });
+  if (!user || user.role !== "super_admin") {
+    return NextResponse.json(
+      { success: false, errors: ["دسترسی غیرمجاز. فقط ادمین کل می‌تواند این کار را انجام دهد."] },
       { status: 403 }
     );
   }

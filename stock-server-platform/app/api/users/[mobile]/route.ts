@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAuth, requireAdmin, normalizeMobile } from "@/lib/auth";
+import { requireAuth, requireAdmin, normalizeMobile, isAdminRole } from "@/lib/auth";
 
 const userSelect = {
   id: true,
@@ -27,7 +27,7 @@ async function getAuthAndTarget(request: NextRequest, mobileParam: string) {
   const isAdmin = await prisma.user.findUnique({
     where: { id: auth.userId },
     select: { role: true },
-  }).then((u) => u?.role === "admin");
+  }).then((u) => isAdminRole(u?.role));
   const isSelf = target.id === auth.userId;
   if (!isAdmin && !isSelf) {
     return NextResponse.json(
