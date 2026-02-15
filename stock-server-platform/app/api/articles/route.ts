@@ -6,17 +6,33 @@ import { notifyUsersNewArticle } from "@/lib/email";
 
 /**
  * GET /api/articles
- * - همه مقالات، از جدیدترین به قدیمی‌ترین (بر اساس تاریخ)
- * - Query: search=... جستجو در عنوان (اختیاری)
+ * - همه مقالات، از جدیدترین به قدیمی‌ترین
+ * - Query: search=... جستجو در عنوان، category=... فیلتر دسته، letter=... حرف اول عنوان
  */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search")?.trim() || undefined;
+    const category = searchParams.get("category")?.trim() || undefined;
+    const letter = searchParams.get("letter")?.trim() || undefined;
 
-    const where = search
-      ? { title: { contains: search, mode: "insensitive" as const } }
-      : undefined;
+    const andParts: Record<string, unknown>[] = [];
+    if (search) andParts.push({ title: { contains: search, mode: "insensitive" as const } });
+    if (category) andParts.push({ category });
+    if (letter) {
+      const char = letter.slice(0, 1);
+      if (char === "ا" || char === "آ") {
+        andParts.push({
+          OR: [
+            { title: { startsWith: "ا", mode: "insensitive" as const } },
+            { title: { startsWith: "آ", mode: "insensitive" as const } },
+          ],
+        });
+      } else {
+        andParts.push({ title: { startsWith: char, mode: "insensitive" as const } });
+      }
+    }
+    const where = andParts.length > 0 ? { AND: andParts } : undefined;
 
     const articles = await prisma.article.findMany({
       where,

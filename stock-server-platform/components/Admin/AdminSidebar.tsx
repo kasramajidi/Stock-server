@@ -13,6 +13,7 @@ import {
   LogOut,
   Shield,
   PackagePlus,
+  Newspaper,
 } from "lucide-react";
 
 const items: { path: string; label: string; icon: React.ElementType }[] = [
@@ -20,6 +21,7 @@ const items: { path: string; label: string; icon: React.ElementType }[] = [
   { path: "/admin/users", label: "کاربران", icon: Users },
   { path: "/admin/cart-requests", label: "درخواست‌های سبد", icon: ShoppingCart },
   { path: "/admin/contact", label: "تماس‌ها", icon: MessageSquare },
+  { path: "/admin/articles", label: "مقالات", icon: Newspaper },
   { path: "/admin/comments", label: "کامنت مقالات", icon: FileText },
   { path: "/admin/product-comments", label: "کامنت محصولات", icon: Package },
   { path: "/admin/products", label: "محصولات", icon: PackagePlus },
