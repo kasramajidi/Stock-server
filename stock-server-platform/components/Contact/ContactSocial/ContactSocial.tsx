@@ -11,11 +11,11 @@ const socials = [
 
 export default function ContactSocial() {
   return (
-    <div className="flex flex-col items-center sm:items-start text-center sm:text-start">
+    <div className="flex flex-col items-center text-center">
       <p className="text-sm text-gray-600 mb-4">
         ما را در شبکه‌های اجتماعی دنبال کنید
       </p>
-      <div className="flex flex-wrap justify-center sm:justify-start gap-3">
+      <div className="flex flex-wrap justify-center gap-3">
         {socials.map(({ href, icon: Icon, label }) => (
           <Link
             key={label}

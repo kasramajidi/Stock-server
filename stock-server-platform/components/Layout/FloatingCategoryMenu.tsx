@@ -3,8 +3,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { BiCategoryAlt } from "react-icons/bi";
 import { useFloatingMenu } from "@/components/Layout/FloatingMenuContext";
+
+const HIDDEN_PATHS = ["/auth", "/contact", "/dashboard"];
 
 interface MenuItem {
   href: string;
@@ -23,7 +26,12 @@ const menuItems: MenuItem[] = [
 ];
 
 export default function FloatingCategoryMenu() {
+  const pathname = usePathname();
   const { isOpen, toggle } = useFloatingMenu();
+
+  const shouldHide =
+    HIDDEN_PATHS.some((path) => pathname?.startsWith(path)) ?? false;
+  if (shouldHide) return null;
 
   return (
     <div className="hidden md:flex fixed -right-1 top-[50px] z-50 w-14 flex-col items-center">
