@@ -306,7 +306,7 @@ export default function AdminOverviewPage() {
                         borderRadius: "8px",
                       }}
                       labelStyle={{ color: "inherit" }}
-                      formatter={(value: number) => [value, "تعداد آیتم"]}
+                      formatter={(value: number | undefined) => [value ?? 0, "تعداد آیتم"]}
                       labelFormatter={(label) => `ماه: ${label}`}
                     />
                     <Bar dataKey="value" name="آیتم" radius={[4, 4, 0, 0]} fill="#10b981">
@@ -349,7 +349,7 @@ export default function AdminOverviewPage() {
                         border: "1px solid rgb(148 163 184)",
                         borderRadius: "8px",
                       }}
-                      formatter={(value: number) => [value, "کاربر جدید"]}
+                      formatter={(value: number | undefined) => [value ?? 0, "کاربر جدید"]}
                       labelFormatter={(label) => `ماه: ${label}`}
                     />
                     <Bar dataKey="count" name="کاربر" radius={[4, 4, 0, 0]} fill="#06b6d4">
