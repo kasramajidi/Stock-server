@@ -120,7 +120,7 @@ export default function AdminEditArticlePage() {
           <p className="text-red-400 mb-4">{error}</p>
           <Link
             href="/admin/articles"
-            className="rounded-lg bg-slate-600 px-4 py-2 text-sm text-slate-300 hover:bg-slate-500"
+            className="rounded-lg bg-slate-400 dark:bg-slate-600 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-500"
           >
             بازگشت به لیست مقالات
           </Link>
@@ -137,8 +137,8 @@ export default function AdminEditArticlePage() {
             <Pencil className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-100">ویرایش مقاله</h1>
-            <p className="text-slate-400 text-sm mt-0.5">{form.title || "در حال بارگذاری..."}</p>
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">ویرایش مقاله</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">{form.title || "در حال بارگذاری..."}</p>
           </div>
         </div>
 
@@ -150,7 +150,7 @@ export default function AdminEditArticlePage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">عنوان مقاله *</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">عنوان مقاله *</label>
             <input
               type="text"
               name="title"
@@ -158,13 +158,13 @@ export default function AdminEditArticlePage() {
               onChange={handleChange}
               required
               maxLength={300}
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="عنوان مقاله"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">دسته‌بندی *</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">دسته‌بندی *</label>
             <input
               type="text"
               name="category"
@@ -172,13 +172,13 @@ export default function AdminEditArticlePage() {
               onChange={handleChange}
               required
               maxLength={100}
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="مثلاً اخبار، آموزش"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">متن معرفی (خلاصه) *</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">متن معرفی (خلاصه) *</label>
             <textarea
               name="excerpt"
               value={form.excerpt}
@@ -186,13 +186,13 @@ export default function AdminEditArticlePage() {
               required
               maxLength={1000}
               rows={3}
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="یک یا دو پاراگراف برای معرفی مقاله"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">محتوا *</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">محتوا *</label>
             <RichTextEditor
               value={form.content}
               onChange={(html) => setForm((prev) => ({ ...prev, content: html }))}
@@ -202,25 +202,25 @@ export default function AdminEditArticlePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">برچسب‌ها (اختیاری)</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">برچسب‌ها (اختیاری)</label>
             <input
               type="text"
               name="tagsInput"
               value={form.tagsInput}
               onChange={handleChange}
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="با کاما جدا کنید"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">آدرس تصویر (اختیاری)</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">آدرس تصویر (اختیاری)</label>
             <input
               type="text"
               name="image"
               value={form.image}
               onChange={handleChange}
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="https://..."
             />
           </div>
@@ -235,7 +235,7 @@ export default function AdminEditArticlePage() {
             </button>
             <Link
               href="/admin/articles"
-              className="rounded-lg bg-slate-600 px-5 py-2.5 text-sm text-slate-300 hover:bg-slate-500 transition-colors"
+              className="rounded-lg bg-slate-400 dark:bg-slate-600 px-5 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-500 transition-colors"
             >
               انصراف
             </Link>

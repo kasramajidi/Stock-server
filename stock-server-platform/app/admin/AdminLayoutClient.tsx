@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { adminFetch, type MeResponse } from "@/lib/admin-api";
+import { AdminThemeProvider } from "@/components/Admin/AdminThemeContext";
 import AdminSidebar from "@/components/Admin/AdminSidebar";
 import AdminLoginForm from "@/components/Admin/AdminLoginForm";
 
@@ -48,26 +49,34 @@ export default function AdminLayoutClient({
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div
-            className="w-12 h-12 rounded-full border-2 border-cyan-500/30 border-t-cyan-400 animate-spin"
-            aria-hidden
-          />
-          <p className="text-sm text-slate-400">در حال بررسی دسترسی...</p>
+      <AdminThemeProvider>
+        <div className="min-h-screen bg-slate-100 dark:bg-slate-950 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div
+              className="w-12 h-12 rounded-full border-2 border-cyan-500/30 border-t-cyan-400 animate-spin"
+              aria-hidden
+            />
+            <p className="text-sm text-slate-500 dark:text-slate-400">در حال بررسی دسترسی...</p>
+          </div>
         </div>
-      </div>
+      </AdminThemeProvider>
     );
   }
 
   if (status === "forbidden") {
-    return <AdminLoginForm onSuccess={handleLoginSuccess} />;
+    return (
+      <AdminThemeProvider>
+        <AdminLoginForm onSuccess={handleLoginSuccess} />
+      </AdminThemeProvider>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex">
-      <AdminSidebar />
-      <div className="flex-1 min-w-0">{children}</div>
-    </div>
+    <AdminThemeProvider>
+      <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex">
+        <AdminSidebar />
+        <div className="flex-1 min-w-0">{children}</div>
+      </div>
+    </AdminThemeProvider>
   );
 }

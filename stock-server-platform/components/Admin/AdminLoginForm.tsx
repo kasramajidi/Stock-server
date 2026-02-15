@@ -59,30 +59,30 @@ export default function AdminLoginForm({ onSuccess }: AdminLoginFormProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 flex items-center justify-center p-4">
       <div
-        className="w-full max-w-sm rounded-2xl border border-slate-700 bg-slate-900/80 p-6 shadow-xl"
+        className="w-full max-w-sm rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900/80 p-6 shadow-xl"
         style={{ animation: "adminCardIn 0.4s ease-out" }}
       >
         <div className="flex flex-col items-center gap-4 mb-6">
-          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-cyan-500/20 text-cyan-400">
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-cyan-500/20 text-cyan-600 dark:text-cyan-400">
             <Shield className="h-8 w-8" />
           </div>
           <div className="text-center">
-            <h1 className="text-xl font-bold text-slate-100">ورود به پنل ادمین</h1>
-            <p className="text-sm text-slate-400 mt-1">شماره موبایل و رمز عبور ادمین را وارد کنید.</p>
+            <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100">ورود به پنل ادمین</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">شماره موبایل و رمز عبور ادمین را وارد کنید.</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           {error && (
-            <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 text-right">
+            <p className="text-sm text-red-600 dark:text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2 text-right">
               {error}
             </p>
           )}
 
           <div>
-            <label htmlFor="admin-login-phone" className="block text-sm font-medium text-slate-400 mb-1.5">
+            <label htmlFor="admin-login-phone" className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1.5">
               شماره موبایل
             </label>
             <input
@@ -91,12 +91,12 @@ export default function AdminLoginForm({ onSuccess }: AdminLoginFormProps) {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="۰۹۱۲۳۴۵۶۷۸۹"
-              className="w-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
             />
           </div>
 
           <div>
-            <label htmlFor="admin-login-pass" className="block text-sm font-medium text-slate-400 mb-1.5">
+            <label htmlFor="admin-login-pass" className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1.5">
               رمز عبور
             </label>
             <input
@@ -105,7 +105,7 @@ export default function AdminLoginForm({ onSuccess }: AdminLoginFormProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="رمز عبور"
-              className="w-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
             />
           </div>
 
@@ -119,7 +119,7 @@ export default function AdminLoginForm({ onSuccess }: AdminLoginFormProps) {
         </form>
 
         <p className="text-center mt-4">
-          <a href="/" className="text-sm text-slate-500 hover:text-slate-400 transition-colors">
+          <a href="/" className="text-sm text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
             بازگشت به سایت
           </a>
         </p>

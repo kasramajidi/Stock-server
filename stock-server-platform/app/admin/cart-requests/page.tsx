@@ -88,7 +88,7 @@ export default function AdminCartRequestsPage() {
     pending: "bg-amber-500/20 text-amber-400",
     in_progress: "bg-cyan-500/20 text-cyan-400",
     completed: "bg-emerald-500/20 text-emerald-400",
-    cancelled: "bg-slate-600/50 text-slate-400",
+    cancelled: "bg-slate-400/50 dark:bg-slate-600/50 text-slate-600 dark:text-slate-400",
   };
 
   return (
@@ -96,14 +96,14 @@ export default function AdminCartRequestsPage() {
       <div className="max-w-5xl mx-auto" style={{ animation: "adminFadeIn 0.4s ease-out" }}>
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-100">درخواست‌های سبد خرید</h1>
-            <p className="text-slate-400 text-sm mt-1">مدیریت وضعیت و یادداشت ادمین</p>
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">درخواست‌های سبد خرید</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">مدیریت وضعیت و یادداشت ادمین</p>
           </div>
           <button
             type="button"
             onClick={load}
             disabled={loading}
-            className="flex items-center gap-2 rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-600 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-slate-300 dark:bg-slate-700 px-4 py-2 text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-400 dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
             بروزرسانی
@@ -119,7 +119,7 @@ export default function AdminCartRequestsPage() {
         {loading && list.length === 0 ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-24 rounded-xl bg-slate-800/50 border border-slate-700 animate-pulse" />
+              <div key={i} className="h-24 rounded-xl bg-slate-200 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700 animate-pulse" />
             ))}
           </div>
         ) : (
@@ -127,14 +127,14 @@ export default function AdminCartRequestsPage() {
             {list.map((req, i) => (
               <div
                 key={req.id}
-                className="rounded-xl border border-slate-700 bg-slate-800/30 overflow-hidden transition-all duration-200"
+                className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200/80 dark:bg-slate-800/30 overflow-hidden transition-all duration-200"
                 style={{
                   animation: "adminCardIn 0.35s ease-out backwards",
                   animationDelay: `${i * 40}ms`,
                 }}
               >
                 <div
-                  className="flex flex-wrap items-center justify-between gap-3 p-4 cursor-pointer hover:bg-slate-700/20"
+                  className="flex flex-wrap items-center justify-between gap-3 p-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/20"
                   onClick={() => setExpandedId(expandedId === req.id ? null : req.id)}
                 >
                   <div className="flex items-center gap-3">
@@ -142,7 +142,7 @@ export default function AdminCartRequestsPage() {
                       <ShoppingCart className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="font-medium text-slate-100">
+                      <p className="font-medium text-slate-800 dark:text-slate-100">
                         {req.user?.fullName ?? "—"} · {req.user?.mobile ?? "—"}
                       </p>
                       <p className="text-xs text-slate-500 mt-0.5">
@@ -152,7 +152,7 @@ export default function AdminCartRequestsPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusColors[req.status] ?? "bg-slate-600/50 text-slate-400"}`}
+                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusColors[req.status] ?? "bg-slate-400/50 dark:bg-slate-600/50 text-slate-600 dark:text-slate-400"}`}
                     >
                       {statusLabels[req.status] ?? req.status}
                     </span>
@@ -161,7 +161,7 @@ export default function AdminCartRequestsPage() {
                       onClick={(e) => e.stopPropagation()}
                       onChange={(e) => updateStatus(req.id, e.target.value)}
                       disabled={!!actionLoading}
-                      className="rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-1.5 text-sm text-slate-200 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                      className="rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-1.5 text-sm text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                     >
                       {Object.entries(statusLabels).map(([val, label]) => (
                         <option key={val} value={val}>
@@ -170,16 +170,16 @@ export default function AdminCartRequestsPage() {
                       ))}
                     </select>
                     {expandedId === req.id ? (
-                      <ChevronUp className="h-4 w-4 text-slate-400" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4 text-slate-400" />
+<ChevronUp className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4 text-slate-500 dark:text-slate-400" />
                     )}
                   </div>
                 </div>
                 {expandedId === req.id && (
-                  <div className="border-t border-slate-700 bg-slate-800/50 p-4 space-y-4">
+                  <div className="border-t border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/50 p-4 space-y-4">
                     {req.note && (
-                      <p className="text-sm text-slate-400">
+                      <p className="text-sm text-slate-500 dark:text-slate-400">
                         <span className="font-medium text-slate-500">یادداشت کاربر:</span> {req.note}
                       </p>
                     )}
@@ -190,7 +190,7 @@ export default function AdminCartRequestsPage() {
                           <textarea
                             value={editNote.adminNote}
                             onChange={(e) => setEditNote({ ...editNote, adminNote: e.target.value })}
-                            className="flex-1 rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-sm text-slate-200 min-h-[80px] focus:border-cyan-500 focus:outline-none"
+                            className="flex-1 rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-sm text-slate-800 dark:text-slate-200 min-h-[80px] focus:border-cyan-500 focus:outline-none"
                             placeholder="یادداشت داخلی..."
                           />
                           <button
@@ -204,13 +204,13 @@ export default function AdminCartRequestsPage() {
                           <button
                             type="button"
                             onClick={() => setEditNote(null)}
-                            className="rounded-lg bg-slate-600 px-4 py-2 text-sm text-slate-400 hover:bg-slate-500"
+                            className="rounded-lg bg-slate-400 dark:bg-slate-600 px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-500"
                           >
                             انصراف
                           </button>
                         </div>
                       ) : (
-                        <p className="text-sm text-slate-400">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
                           {req.adminNote || "—"}
                           <button
                             type="button"
@@ -238,7 +238,7 @@ export default function AdminCartRequestsPage() {
               </div>
             ))}
             {list.length === 0 && !loading && (
-              <div className="rounded-xl border border-slate-700 bg-slate-800/30 p-12 text-center text-slate-500">
+              <div className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200/80 dark:bg-slate-800/30 p-12 text-center text-slate-500 dark:text-slate-400">
                 درخواستی یافت نشد.
               </div>
             )}

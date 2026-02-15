@@ -51,7 +51,7 @@ export function RichTextEditor({
         dir: "rtl",
         "data-placeholder": placeholder,
         class:
-          "prose prose-invert max-w-none min-h-[120px] px-3 py-2 focus:outline-none text-slate-200",
+          "prose dark:prose-invert max-w-none min-h-[120px] px-3 py-2 focus:outline-none text-slate-800 dark:text-slate-200",
       },
     },
   });
@@ -117,7 +117,7 @@ export function RichTextEditor({
       className={`flex h-8 w-8 items-center justify-center rounded border transition-colors ${
         active
           ? "border-cyan-500/50 bg-cyan-500/20 text-cyan-400"
-          : "border-slate-600 bg-slate-700/50 text-slate-400 hover:bg-slate-600 hover:text-slate-200"
+          : "border-slate-400 dark:border-slate-600 bg-slate-200/80 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-slate-200"
       }`}
     >
       {children}
@@ -126,10 +126,10 @@ export function RichTextEditor({
 
   return (
     <div
-      className="rounded-lg border border-slate-600 bg-slate-700/50 overflow-hidden focus-within:border-cyan-500 focus-within:ring-1 focus-within:ring-cyan-500/50"
+      className="rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 overflow-hidden focus-within:border-cyan-500 focus-within:ring-1 focus-within:ring-cyan-500/50"
       dir="rtl"
     >
-      <div className="flex flex-wrap items-center gap-1 border-b border-slate-600 bg-slate-800/50 p-2">
+      <div className="flex flex-wrap items-center gap-1 border-b border-slate-300 dark:border-slate-600 bg-slate-200 dark:bg-slate-800/50 p-2">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           active={editor.isActive("bold")}
@@ -151,7 +151,7 @@ export function RichTextEditor({
         >
           <Strikethrough className="h-4 w-4" />
         </ToolbarButton>
-        <span className="w-px h-6 bg-slate-600 mx-0.5" />
+        <span className="w-px h-6 bg-slate-400 dark:bg-slate-600 mx-0.5" />
         <ToolbarButton onClick={setLink} active={editor.isActive("link")} title="لینک">
           <LinkIcon className="h-4 w-4" />
         </ToolbarButton>
@@ -161,7 +161,7 @@ export function RichTextEditor({
         <ToolbarButton onClick={insertTable} title="جدول">
           <Table className="h-4 w-4" />
         </ToolbarButton>
-        <span className="w-px h-6 bg-slate-600 mx-0.5" />
+        <span className="w-px h-6 bg-slate-400 dark:bg-slate-600 mx-0.5" />
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           active={editor.isActive("heading", { level: 2 })}

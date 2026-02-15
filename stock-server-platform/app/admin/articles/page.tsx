@@ -107,15 +107,15 @@ export default function AdminArticlesPage() {
       <div className="max-w-5xl mx-auto" style={{ animation: "adminFadeIn 0.4s ease-out" }}>
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-100">مقالات</h1>
-            <p className="text-slate-400 text-sm mt-1">مدیریت و افزودن مقالات بلاگ</p>
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">مقالات</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">مدیریت و افزودن مقالات بلاگ</p>
           </div>
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={load}
               disabled={loading}
-              className="flex items-center gap-2 rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-600 transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-slate-300 dark:bg-slate-700 px-4 py-2 text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-400 dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
               بروزرسانی
@@ -130,8 +130,8 @@ export default function AdminArticlesPage() {
           </div>
         </div>
 
-        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-slate-700 bg-slate-800/30 p-4">
-          <div className="flex flex-1 min-w-[200px] items-center gap-2 rounded-lg border border-slate-600 bg-slate-800/50 px-3 py-2 focus-within:ring-2 focus-within:ring-cyan-500/50">
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200/80 dark:bg-slate-800/30 p-4">
+          <div className="flex flex-1 min-w-[200px] items-center gap-2 rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-800/50 px-3 py-2 focus-within:ring-2 focus-within:ring-cyan-500/50">
             <Search className="h-4 w-4 shrink-0 text-slate-500" />
             <input
               type="text"
@@ -139,13 +139,13 @@ export default function AdminArticlesPage() {
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), applyFilters())}
               placeholder="جستجو در عنوان..."
-              className="w-full bg-transparent text-sm text-slate-200 placeholder:text-slate-500 outline-none"
+              className="w-full bg-transparent text-sm text-slate-800 dark:text-slate-200 placeholder:text-slate-500 outline-none"
             />
           </div>
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="min-w-[160px] rounded-lg border border-slate-600 bg-slate-800/50 px-3 py-2 text-sm text-slate-200 focus:ring-2 focus:ring-cyan-500/50"
+            className="min-w-[160px] rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-800/50 px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-cyan-500/50"
           >
             <option value="">همهٔ دسته‌ها</option>
             {categories.map((c) => (
@@ -167,7 +167,7 @@ export default function AdminArticlesPage() {
             <button
               type="button"
               onClick={clearFilters}
-              className="text-sm text-slate-500 hover:text-slate-300"
+              className="text-sm text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
             >
               پاک کردن فیلتر
             </button>
@@ -185,7 +185,7 @@ export default function AdminArticlesPage() {
             className={`rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors ${
               !appliedLetter
                 ? "bg-cyan-500/30 text-cyan-400 border border-cyan-500/50"
-                : "bg-slate-700/50 text-slate-400 border border-slate-600 hover:bg-slate-600 hover:text-slate-200"
+                : "bg-slate-300/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 border border-slate-400 dark:border-slate-600 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-slate-200"
             }`}
           >
             همه
@@ -201,7 +201,7 @@ export default function AdminArticlesPage() {
               className={`rounded-lg px-2 py-1 text-sm font-medium transition-colors min-w-8 ${
                 appliedLetter === char
                   ? "bg-cyan-500/30 text-cyan-400 border border-cyan-500/50"
-                  : "bg-slate-700/50 text-slate-400 border border-slate-600 hover:bg-slate-600 hover:text-slate-200"
+                  : "bg-slate-300/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 border border-slate-400 dark:border-slate-600 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-800 dark:hover:text-slate-200"
               }`}
             >
               {char}
@@ -216,21 +216,21 @@ export default function AdminArticlesPage() {
         )}
 
         {loading && articles.length === 0 ? (
-          <div className="rounded-xl border border-slate-700 bg-slate-800/30 overflow-hidden">
-            <div className="h-12 border-b border-slate-700 bg-slate-800/50" />
+          <div className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200/80 dark:bg-slate-800/30 overflow-hidden">
+            <div className="h-12 border-b border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800/50" />
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-16 border-b border-slate-700/50 animate-pulse bg-slate-800/20" />
+              <div key={i} className="h-16 border-b border-slate-300/50 dark:border-slate-700/50 animate-pulse bg-slate-100 dark:bg-slate-800/20" />
             ))}
           </div>
         ) : (
           <div
-            className="rounded-xl border border-slate-700 bg-slate-800/30 overflow-hidden"
+            className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200/80 dark:bg-slate-800/30 overflow-hidden"
             style={{ animation: "adminCardIn 0.35s ease-out" }}
           >
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-700 bg-slate-800/50 text-slate-400 text-right">
+                  <tr className="border-b border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-right">
                     <th className="p-3 font-medium">عنوان</th>
                     <th className="p-3 font-medium">دسته</th>
                     <th className="p-3 font-medium">بازدید</th>
@@ -242,21 +242,21 @@ export default function AdminArticlesPage() {
                   {articles.map((a) => (
                     <tr
                       key={a.id}
-                      className="border-b border-slate-700/50 text-slate-200 hover:bg-slate-700/20 transition-colors"
+                      className="border-b border-slate-300/50 dark:border-slate-700/50 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/20 transition-colors"
                     >
-                      <td className="p-3 font-medium max-w-[200px] truncate" title={a.title}>
+                      <td className="p-3 font-medium max-w-[200px] truncate text-slate-800 dark:text-slate-100" title={a.title}>
                         {a.title}
                       </td>
-                      <td className="p-3 text-slate-400">{a.category}</td>
-                      <td className="p-3 text-slate-400">{a.viewCount}</td>
-                      <td className="p-3 text-slate-400">{formatDate(a.publishedAt)}</td>
+                      <td className="p-3 text-slate-500 dark:text-slate-400">{a.category}</td>
+                      <td className="p-3 text-slate-500 dark:text-slate-400">{a.viewCount}</td>
+                      <td className="p-3 text-slate-500 dark:text-slate-400">{formatDate(a.publishedAt)}</td>
                       <td className="p-3">
                         <div className="flex items-center gap-2 flex-wrap">
                           <Link
                             href={`/article/${a.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center gap-1 min-w-16 rounded-lg border border-slate-600 bg-slate-700/50 px-2.5 py-1.5 text-xs font-medium text-slate-300 hover:bg-slate-600 hover:text-slate-100 transition-colors"
+                            className="inline-flex items-center justify-center gap-1 min-w-16 rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-300/50 dark:bg-slate-700/50 px-2.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-400 dark:hover:bg-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
                           >
                             مشاهده
                           </Link>

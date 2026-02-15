@@ -91,14 +91,14 @@ export default function AdminUsersPage() {
       <div className="max-w-5xl mx-auto" style={{ animation: "adminFadeIn 0.4s ease-out" }}>
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-100">کاربران</h1>
-            <p className="text-slate-400 text-sm mt-1">مدیریت نقش و وضعیت کاربران</p>
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">کاربران</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">مدیریت نقش و وضعیت کاربران</p>
           </div>
           <button
             type="button"
             onClick={load}
             disabled={loading}
-            className="flex items-center gap-2 rounded-lg bg-slate-700 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-600 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-slate-300 dark:bg-slate-700 px-4 py-2 text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-400 dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
             بروزرسانی
@@ -112,21 +112,21 @@ export default function AdminUsersPage() {
         )}
 
         {loading && list.length === 0 ? (
-          <div className="rounded-xl border border-slate-700 bg-slate-800/30 overflow-hidden">
-            <div className="h-12 border-b border-slate-700 bg-slate-800/50" />
+          <div className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200/80 dark:bg-slate-800/30 overflow-hidden">
+            <div className="h-12 border-b border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800/50" />
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-14 border-b border-slate-700/50 animate-pulse bg-slate-800/20" />
+              <div key={i} className="h-14 border-b border-slate-300/50 dark:border-slate-700/50 animate-pulse bg-slate-100 dark:bg-slate-800/20" />
             ))}
           </div>
         ) : (
           <div
-            className="rounded-xl border border-slate-700 bg-slate-800/30 overflow-hidden"
+            className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200/80 dark:bg-slate-800/30 overflow-hidden"
             style={{ animation: "adminCardIn 0.35s ease-out" }}
           >
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-700 bg-slate-800/50 text-slate-400 text-right">
+                  <tr className="border-b border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-right">
                     <th className="p-3 font-medium">نام</th>
                     <th className="p-3 font-medium">موبایل</th>
                     <th className="p-3 font-medium">ایمیل</th>
@@ -139,15 +139,15 @@ export default function AdminUsersPage() {
                   {list.map((user, i) => (
                     <tr
                       key={user.id}
-                      className="border-b border-slate-700/50 text-slate-200 hover:bg-slate-700/20 transition-colors"
+                      className="border-b border-slate-300/50 dark:border-slate-700/50 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/20 transition-colors"
                       style={{
                         animation: "adminFadeIn 0.3s ease-out backwards",
                         animationDelay: `${i * 30}ms`,
                       }}
                     >
-                      <td className="p-3 font-medium">{user.fullName}</td>
-                      <td className="p-3 text-slate-400">{user.mobile}</td>
-                      <td className="p-3 text-slate-400">{user.email}</td>
+                      <td className="p-3 font-medium text-slate-800 dark:text-slate-100">{user.fullName}</td>
+                      <td className="p-3 text-slate-500 dark:text-slate-400">{user.mobile}</td>
+                      <td className="p-3 text-slate-500 dark:text-slate-400">{user.email}</td>
                       <td className="p-3">
                         <span
                           className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
@@ -155,7 +155,7 @@ export default function AdminUsersPage() {
                               ? "bg-violet-500/20 text-violet-400"
                               : user.role === "admin"
                                 ? "bg-cyan-500/20 text-cyan-400"
-                                : "bg-slate-600/50 text-slate-400"
+                                : "bg-slate-400/50 dark:bg-slate-600/50 text-slate-600 dark:text-slate-400"
                           }`}
                         >
                           {user.role === "super_admin" || user.role === "admin" ? (
@@ -203,7 +203,7 @@ export default function AdminUsersPage() {
                                     type="button"
                                     onClick={() => setRole(user.mobile, "user")}
                                     disabled={!!actionLoading}
-                                    className="rounded-lg bg-slate-600/50 px-2.5 py-1 text-xs text-slate-400 hover:bg-slate-600 transition-colors disabled:opacity-50"
+                                    className="rounded-lg bg-slate-400/50 dark:bg-slate-600/50 px-2.5 py-1 text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-500 dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
                                   >
                                     {actionLoading === user.mobile ? "..." : "کاربر"}
                                   </button>
@@ -252,7 +252,7 @@ export default function AdminUsersPage() {
                             type="button"
                             onClick={() => deleteUser(user.mobile, user.fullName)}
                             disabled={!!actionLoading}
-                            className="rounded-lg bg-slate-600/50 px-2.5 py-1 text-xs text-slate-300 hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 inline-flex items-center gap-1"
+                            className="rounded-lg bg-slate-400/50 dark:bg-slate-600/50 px-2.5 py-1 text-xs text-slate-600 dark:text-slate-300 hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 inline-flex items-center gap-1"
                             title="حذف کاربر"
                           >
                             <Trash2 className="h-3 w-3" />

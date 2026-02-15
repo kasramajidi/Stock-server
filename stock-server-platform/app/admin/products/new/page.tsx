@@ -85,12 +85,12 @@ export default function AdminNewProductPage() {
             <PackagePlus className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-100">محصول درست کردن</h1>
-            <p className="text-slate-400 text-sm mt-0.5">افزودن محصول جدید به فروشگاه</p>
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">محصول درست کردن</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">افزودن محصول جدید به فروشگاه</p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="rounded-xl border border-slate-700 bg-slate-800/30 p-6 sm:p-8 space-y-4">
+        <form onSubmit={handleSubmit} className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200/80 dark:bg-slate-800/30 p-6 sm:p-8 space-y-4">
           {error && (
             <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2">
               {error}
@@ -98,45 +98,45 @@ export default function AdminNewProductPage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">عنوان محصول *</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">عنوان محصول *</label>
             <input
               type="text"
               name="title"
               value={form.title}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="عنوان محصول"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">slug (اختیاری — در صورت خالی بودن از عنوان ساخته می‌شود)</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">slug (اختیاری — در صورت خالی بودن از عنوان ساخته می‌شود)</label>
             <input
               type="text"
               name="slug"
               value={form.slug}
               onChange={handleChange}
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="نامک-url"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">معرفی کوتاه *</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">معرفی کوتاه *</label>
             <textarea
               name="shortDescription"
               value={form.shortDescription}
               onChange={handleChange}
               required
               rows={2}
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="یک خط معرفی"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">محتوا / توضیحات *</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">محتوا / توضیحات *</label>
             <RichTextEditor
               value={form.content}
               onChange={(html) => setForm((prev) => ({ ...prev, content: html }))}
@@ -147,65 +147,65 @@ export default function AdminNewProductPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-1.5">دسته‌بندی *</label>
+              <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">دسته‌بندی *</label>
               <input
                 type="text"
                 name="category"
                 value={form.category}
                 onChange={handleChange}
                 required
-                className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
                 placeholder="مثلاً سرور"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-1.5">برند *</label>
+              <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">برند *</label>
               <input
                 type="text"
                 name="brand"
                 value={form.brand}
                 onChange={handleChange}
                 required
-                className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
                 placeholder="نام برند"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">متن قیمت *</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">متن قیمت *</label>
             <input
               type="text"
               name="priceLabel"
               value={form.priceLabel}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="مثلاً برای استعلام موجودی تماس بگیرید"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">وضعیت ارسال *</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">وضعیت ارسال *</label>
             <input
               type="text"
               name="statusLabel"
               value={form.statusLabel}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="مثلاً آماده ارسال"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">آدرس تصویر (اختیاری)</label>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">آدرس تصویر (اختیاری)</label>
             <input
               type="text"
               name="image"
               value={form.image}
               onChange={handleChange}
-              className="w-full rounded-lg border border-slate-600 bg-slate-700/50 px-3 py-2 text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="https://..."
             />
           </div>
@@ -216,9 +216,9 @@ export default function AdminNewProductPage() {
               name="inStock"
               checked={form.inStock}
               onChange={handleChange}
-              className="rounded border-slate-600 bg-slate-700 text-cyan-500 focus:ring-cyan-500"
+              className="rounded border-slate-400 dark:border-slate-600 bg-slate-300 dark:bg-slate-700 text-cyan-500 focus:ring-cyan-500"
             />
-            <span className="text-sm text-slate-400">موجود در انبار</span>
+            <span className="text-sm text-slate-500 dark:text-slate-400">موجود در انبار</span>
           </label>
 
           <div className="flex gap-3 pt-2">
@@ -232,7 +232,7 @@ export default function AdminNewProductPage() {
             <button
               type="button"
               onClick={() => router.push("/admin/products")}
-              className="rounded-lg bg-slate-600 px-5 py-2.5 text-sm text-slate-300 hover:bg-slate-500"
+              className="rounded-lg bg-slate-400 dark:bg-slate-600 px-5 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-500"
             >
               انصراف
             </button>
