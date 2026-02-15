@@ -65,7 +65,11 @@ export default function AdminOverviewPage() {
       adminFetch<{ inquiries?: unknown[] }>("/api/contact"),
       adminFetch<{ comments?: unknown[] }>("/api/comments"),
       adminFetch<{ comments?: unknown[] }>("/api/product-comments"),
-      adminFetch<{ cartItems: DashboardStats["cartItems"]; users: DashboardStats["users"] }>("/api/admin/stats"),
+      adminFetch<{
+          cartItems: DashboardStats["cartItems"];
+          users: DashboardStats["users"];
+          chartData?: DashboardStats["chartData"];
+        }>("/api/admin/stats"),
     ])
       .then(([u, c, co, cm, pc, st]) => {
         setCounts({
