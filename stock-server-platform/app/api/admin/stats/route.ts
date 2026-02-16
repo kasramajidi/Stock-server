@@ -103,33 +103,39 @@ export async function GET(request: NextRequest) {
         : Math.round(((usersThisYear - usersLastYear) / usersLastYear) * 100);
 
     // دادهٔ نمودار: ۱۲ ماه اخیر (از قدیم به جدید)
-    const results = await Promise.all(
-      Array.from({ length: 12 }, (_, i) => {
-        const d = new Date(year, month - 11 + i, 1);
-        const startM = new Date(d.getFullYear(), d.getMonth(), 1);
-        const endM = new Date(d.getFullYear(), d.getMonth() + 1, 1);
-        const label = `${d.getMonth() + 1}/${String(d.getFullYear()).slice(-2)}`;
-        return Promise.all([
-          prisma.cartRequestItem.aggregate({
-            where: {
-              cartRequest: {
-                createdAt: { gte: startM, lt: endM },
+    let cartItemsByMonth: { label: string; value: number }[] = [];
+    let usersByMonth: { label: string; count: number }[] = [];
+    try {
+      const results = await Promise.all(
+        Array.from({ length: 12 }, (_, i) => {
+          const d = new Date(year, month - 11 + i, 1);
+          const startM = new Date(d.getFullYear(), d.getMonth(), 1);
+          const endM = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+          const label = `${d.getMonth() + 1}/${String(d.getFullYear()).slice(-2)}`;
+          return Promise.all([
+            prisma.cartRequestItem.aggregate({
+              where: {
+                cartRequest: {
+                  createdAt: { gte: startM, lt: endM },
+                },
               },
-            },
-            _sum: { quantity: true },
-          }),
-          prisma.user.count({
-            where: { createdAt: { gte: startM, lt: endM } },
-          }),
-        ]).then(([cartAgg, userCount]) => ({
-          label,
-          cartValue: cartAgg._sum.quantity ?? 0,
-          userCount,
-        }));
-      })
-    );
-    const cartItemsByMonth = results.map((r) => ({ label: r.label, value: r.cartValue }));
-    const usersByMonth = results.map((r) => ({ label: r.label, count: r.userCount }));
+              _sum: { quantity: true },
+            }),
+            prisma.user.count({
+              where: { createdAt: { gte: startM, lt: endM } },
+            }),
+          ]).then(([cartAgg, userCount]) => ({
+            label,
+            cartValue: cartAgg._sum.quantity ?? 0,
+            userCount,
+          }));
+        })
+      );
+      cartItemsByMonth = results.map((r) => ({ label: r.label, value: r.cartValue }));
+      usersByMonth = results.map((r) => ({ label: r.label, count: r.userCount }));
+    } catch (chartErr) {
+      console.error("Admin stats chart data error:", chartErr);
+    }
 
     return NextResponse.json({
       success: true,

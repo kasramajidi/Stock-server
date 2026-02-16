@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Users, ShoppingCart, MessageSquare, FileText, Package, ArrowLeft, TrendingUp, TrendingDown } from "lucide-react";
+import { Users, ShoppingCart, MessageSquare, FileText, Package, ArrowLeft, TrendingUp, TrendingDown, ShoppingBag, Newspaper } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -14,6 +14,7 @@ import {
   Cell,
 } from "recharts";
 import { adminFetch } from "@/lib/admin-api";
+import { useAdminTheme } from "@/components/Admin/AdminThemeContext";
 
 interface Counts {
   users: number;
@@ -21,12 +22,8 @@ interface Counts {
   contact: number;
   comments: number;
   productComments: number;
-}
-
-interface ChartPoint {
-  label: string;
-  value?: number;
-  count?: number;
+  products: number;
+  articles: number;
 }
 
 interface DashboardStats {
@@ -53,10 +50,51 @@ interface DashboardStats {
   };
 }
 
+// دادهٔ پیش‌فرض ۱۲ ماه برای نمودار وقتی از API نیامده یا خالی است
+function getChartDataFallback(
+  cartItems: { label: string; value: number }[] | undefined,
+  users: { label: string; count: number }[] | undefined
+) {
+  const emptyCart = Array.from({ length: 12 }, (_, i) => ({
+    label: `${i + 1}`,
+    value: 0,
+  }));
+  const emptyUsers = Array.from({ length: 12 }, (_, i) => ({
+    label: `${i + 1}`,
+    count: 0,
+  }));
+  return {
+    cartItemsByMonth: cartItems?.length ? cartItems : emptyCart,
+    usersByMonth: users?.length ? users : emptyUsers,
+  };
+}
+
+const tooltipStyle = (isDark: boolean) =>
+  isDark
+    ? {
+        backgroundColor: "rgb(30 41 59)",
+        color: "rgb(248 250 252)",
+        border: "1px solid rgb(71 85 105)",
+        borderRadius: "8px",
+      }
+    : {
+        backgroundColor: "rgb(248 250 252)",
+        color: "rgb(30 41 59)",
+        border: "1px solid rgb(203 213 225)",
+        borderRadius: "8px",
+      };
+
 export default function AdminOverviewPage() {
+  const { theme } = useAdminTheme();
+  const isDark = theme === "dark";
   const [counts, setCounts] = useState<Counts | null>(null);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const chartData = getChartDataFallback(
+    stats?.chartData?.cartItemsByMonth,
+    stats?.chartData?.usersByMonth
+  );
 
   useEffect(() => {
     Promise.all([
@@ -65,28 +103,32 @@ export default function AdminOverviewPage() {
       adminFetch<{ inquiries?: unknown[] }>("/api/contact"),
       adminFetch<{ comments?: unknown[] }>("/api/comments"),
       adminFetch<{ comments?: unknown[] }>("/api/product-comments"),
+      adminFetch<{ total?: number }>("/api/products?limit=1"),
+      adminFetch<{ articles?: unknown[] }>("/api/articles"),
       adminFetch<{
           cartItems: DashboardStats["cartItems"];
           users: DashboardStats["users"];
           chartData?: DashboardStats["chartData"];
         }>("/api/admin/stats"),
     ])
-      .then(([u, c, co, cm, pc, st]) => {
+      .then(([u, c, co, cm, pc, pr, ar, st]) => {
         setCounts({
           users: u.data?.users?.length ?? 0,
           cartRequests: c.data?.cartRequests?.length ?? 0,
           contact: co.data?.inquiries?.length ?? 0,
           comments: cm.data?.comments?.length ?? 0,
           productComments: pc.data?.comments?.length ?? 0,
+          products: pr.data?.total ?? 0,
+          articles: ar.data?.articles?.length ?? 0,
         });
-        if (st.data)
+        if (st.ok && st.data)
           setStats({
             cartItems: st.data.cartItems,
             users: st.data.users,
             chartData: st.data.chartData,
           });
       })
-      .catch(() => setCounts({ users: 0, cartRequests: 0, contact: 0, comments: 0, productComments: 0 }))
+      .catch(() => setCounts({ users: 0, cartRequests: 0, contact: 0, comments: 0, productComments: 0, products: 0, articles: 0 }))
       .finally(() => setLoading(false));
   }, []);
 
@@ -131,6 +173,22 @@ export default function AdminOverviewPage() {
       color: "rose",
       delay: 200,
     },
+    {
+      title: "محصولات",
+      value: counts?.products ?? "—",
+      href: "/admin/products",
+      icon: ShoppingBag,
+      color: "sky",
+      delay: 250,
+    },
+    {
+      title: "مقالات",
+      value: counts?.articles ?? "—",
+      href: "/admin/articles",
+      icon: Newspaper,
+      color: "violet",
+      delay: 300,
+    },
   ];
 
   const colorClasses: Record<string, string> = {
@@ -139,6 +197,7 @@ export default function AdminOverviewPage() {
     amber: "from-amber-500/20 to-amber-600/10 border-amber-500/30 text-amber-400",
     violet: "from-violet-500/20 to-violet-600/10 border-violet-500/30 text-violet-400",
     rose: "from-rose-500/20 to-rose-600/10 border-rose-500/30 text-rose-400",
+    sky: "from-sky-500/20 to-sky-600/10 border-sky-500/30 text-sky-400",
   };
 
   return (
@@ -193,7 +252,7 @@ export default function AdminOverviewPage() {
                     ) : (
                       <TrendingDown className="h-3.5 w-3.5" />
                     )}
-                    ماهانه: {(stats?.cartItems?.monthlyGrowthPercent ?? 0) >= 0 ? "+" : ""}
+                    {(stats?.cartItems?.monthlyGrowthPercent ?? 0) >= 0 ? "رشد" : "افت"} ماهانه: {(stats?.cartItems?.monthlyGrowthPercent ?? 0) >= 0 ? "+" : ""}
                     {stats?.cartItems?.monthlyGrowthPercent ?? 0}%
                   </span>
                   <span
@@ -208,7 +267,7 @@ export default function AdminOverviewPage() {
                     ) : (
                       <TrendingDown className="h-3.5 w-3.5" />
                     )}
-                    سالانه: {(stats?.cartItems?.yearlyGrowthPercent ?? 0) >= 0 ? "+" : ""}
+                    {(stats?.cartItems?.yearlyGrowthPercent ?? 0) >= 0 ? "رشد" : "افت"} سالانه: {(stats?.cartItems?.yearlyGrowthPercent ?? 0) >= 0 ? "+" : ""}
                     {stats?.cartItems?.yearlyGrowthPercent ?? 0}%
                   </span>
                 </div>
@@ -248,7 +307,7 @@ export default function AdminOverviewPage() {
                     ) : (
                       <TrendingDown className="h-3.5 w-3.5" />
                     )}
-                    رشد ماهانه: {(stats?.users?.monthlyGrowthPercent ?? 0) >= 0 ? "+" : ""}
+                    {(stats?.users?.monthlyGrowthPercent ?? 0) >= 0 ? "رشد" : "افت"} ماهانه: {(stats?.users?.monthlyGrowthPercent ?? 0) >= 0 ? "+" : ""}
                     {stats?.users?.monthlyGrowthPercent ?? 0}%
                   </span>
                   <span
@@ -263,7 +322,7 @@ export default function AdminOverviewPage() {
                     ) : (
                       <TrendingDown className="h-3.5 w-3.5" />
                     )}
-                    رشد سالانه: {(stats?.users?.yearlyGrowthPercent ?? 0) >= 0 ? "+" : ""}
+                    {(stats?.users?.yearlyGrowthPercent ?? 0) >= 0 ? "رشد" : "افت"} سالانه: {(stats?.users?.yearlyGrowthPercent ?? 0) >= 0 ? "+" : ""}
                     {stats?.users?.yearlyGrowthPercent ?? 0}%
                   </span>
                 </div>
@@ -272,8 +331,8 @@ export default function AdminOverviewPage() {
           )}
         </div>
 
-        {/* نمودارها — زیر باکس‌ها، بزرگ و تمام‌عرض */}
-        {!loading && stats?.chartData && (
+        {/* نمودارها — زیر باکس‌ها، بزرگ و تمام‌عرض (همیشه نمایش داده می‌شوند، با داده خالی در صورت خطای API) */}
+        {!loading && (
           <div className="space-y-6 mb-8 w-full max-w-none">
             <div
               className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100/80 dark:bg-slate-900/50 p-4 sm:p-6"
@@ -283,35 +342,53 @@ export default function AdminOverviewPage() {
                 <ShoppingCart className="h-5 w-5 text-emerald-500" />
                 روند آیتم‌های سبد خرید (۱۲ ماه اخیر)
               </h3>
-              <div className="w-full h-[360px]">
+              <div
+                className={`w-full h-[360px] rounded-lg ${isDark ? "bg-slate-800/90" : "bg-slate-200/70"}`}
+                style={{ backgroundColor: isDark ? "rgb(30 41 59 / 0.9)" : "rgb(226 232 240 / 0.7)" }}
+              >
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
-                    data={stats.chartData.cartItemsByMonth}
+                    data={chartData.cartItemsByMonth}
                     margin={{ top: 12, right: 12, left: 0, bottom: 8 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-slate-300 dark:stroke-slate-600" />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke={isDark ? "rgb(71 85 105)" : "rgb(203 213 225)"}
+                    />
                     <XAxis
                       dataKey="label"
-                      tick={{ fill: "currentColor", fontSize: 12 }}
-                      className="text-slate-500 dark:text-slate-400"
+                      tick={{ fill: isDark ? "rgb(248 250 252)" : "rgb(51 65 85)", fontSize: 12 }}
                     />
                     <YAxis
-                      tick={{ fill: "currentColor", fontSize: 12 }}
-                      className="text-slate-500 dark:text-slate-400"
+                      domain={(_dataMin: number, dataMax: number) => [0, Math.max(1, dataMax)]}
+                      tick={{ fill: isDark ? "rgb(248 250 252)" : "rgb(51 65 85)", fontSize: 12 }}
                     />
                     <Tooltip
-                      contentStyle={{
-                        backgroundColor: "var(--tw-bg-opacity)",
-                        border: "1px solid rgb(148 163 184)",
-                        borderRadius: "8px",
-                      }}
-                      labelStyle={{ color: "inherit" }}
+                      contentStyle={tooltipStyle(isDark)}
+                      labelStyle={{ color: isDark ? "rgb(248 250 252)" : "rgb(30 41 59)" }}
                       formatter={(value: number | undefined) => [value ?? 0, "تعداد آیتم"]}
                       labelFormatter={(label) => `ماه: ${label}`}
+                      cursor={false}
                     />
-                    <Bar dataKey="value" name="آیتم" radius={[4, 4, 0, 0]} fill="#10b981">
-                      {stats.chartData.cartItemsByMonth.map((_, i) => (
-                        <Cell key={i} fill="#10b981" />
+                    <Bar
+                      dataKey="value"
+                      name="آیتم"
+                      radius={[4, 4, 0, 0]}
+                      fill={isDark ? "#34d399" : "#059669"}
+                      stroke="none"
+                      activeBar={{
+                        fill: isDark ? "#6ee7b7" : "#10b981",
+                        stroke: "none",
+                        opacity: 1,
+                      }}
+                      cursor="pointer"
+                    >
+                      {chartData.cartItemsByMonth.map((_, i) => (
+                        <Cell
+                          key={i}
+                          fill={isDark ? "#34d399" : "#059669"}
+                          stroke="none"
+                        />
                       ))}
                     </Bar>
                   </BarChart>
@@ -327,34 +404,53 @@ export default function AdminOverviewPage() {
                 <Users className="h-5 w-5 text-cyan-500" />
                 روند ثبت‌نام کاربران (۱۲ ماه اخیر)
               </h3>
-              <div className="w-full h-[360px]">
+              <div
+                className={`w-full h-[360px] rounded-lg ${isDark ? "bg-slate-800/90" : "bg-slate-200/70"}`}
+                style={{ backgroundColor: isDark ? "rgb(30 41 59 / 0.9)" : "rgb(226 232 240 / 0.7)" }}
+              >
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
-                    data={stats.chartData.usersByMonth}
+                    data={chartData.usersByMonth}
                     margin={{ top: 12, right: 12, left: 0, bottom: 8 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-slate-300 dark:stroke-slate-600" />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke={isDark ? "rgb(71 85 105)" : "rgb(203 213 225)"}
+                    />
                     <XAxis
                       dataKey="label"
-                      tick={{ fill: "currentColor", fontSize: 12 }}
-                      className="text-slate-500 dark:text-slate-400"
+                      tick={{ fill: isDark ? "rgb(248 250 252)" : "rgb(51 65 85)", fontSize: 12 }}
                     />
                     <YAxis
-                      tick={{ fill: "currentColor", fontSize: 12 }}
-                      className="text-slate-500 dark:text-slate-400"
+                      domain={(_dataMin: number, dataMax: number) => [0, Math.max(1, dataMax)]}
+                      tick={{ fill: isDark ? "rgb(248 250 252)" : "rgb(51 65 85)", fontSize: 12 }}
                     />
                     <Tooltip
-                      contentStyle={{
-                        backgroundColor: "var(--tw-bg-opacity)",
-                        border: "1px solid rgb(148 163 184)",
-                        borderRadius: "8px",
-                      }}
+                      contentStyle={tooltipStyle(isDark)}
+                      labelStyle={{ color: isDark ? "rgb(248 250 252)" : "rgb(30 41 59)" }}
                       formatter={(value: number | undefined) => [value ?? 0, "کاربر جدید"]}
                       labelFormatter={(label) => `ماه: ${label}`}
+                      cursor={false}
                     />
-                    <Bar dataKey="count" name="کاربر" radius={[4, 4, 0, 0]} fill="#06b6d4">
-                      {stats.chartData.usersByMonth.map((_, i) => (
-                        <Cell key={i} fill="#06b6d4" />
+                    <Bar
+                      dataKey="count"
+                      name="کاربر"
+                      radius={[4, 4, 0, 0]}
+                      fill={isDark ? "#22d3ee" : "#0891b2"}
+                      stroke="none"
+                      activeBar={{
+                        fill: isDark ? "#67e8f9" : "#06b6d4",
+                        stroke: "none",
+                        opacity: 1,
+                      }}
+                      cursor="pointer"
+                    >
+                      {chartData.usersByMonth.map((_, i) => (
+                        <Cell
+                          key={i}
+                          fill={isDark ? "#22d3ee" : "#0891b2"}
+                          stroke="none"
+                        />
                       ))}
                     </Bar>
                   </BarChart>

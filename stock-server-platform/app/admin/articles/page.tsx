@@ -242,7 +242,7 @@ export default function AdminArticlesPage() {
                   {articles.map((a) => (
                     <tr
                       key={a.id}
-                      className="border-b border-slate-300/50 dark:border-slate-700/50 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/20 transition-colors"
+                      className="border-b border-slate-300/50 dark:border-slate-700/50 text-slate-800 dark:text-slate-200 hover:bg-slate-200/80 dark:hover:bg-slate-700/40 transition-colors duration-150"
                     >
                       <td className="p-3 font-medium max-w-[200px] truncate text-slate-800 dark:text-slate-100" title={a.title}>
                         {a.title}

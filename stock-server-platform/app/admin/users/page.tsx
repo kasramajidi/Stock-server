@@ -139,7 +139,7 @@ export default function AdminUsersPage() {
                   {list.map((user, i) => (
                     <tr
                       key={user.id}
-                      className="border-b border-slate-300/50 dark:border-slate-700/50 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/20 transition-colors"
+                      className="border-b border-slate-300/50 dark:border-slate-700/50 text-slate-800 dark:text-slate-200 hover:bg-slate-200/80 dark:hover:bg-slate-700/40 transition-colors duration-150"
                       style={{
                         animation: "adminFadeIn 0.3s ease-out backwards",
                         animationDelay: `${i * 30}ms`,

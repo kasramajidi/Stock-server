@@ -130,7 +130,7 @@ export default function AdminProductCommentsPage() {
                 }}
               >
                 <div
-                  className="flex flex-wrap items-start justify-between gap-3 p-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/20"
+                  className="flex flex-wrap items-start justify-between gap-3 p-4 cursor-pointer hover:bg-slate-200/80 dark:hover:bg-slate-700/40 transition-colors duration-150"
                   onClick={() => setExpandedId(expandedId === c.id ? null : c.id)}
                 >
                   <div className="flex items-start gap-3 min-w-0">
