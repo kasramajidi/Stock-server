@@ -360,7 +360,7 @@ export default function AdminOverviewPage() {
                       tick={{ fill: isDark ? "rgb(248 250 252)" : "rgb(51 65 85)", fontSize: 12 }}
                     />
                     <YAxis
-                      domain={([_dataMin, dataMax]: [number, number]) => [0, Math.max(1, dataMax)]}
+                      domain={([_dataMin, dataMax]: readonly [number, number]) => [0, Math.max(1, dataMax)]}
                       tick={{ fill: isDark ? "rgb(248 250 252)" : "rgb(51 65 85)", fontSize: 12 }}
                     />
                     <Tooltip
@@ -422,7 +422,7 @@ export default function AdminOverviewPage() {
                       tick={{ fill: isDark ? "rgb(248 250 252)" : "rgb(51 65 85)", fontSize: 12 }}
                     />
                     <YAxis
-                      domain={([_dataMin, dataMax]: [number, number]) => [0, Math.max(1, dataMax)]}
+                      domain={([_dataMin, dataMax]: readonly [number, number]) => [0, Math.max(1, dataMax)]}
                       tick={{ fill: isDark ? "rgb(248 250 252)" : "rgb(51 65 85)", fontSize: 12 }}
                     />
                     <Tooltip
