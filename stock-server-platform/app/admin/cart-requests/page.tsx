@@ -92,11 +92,11 @@ export default function AdminCartRequestsPage() {
   };
 
   return (
-    <div className="p-6 md:p-8 lg:p-10">
-      <div className="max-w-5xl mx-auto" style={{ animation: "adminFadeIn 0.4s ease-out" }}>
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">درخواست‌های سبد خرید</h1>
+    <div className="p-4 sm:p-6 md:p-8 lg:p-10 min-w-0">
+      <div className="max-w-5xl mx-auto w-full min-w-0" style={{ animation: "adminFadeIn 0.4s ease-out" }}>
+        <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">درخواست‌های سبد خرید</h1>
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">مدیریت وضعیت و یادداشت ادمین</p>
           </div>
           <button

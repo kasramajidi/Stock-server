@@ -6,6 +6,7 @@ import { adminFetch, type MeResponse } from "@/lib/admin-api";
 import { AdminThemeProvider } from "@/components/Admin/AdminThemeContext";
 import AdminSidebar from "@/components/Admin/AdminSidebar";
 import AdminLoginForm from "@/components/Admin/AdminLoginForm";
+import { Menu } from "lucide-react";
 
 export default function AdminLayoutClient({
   children,
@@ -73,10 +74,31 @@ export default function AdminLayoutClient({
 
   return (
     <AdminThemeProvider>
-      <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex">
-        <AdminSidebar />
-        <div className="flex-1 min-w-0">{children}</div>
-      </div>
+      <AdminLayoutWithSidebar>{children}</AdminLayoutWithSidebar>
     </AdminThemeProvider>
+  );
+}
+
+function AdminLayoutWithSidebar({ children }: { children: React.ReactNode }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col md:flex-row">
+      <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 min-w-0 flex flex-col">
+        <header className="md:hidden sticky top-0 z-40 flex items-center gap-3 px-4 py-3 border-b border-slate-300 dark:border-slate-800 bg-slate-100/95 dark:bg-slate-950/95 backdrop-blur">
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800"
+            aria-label="باز کردن منو"
+          >
+            <Menu className="h-6 w-6" />
+          </button>
+          <span className="font-semibold text-slate-800 dark:text-slate-100">پنل ادمین</span>
+        </header>
+        <main className="flex-1 min-w-0">{children}</main>
+      </div>
+    </div>
   );
 }

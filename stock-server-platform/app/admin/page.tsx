@@ -201,16 +201,16 @@ export default function AdminOverviewPage() {
   };
 
   return (
-    <div className="p-6 md:p-8 lg:p-10">
+    <div className="p-4 sm:p-6 md:p-8 lg:p-10">
       <div
-        className="max-w-5xl mx-auto"
+        className="max-w-5xl mx-auto w-full min-w-0"
         style={{ animation: "adminFadeIn 0.4s ease-out" }}
       >
-        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-1">پیشخوان ادمین</h1>
-        <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">خلاصه وضعیت و دسترسی سریع به بخش‌ها</p>
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100 mb-1">پیشخوان ادمین</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6">خلاصه وضعیت و دسترسی سریع به بخش‌ها</p>
 
         {/* ویجت‌های رشد: آیتم‌های سبد خرید و کاربران */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
           {loading ? (
             <>
               <div className="h-40 rounded-xl bg-slate-200 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700 animate-pulse" />
@@ -219,7 +219,7 @@ export default function AdminOverviewPage() {
           ) : (
             <>
               <div
-                className="rounded-xl border border-slate-300 dark:border-slate-700 bg-gradient-to-br from-emerald-500/15 to-emerald-600/5 p-5"
+                className="rounded-xl border border-slate-300 dark:border-slate-700 bg-gradient-to-br from-emerald-500/15 to-emerald-600/5 p-4 sm:p-5"
                 style={{ animation: "adminCardIn 0.4s ease-out backwards", animationDelay: "0ms" }}
               >
                 <div className="flex items-center gap-2 mb-3">
@@ -274,7 +274,7 @@ export default function AdminOverviewPage() {
               </div>
 
               <div
-                className="rounded-xl border border-slate-300 dark:border-slate-700 bg-gradient-to-br from-cyan-500/15 to-cyan-600/5 p-5"
+                className="rounded-xl border border-slate-300 dark:border-slate-700 bg-gradient-to-br from-cyan-500/15 to-cyan-600/5 p-4 sm:p-5"
                 style={{ animation: "adminCardIn 0.4s ease-out backwards", animationDelay: "50ms" }}
               >
                 <div className="flex items-center gap-2 mb-3">
@@ -333,17 +333,17 @@ export default function AdminOverviewPage() {
 
         {/* نمودارها — زیر باکس‌ها، بزرگ و تمام‌عرض (همیشه نمایش داده می‌شوند، با داده خالی در صورت خطای API) */}
         {!loading && (
-          <div className="space-y-6 mb-8 w-full max-w-none">
+          <div className="space-y-4 sm:space-y-6 mb-6 sm:mb-8 w-full max-w-none overflow-hidden">
             <div
-              className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100/80 dark:bg-slate-900/50 p-4 sm:p-6"
+              className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100/80 dark:bg-slate-900/50 p-3 sm:p-4 md:p-6"
               style={{ animation: "adminCardIn 0.4s ease-out backwards", animationDelay: "100ms" }}
             >
-              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
-                <ShoppingCart className="h-5 w-5 text-emerald-500" />
-                روند آیتم‌های سبد خرید (۱۲ ماه اخیر)
+              <h3 className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100 mb-3 sm:mb-4 flex items-center gap-2">
+                <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-500 shrink-0" />
+                <span className="truncate">روند آیتم‌های سبد خرید (۱۲ ماه اخیر)</span>
               </h3>
               <div
-                className={`w-full h-[360px] rounded-lg ${isDark ? "bg-slate-800/90" : "bg-slate-200/70"}`}
+                className={`w-full h-[220px] sm:h-[280px] md:h-[320px] lg:h-[360px] rounded-lg min-w-0 ${isDark ? "bg-slate-800/90" : "bg-slate-200/70"}`}
                 style={{ backgroundColor: isDark ? "rgb(30 41 59 / 0.9)" : "rgb(226 232 240 / 0.7)" }}
               >
                 <ResponsiveContainer width="100%" height="100%">
@@ -397,15 +397,15 @@ export default function AdminOverviewPage() {
             </div>
 
             <div
-              className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100/80 dark:bg-slate-900/50 p-4 sm:p-6"
+              className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100/80 dark:bg-slate-900/50 p-3 sm:p-4 md:p-6"
               style={{ animation: "adminCardIn 0.4s ease-out backwards", animationDelay: "150ms" }}
             >
-              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
-                <Users className="h-5 w-5 text-cyan-500" />
-                روند ثبت‌نام کاربران (۱۲ ماه اخیر)
+              <h3 className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100 mb-3 sm:mb-4 flex items-center gap-2">
+                <Users className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-500 shrink-0" />
+                <span className="truncate">روند ثبت‌نام کاربران (۱۲ ماه اخیر)</span>
               </h3>
               <div
-                className={`w-full h-[360px] rounded-lg ${isDark ? "bg-slate-800/90" : "bg-slate-200/70"}`}
+                className={`w-full h-[220px] sm:h-[280px] md:h-[320px] lg:h-[360px] rounded-lg min-w-0 ${isDark ? "bg-slate-800/90" : "bg-slate-200/70"}`}
                 style={{ backgroundColor: isDark ? "rgb(30 41 59 / 0.9)" : "rgb(226 232 240 / 0.7)" }}
               >
                 <ResponsiveContainer width="100%" height="100%">
@@ -470,7 +470,7 @@ export default function AdminOverviewPage() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {cards.map((card) => {
               const Icon = card.icon;
               return (

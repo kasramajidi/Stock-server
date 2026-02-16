@@ -134,7 +134,7 @@ export default function AdminEditProductPage() {
   }
 
   return (
-    <div className="p-6 md:p-8 lg:p-10">
+    <div className="p-4 sm:p-6 md:p-8 lg:p-10 min-w-0">
       <div className="max-w-2xl mx-auto" style={{ animation: "adminFadeIn 0.4s ease-out" }}>
         <div className="flex items-center gap-3 mb-6">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/20 text-cyan-400">
