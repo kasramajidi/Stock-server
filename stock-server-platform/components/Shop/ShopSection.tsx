@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import { useFilters } from "./context/FilterContext";
 import SearchFilter from "./filters/SearchFilter";
 import PriceRangeFilter from "./filters/PriceRangeFilter";
 import CategoryFilter from "./filters/CategoryFilter";
@@ -11,8 +10,6 @@ import ShopCategoryMenu from "./ShopCategoryMenu";
 import ShopMainContent from "./ShopMainContent";
 
 export default function ShopSection() {
-  const { applyFilters } = useFilters();
-
   const pageMargin =
     "mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k";
 
@@ -61,14 +58,6 @@ export default function ShopSection() {
                 <PriceRangeFilter />
                 <CategoryFilter />
                 <BrandFilter />
-                <button
-                  type="button"
-                  onClick={applyFilters}
-                  aria-label="اعمال فیلترها"
-                  className="w-full py-3 rounded-xl font-semibold text-sm bg-slate-900 text-white hover:bg-slate-800 transition-colors cursor-pointer"
-                >
-                  اعمال فیلترها
-                </button>
               </div>
             </div>
           </aside>

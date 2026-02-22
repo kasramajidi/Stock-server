@@ -19,6 +19,8 @@ import {
 import { FaWhatsapp, FaInstagram } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
 
+import ScrollArrow from "@/components/Layout/ScrollArrow";
+
 /* =======================
    Types
 ======================= */
@@ -61,8 +63,8 @@ const quickAccessLinks: SimpleLink[] = [
    Components
 ======================= */
 
-const FooterLink = ({ name, href }: FooterLinkProps): JSX.Element => (
-  <li className="flex items-center gap-2 flex-row-reverse justify-end text-right">
+const FooterLink = ({ name, href, center }: FooterLinkProps & { center?: boolean }): JSX.Element => (
+  <li className={`flex items-center gap-2 flex-row-reverse ${center ? "justify-center text-center" : "justify-end text-right"}`}>
     <Link
       href={href}
       className="text-sm text-gray-600 hover:text-[#17e2fe] transition-colors"
@@ -79,19 +81,17 @@ const FooterLink = ({ name, href }: FooterLinkProps): JSX.Element => (
 
 export default function Footer(): JSX.Element {
   return (
-    <footer className="w-full bg-white mt-16 text-right">
+    <footer id="site-footer" className="w-full bg-white mt-16 text-right">
+      <div className="flex justify-center border-b border-gray-100">
+        <ScrollArrow direction="up" label="برگشت به بالای صفحه" className="!pb-2" />
+      </div>
       <div className="mx-3 sm:mx-[30px] md:mx-[50px] xl:mx-[50px] pt-8 sm:pt-10 lg:pt-12">
         {/* Main Footer Columns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 sm:gap-8 pb-8 sm:pb-12">
           {/* Column 1: Company Info & Social (rightmost in RTL) */}
           <div className="sm:col-span-2 lg:col-span-2 space-y-4 order-1 flex flex-col">
             {/* سرویس بالای این بخش - وسط */}
-            <div className="flex flex-col items-center justify-center gap-2 pb-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-[#17e2fe]/10 flex items-center justify-center border-2 border-[#17e2fe]/30">
-                <LifebuoyIcon className="w-5 h-5 text-[#17e2fe]" />
-              </div>
-              <span className="text-xs font-medium text-gray-700 text-center">پشتیبانی فنی</span>
-            </div>
+
             <Image
               src="/Images/Logo/logo stock copy 2.png"
               alt="لوگوی استوک سرور"
@@ -162,7 +162,7 @@ export default function Footer(): JSX.Element {
           </div>
 
           {/* Column 3: Quick Access */}
-          <div className="order-3 flex flex-col">
+          <div className="order-3 flex flex-col items-center text-center">
             {/* سرویس بالای این بخش - وسط */}
             <div className="flex flex-col items-center justify-center gap-2 pb-4 mb-4">
               <div className="w-10 h-10 rounded-full bg-[#17e2fe]/10 flex items-center justify-center border-2 border-[#17e2fe]/30">
@@ -173,9 +173,9 @@ export default function Footer(): JSX.Element {
             <h4 className="text-sm sm:text-base font-bold border-b-2 border-[#17e2fe] pb-1.5 inline-block text-gray-800 mb-4">
               دسترسی سریع
             </h4>
-            <ul className="space-y-2.5">
+            <ul className="space-y-2.5 w-full flex flex-col items-center">
               {quickAccessLinks.map((link) => (
-                <FooterLink key={link.name} {...link} />
+                <FooterLink key={link.name} {...link} center />
               ))}
             </ul>
           </div>
@@ -218,12 +218,20 @@ export default function Footer(): JSX.Element {
 
           {/* Column 5: Licenses */}
           <div className="order-5 flex flex-col">
-            {/* سرویس بالای این بخش - وسط */}
-            <div className="flex flex-col items-center justify-center gap-2 pb-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-[#17e2fe]/10 flex items-center justify-center border-2 border-[#17e2fe]/30">
-                <TruckIcon className="w-5 h-5 text-[#17e2fe]" />
+            {/* دو آیکون کنار هم: ارسال سریع و پشتیبانی فنی */}
+            <div className="flex items-center flex-wrap i justify-between gap-4 sm:gap-6 pb-4 mb-4">
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-[#17e2fe]/10 flex items-center justify-center border-2 border-[#17e2fe]/30">
+                  <TruckIcon className="w-5 h-5 text-[#17e2fe]" />
+                </div>
+                <span className="text-xs font-medium text-gray-700 text-center">ارسال سریع</span>
               </div>
-              <span className="text-xs font-medium text-gray-700 text-center">ارسال سریع</span>
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-[#17e2fe]/10 flex items-center justify-center border-2 border-[#17e2fe]/30">
+                  <LifebuoyIcon className="w-5 h-5 text-[#17e2fe]" />
+                </div>
+                <span className="text-xs font-medium text-gray-700 text-center">پشتیبانی فنی</span>
+              </div>
             </div>
             <h4 className="text-sm sm:text-base font-bold border-b-2 border-[#17e2fe] pb-1.5 inline-block text-gray-800 mb-4">
               مجوزها

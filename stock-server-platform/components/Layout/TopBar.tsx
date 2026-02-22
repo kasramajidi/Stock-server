@@ -16,10 +16,10 @@ export default function TopBar() {
   ];
 
   return (
-    <div className="bg-white border-b rounded-3xl border-gray-200 py-2 md:py-2.5 z-0 relative mx-[60px] md:mx-[80px] lg:mx-[80px] topbar-1080 xl:mx-[80px] topbar-4k md:mt-4">
-      <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+    <div className="bg-white border-b rounded-2xl sm:rounded-3xl border-gray-200 py-2.5 md:py-2.5 z-0 relative mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-[80px] lg:mx-[80px] topbar-1080 xl:mx-[80px] topbar-4k mt-3 sm:mt-4 md:mt-4">
+      <div className="container mx-auto px-3 min-[400px]:px-4 sm:px-4 md:px-6 lg:px-8">
         <div className="flex items-center justify-center sm:justify-between gap-2 sm:gap-4">
-          <div className="hidden sm:block text-[10px] sm:text-xs md:text-sm text-[#8d8583] text-right flex-1 mr-2 sm:mr-0">
+          <div className="hidden sm:block text-[10px] sm:text-xs md:text-sm text-[#8d8583] text-right flex-1 mr-2 sm:mr-0 leading-relaxed">
             <span>
               کلیه سفارش ها در اولین روز کاری بعد از ثبت سفارش تحویل پست داده می
               شوند.

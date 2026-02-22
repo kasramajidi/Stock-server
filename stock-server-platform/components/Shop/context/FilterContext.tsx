@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 interface FilterContextType {
   selectedCategories: string[];
@@ -51,6 +51,23 @@ export function FilterProvider({ children }: { children: ReactNode }) {
       prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]
     );
   };
+
+  /** با هر تغییر فیلتر، بلافاصله اعمال می‌شود و لیست محصولات به‌روز می‌شود */
+  useEffect(() => {
+    setAppliedFilters({
+      categories: selectedCategories,
+      brands: selectedBrands,
+      mainCategoryId: selectedMainCategoryId,
+      search: searchQuery,
+      price: priceRange,
+    });
+  }, [
+    selectedCategories,
+    selectedBrands,
+    selectedMainCategoryId,
+    searchQuery,
+    priceRange,
+  ]);
 
   const applyFilters = () => {
     setAppliedFilters({

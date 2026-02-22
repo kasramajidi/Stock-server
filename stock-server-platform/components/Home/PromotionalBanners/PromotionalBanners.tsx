@@ -57,7 +57,7 @@ export default function PromotionalBanners() {
       className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-0 mb-0"
       aria-label="بنرهای تبلیغاتی"
     >
-      <div className="flex flex-col sm:flex-row gap-0 sm:gap-6">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
         {banners.map((banner, index) => (
           <article
             key={banner.id}

@@ -2,15 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { RxDoubleArrowDown } from "react-icons/rx";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import PromotionalBanners from "../PromotionalBanners/PromotionalBanners";
+
 interface Category {
   id: string;
   name: string;
@@ -89,26 +82,15 @@ const categories: Category[] = [
 
 export default function CategoryIcons() {
   return (
-    <section className="bg-white rounded-2xl sm:rounded-3xl mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0">
+    <section className="bg-white rounded-2xl sm:rounded-3xl mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0 overflow-hidden">
       {/* اول بنرهای تبلیغاتی */}
-      <div className="-mx-4 sm:-mx-6 md:-mx-8">
+      <div className="-mx-3 min-[400px]:-mx-4 sm:-mx-6 md:-mx-8">
         <PromotionalBanners />
       </div>
 
       <div className="container mx-auto px-3 min-[400px]:px-4 sm:px-6 md:px-8 py-4 min-[400px]:py-5 sm:py-6 md:py-8">
-        <div className="relative mb-4 sm:mb-6 -mt-4 sm:-mt-6">
-          <div className="flex justify-center">
-            <div className="relative w-10 sm:w-16 h-3 sm:h-8">
-              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-full h-full bg-gray-100 rounded-b-full"></div>
-              <div className="absolute top-1 left-1/2 -translate-x-1/2 -translate-y-3 sm:-translate-y-1/2 text-gray-400">
-                <RxDoubleArrowDown className="text-xs sm:text-sm" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="text-center mb-6 sm:mb-8">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#00DDFF] text-white px-5 py-2.5 sm:px-6 sm:py-3 mb-2">
+        <div className="text-center mb-4 sm:mb-6 md:mb-8">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#00DDFF] text-white px-4 min-[400px]:px-5 py-2 sm:px-6 sm:py-3 mb-2">
             <h2 className="text-lg min-[400px]:text-xl sm:text-2xl font-bold">
               دسته بندی محصولات
             </h2>
@@ -121,43 +103,32 @@ export default function CategoryIcons() {
           </div>
         </div>
 
-        {/* اسلایدر دسته‌بندی */}
-        <div className="relative w-full max-w-[1260px] mx-auto">
-          <Carousel
-            opts={{ align: "start", loop: false, containScroll: "trimSnaps" }}
-            className="relative w-full"
-          >
-            <CarouselContent className="-ms-4">
-              {categories.map((category) => (
-                <CarouselItem
-                  key={category.id}
-                  className="ps-4 basis-1/3 min-[400px]:basis-1/4 sm:basis-1/5 md:basis-1/6 min-w-0"
-                >
-                  <Link
-                    href={category.href}
-                    className="flex flex-col items-center gap-1.5 sm:gap-2 md:gap-3 group hover:scale-105 transition-transform duration-200"
-                  >
-                    <div className="relative w-14 h-14 min-[400px]:w-16 min-[400px]:h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
-                      <Image
-                        src={category.image}
-                        alt={category.name}
-                        fill
-                        className="object-contain group-hover:opacity-80 transition-opacity"
-                        sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, 96px"
-                        quality={75}
-                        loading="lazy"
-                      />
-                    </div>
-                    <span className="text-[9px] min-[400px]:text-[10px] sm:text-xs md:text-sm text-center text-gray-700 font-medium max-w-[90px] min-[400px]:max-w-[100px] sm:max-w-[120px] leading-tight">
-                      {category.name}
-                    </span>
-                  </Link>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="right-auto left-0 sm:-left-12 md:-left-16 lg:-left-20 z-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
-            <CarouselNext className="right-0 sm:-right-12 md:-right-16 lg:-right-20 z-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
-          </Carousel>
+        {/* دسته‌بندی محصولات — همه در یک سطر */}
+        <div className="w-full max-w-[1260px] mx-auto overflow-x-auto scrollbar-hide">
+          <div className="flex flex-nowrap items-stretch justify-between gap-1 sm:gap-2 md:gap-4 min-w-max md:min-w-0">
+          {categories.map((category) => (
+            <Link
+              key={category.id}
+              href={category.href}
+              className="flex flex-1 min-w-0 flex-col items-center gap-1.5 sm:gap-2 md:gap-3 group hover:scale-105 transition-transform duration-200"
+            >
+              <div className="relative w-10 h-10 min-[400px]:w-12 min-[400px]:h-12 sm:w-14 sm:h-14 md:w-20 md:h-20 flex items-center justify-center shrink-0">
+                <Image
+                  src={category.image}
+                  alt={category.name}
+                  fill
+                  className="object-contain group-hover:opacity-80 transition-opacity"
+                  sizes="(max-width: 640px) 56px, (max-width: 768px) 64px, 80px"
+                  quality={75}
+                  loading="lazy"
+                />
+              </div>
+              <span className="text-[8px] min-[400px]:text-[9px] sm:text-[10px] md:text-xs text-center text-gray-700 font-medium max-w-[70px] min-[400px]:max-w-[80px] sm:max-w-[90px] leading-tight">
+                {category.name}
+              </span>
+            </Link>
+          ))}
+          </div>
         </div>
       </div>
     </section>

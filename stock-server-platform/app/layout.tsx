@@ -94,6 +94,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div id="site-top" className="absolute top-0 left-0 w-0 h-0" aria-hidden />
         <FloatingMenuProvider>
           <SiteShellOrAdmin>{children}</SiteShellOrAdmin>
         </FloatingMenuProvider>

@@ -25,9 +25,11 @@ const menuItems: MenuItem[] = [
   { href: "/shop", image: "/Images/Menu/camera-box.svg", label: "دوربین دیجیتال" },
 ];
 
+const HOVER_CLOSE_DELAY = 180;
+
 export default function FloatingCategoryMenu() {
   const pathname = usePathname();
-  const { isOpen, toggle } = useFloatingMenu();
+  const { isOpen, open, toggle, scheduleClose, cancelScheduledClose } = useFloatingMenu();
 
   const shouldHide =
     HIDDEN_PATHS.some((path) => pathname?.startsWith(path)) ?? false;
@@ -35,10 +37,18 @@ export default function FloatingCategoryMenu() {
 
   return (
     <div className="hidden md:flex fixed -right-1 top-[50px] z-50 w-14 flex-col items-center">
-      <div className="relative">
+      <div
+        className="relative"
+        onMouseEnter={() => {
+          cancelScheduledClose();
+          open();
+        }}
+        onMouseLeave={() => scheduleClose(HOVER_CLOSE_DELAY)}
+      >
         <button
+          type="button"
           onClick={toggle}
-          className="w-12 h-12 rounded-xl bg-[#17e2fe] text-white flex items-center justify-center shadow-lg hover:bg-[#14c8e0] transition shrink-0"
+          className="w-12 h-12 rounded-xl bg-[#17e2fe] text-white flex items-center justify-center shadow-lg hover:bg-[#14c8e0] transition shrink-0 cursor-pointer"
           aria-expanded={isOpen}
           aria-label={isOpen ? "بستن منو" : "باز کردن منو"}
         >

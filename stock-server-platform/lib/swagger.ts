@@ -6,7 +6,7 @@ export const openApiDoc = {
   info: {
     title: "Stock Server API",
     version: "1.0.0",
-    description: "API سامانه استوک سرور. شامل: احراز هویت (ثبت‌نام/ورود)، پرسش و تماس، مدیریت کاربران، مقالات وبلاگ، کامنت مقالات، و محصولات فروشگاه. برای endpointهای محافظت‌شده هدر Authorization: Bearer <توکن> الزامی است.",
+    description: "API سامانه استوک سرور. شامل: احراز هویت (ثبت‌نام/ورود)، پرسش و تماس، چت پشتیبانی، مدیریت کاربران، مقالات وبلاگ، کامنت مقالات، و محصولات فروشگاه. برای endpointهای محافظت‌شده هدر Authorization: Bearer <توکن> الزامی است.",
   },
   servers: [
     { url: "/api", description: "API Base" },
@@ -835,6 +835,356 @@ export const openApiDoc = {
         responses: { "200": { description: "محصول حذف شد" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "محصول یافت نشد" } },
       },
     },
+    "/support/start": {
+      post: {
+        summary: "شروع مکالمه چت پشتیبانی",
+        description: "**برای چی:** کاربر نام، نام خانوادگی و شماره موبایل می‌دهد و یک مکالمه چت ساخته می‌شود. در پاسخ conversationId و clientToken برمی‌گردد؛ با این توکن کاربر می‌تواند پیام بفرستد و بخواند (از طریق GET/POST /support/conversations/{id}/messages?token=...). بدون نیاز به لاگین.",
+        operationId: "supportStart",
+        tags: ["Support"],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["firstName", "lastName", "phone"],
+                properties: {
+                  firstName: { type: "string", example: "علی", description: "نام" },
+                  lastName: { type: "string", example: "رضایی", description: "نام خانوادگی" },
+                  phone: { type: "string", example: "09123456789", description: "شماره موبایل (۱۱ رقم با ۰۹)" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "201": {
+            description: "مکالمه ایجاد شد",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    conversationId: { type: "string", description: "شناسه مکالمه برای دریافت/ارسال پیام" },
+                    clientToken: { type: "string", description: "توکن سمت کاربر؛ در query با نام token ارسال شود" },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "خطای اعتبارسنجی (نام/موبایل)" },
+        },
+      },
+    },
+    "/support/conversations/{id}/messages": {
+      get: {
+        summary: "دریافت پیام‌های یک مکالمه (کاربر)",
+        description: "**برای چی:** کاربر با conversationId و token (clientToken دریافتی از POST /support/start) لیست پیام‌های مکالمه را می‌گیرد. برای پیام‌های پشتیبانی، admin (fullName، avatarUrl) برمی‌گردد. supportSeenAt برای نمایش تیک «دیده شده» است.",
+        operationId: "supportGetMessages",
+        tags: ["Support"],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه مکالمه (conversationId)" },
+          { name: "token", in: "query", required: true, schema: { type: "string" }, description: "clientToken همان مکالمه" },
+        ],
+        responses: {
+          "200": {
+            description: "لیست پیام‌ها و زمان دیده‌شدن توسط پشتیبانی",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    messages: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          senderType: { type: "string", enum: ["user", "support"] },
+                          content: { type: "string" },
+                          createdAt: { type: "string", format: "date-time" },
+                          admin: {
+                            type: "object",
+                            nullable: true,
+                            properties: { fullName: { type: "string" }, avatarUrl: { type: "string", nullable: true } },
+                            description: "فقط برای senderType=support",
+                          },
+                        },
+                      },
+                    },
+                    supportSeenAt: { type: "string", format: "date-time", nullable: true, description: "آخرین زمانی که پشتیبانی چت را دید (برای تیک دیده شده)" },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "توکن ارسال نشده یا نامعتبر" },
+          "404": { description: "مکالمه یافت نشد" },
+        },
+      },
+      post: {
+        summary: "ارسال پیام کاربر در چت پشتیبانی",
+        description: "**برای چی:** کاربر با conversationId و token یک پیام (content) در همان مکالمه ارسال می‌کند.",
+        operationId: "supportSendMessage",
+        tags: ["Support"],
+        parameters: [
+          { name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه مکالمه" },
+          { name: "token", in: "query", required: true, schema: { type: "string" }, description: "clientToken" },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["content"],
+                properties: { content: { type: "string", minLength: 1, maxLength: 2000, description: "متن پیام" } },
+              },
+            },
+          },
+        },
+        responses: {
+          "201": {
+            description: "پیام ارسال شد",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    message: {
+                      type: "object",
+                      properties: {
+                        id: { type: "string" },
+                        senderType: { type: "string", example: "user" },
+                        content: { type: "string" },
+                        createdAt: { type: "string", format: "date-time" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "خطای اعتبارسنجی" },
+          "401": { description: "توکن ارسال نشده یا نامعتبر" },
+          "404": { description: "مکالمه یافت نشد" },
+        },
+      },
+    },
+    "/admin/support/conversations": {
+      get: {
+        summary: "لیست مکالمات چت پشتیبانی (ادمین)",
+        description: "**برای چی:** ادمین لیست همه مکالمات چت را می‌بیند (نام، موبایل، آخرین پیام، زمان به‌روزرسانی). نیاز به توکن ادمین.",
+        operationId: "adminSupportListConversations",
+        tags: ["Support"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "لیست مکالمات",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    conversations: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          firstName: { type: "string" },
+                          lastName: { type: "string" },
+                          phone: { type: "string" },
+                          createdAt: { type: "string", format: "date-time" },
+                          updatedAt: { type: "string", format: "date-time" },
+                          lastMessage: {
+                            type: "object",
+                            nullable: true,
+                            properties: {
+                              content: { type: "string" },
+                              senderType: { type: "string" },
+                              createdAt: { type: "string", format: "date-time" },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+        },
+      },
+    },
+    "/admin/support/conversations/{id}/messages": {
+      get: {
+        summary: "دریافت پیام‌های یک مکالمه (ادمین)",
+        description: "**برای چی:** ادمین با انتخاب یک مکالمه، جزئیات (نام، موبایل کاربر) و لیست پیام‌ها را می‌گیرد. با هر بار فراخوانی، supportSeenAt به‌روز می‌شود (تیک «دیده شده» برای کاربر). پیام‌های support شامل admin (ادمین فرستنده) هستند.",
+        operationId: "adminSupportGetMessages",
+        tags: ["Support"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه مکالمه" }],
+        responses: {
+          "200": {
+            description: "جزئیات مکالمه و لیست پیام‌ها",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    conversation: {
+                      type: "object",
+                      properties: {
+                        id: { type: "string" },
+                        firstName: { type: "string" },
+                        lastName: { type: "string" },
+                        phone: { type: "string" },
+                        createdAt: { type: "string", format: "date-time" },
+                      },
+                    },
+                    messages: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          senderType: { type: "string", enum: ["user", "support"] },
+                          content: { type: "string" },
+                          createdAt: { type: "string", format: "date-time" },
+                          admin: {
+                            type: "object",
+                            nullable: true,
+                            properties: { id: { type: "string" }, fullName: { type: "string" }, avatarUrl: { type: "string", nullable: true } },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+          "404": { description: "مکالمه یافت نشد" },
+        },
+      },
+      post: {
+        summary: "ارسال پاسخ پشتیبانی (ادمین)",
+        description: "**برای چی:** ادمین در یک مکالمه پاسخ می‌فرستد. ادمین فرستنده به‌صورت خودکار (adminId) ذخیره می‌شود و برای کاربر با نام و عکس نمایش داده می‌شود.",
+        operationId: "adminSupportSendMessage",
+        tags: ["Support"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه مکالمه" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["content"],
+                properties: { content: { type: "string", minLength: 1, maxLength: 2000, description: "متن پاسخ" } },
+              },
+            },
+          },
+        },
+        responses: {
+          "201": {
+            description: "پیام پشتیبانی ارسال شد",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    message: {
+                      type: "object",
+                      properties: {
+                        id: { type: "string" },
+                        senderType: { type: "string", example: "support" },
+                        content: { type: "string" },
+                        createdAt: { type: "string", format: "date-time" },
+                        admin: {
+                          type: "object",
+                          nullable: true,
+                          properties: { fullName: { type: "string" }, avatarUrl: { type: "string", nullable: true } },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "خطای اعتبارسنجی" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+          "404": { description: "مکالمه یافت نشد" },
+        },
+      },
+    },
+    "/cron/cleanup-support-chat": {
+      get: {
+        summary: "پاکسازی چت پشتیبانی (GET)",
+        description: "همان پاکسازی؛ برای cronهایی که فقط GET پشتیبانی می‌کنند. مکالمات قدیمی‌تر از ۳۰ دقیقه حذف می‌شوند.",
+        operationId: "cronCleanupSupportChatGet",
+        tags: ["Support"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "پاکسازی انجام شد",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    deleted: { type: "number", description: "تعداد مکالمات حذف‌شده" },
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "توکن ارسال نشده یا نامعتبر" },
+          "403": { description: "فقط ادمین یا CRON_SECRET" },
+        },
+      },
+      post: {
+        summary: "پاکسازی چت پشتیبانی (حذف مکالمات قدیمی‌تر از ۳۰ دقیقه)",
+        description: "**برای چی:** مکالمات چت پشتیبانی که بیش از ۳۰ دقیقه از ایجادشان گذشته حذف می‌شوند (پیام‌ها به‌صورت cascade حذف می‌شوند). فراخوانی با توکن ادمین (JWT) یا با کلید cron: Authorization: Bearer <CRON_SECRET>. برای اجرای خودکار هر ۵–۱۰ دقیقه از cron (مثلاً Vercel Cron، Render Cron یا cron-job.org) استفاده کن.",
+        operationId: "cronCleanupSupportChat",
+        tags: ["Support"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "پاکسازی انجام شد",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    deleted: { type: "number", description: "تعداد مکالمات حذف‌شده" },
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "توکن ارسال نشده یا نامعتبر" },
+          "403": { description: "فقط ادمین یا CRON_SECRET" },
+        },
+      },
+    },
     "/products/{id}/comments": {
       get: {
         summary: "لیست کامنت‌های یک محصول",
@@ -969,6 +1319,7 @@ export const openApiDoc = {
   tags: [
     { name: "Auth", description: "ثبت‌نام و ورود" },
     { name: "Contact", description: "پرسش و تماس (ارسال به شرکت + تایید/رد ادمین)" },
+    { name: "Support", description: "چت پشتیبانی — شروع مکالمه، ارسال/دریافت پیام (کاربر با token؛ ادمین با JWT)" },
     { name: "Users", description: "مدیریت کاربران (نیاز به JWT)" },
     { name: "Articles", description: "مقالات — لیست، جستجو، ایجاد، ویرایش، حذف" },
     { name: "Comments", description: "کامنت مقالات — ثبت، لیست، تایید/رد، پاسخ ادمین، پاسخ تو در تو" },

@@ -19,6 +19,7 @@ model User {
   acceptTerms  Boolean  @default(false) @map("accept_terms")
   role         String   @default("user") // user | admin | super_admin
   isBanned     Boolean  @default(false) @map("is_banned")
+  avatarUrl    String?  @map("avatar_url") // تصویر پروفایل (برای ادمین در چت پشتیبانی)
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
   comments         Comment[]
@@ -26,6 +27,7 @@ model User {
   cartRequests     CartRequest[]  // درخواست‌های سبد خرید این کاربر
   productsCreated  Product[]  @relation("ProductCreatedBy")
   articlesCreated  Article[]  @relation("ArticleCreatedBy")
+  supportMessages  SupportMessage[]  // پیام‌های ارسالی این ادمین در چت پشتیبانی
 
   @@map("users")
 }
@@ -154,4 +156,33 @@ model CartRequestItem {
   product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)      // آیتم → یک محصول
 
   @@map("cart_request_items")
+}
+// چت پشتیبانی — هر مکالمه با نام، نام خانوادگی و شماره تلفن شروع می‌شود
+model SupportConversation {
+  id           String    @id @default(cuid())
+  firstName    String    @map("first_name")
+  lastName     String    @map("last_name")
+  phone        String
+  clientToken  String    @unique @map("client_token") // توکن برای شناسایی کاربر در این مکالمه
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  supportSeenAt DateTime? @map("support_seen_at") // آخرین زمانی که پشتیبانی چت را دید — برای تیک «دیده شده»
+
+  messages SupportMessage[]
+
+  @@map("support_conversations")
+}
+
+model SupportMessage {
+  id             String   @id @default(cuid())
+  conversationId String   @map("conversation_id")
+  senderType     String   @map("sender_type") // user | support
+  adminId        String?  @map("admin_id") // وقتی senderType=support، کدام ادمین فرستاده
+  content        String   @db.Text
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  conversation SupportConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  admin        User?                 @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@map("support_messages")
 }
