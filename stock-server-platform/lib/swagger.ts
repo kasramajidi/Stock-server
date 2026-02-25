@@ -6,7 +6,7 @@ export const openApiDoc = {
   info: {
     title: "Stock Server API",
     version: "1.0.0",
-    description: "API سامانه استوک سرور. شامل: احراز هویت (ثبت‌نام/ورود)، پرسش و تماس، چت پشتیبانی، مدیریت کاربران، بنرهای اصلی، مقالات وبلاگ، کامنت مقالات، و محصولات فروشگاه. برای endpointهای محافظت‌شده هدر Authorization: Bearer <توکن> الزامی است.",
+    description: "API سامانه استوک سرور. شامل: احراز هویت (ثبت‌نام/ورود)، پرسش و تماس، چت پشتیبانی، مدیریت کاربران، آدرس‌های کاربر، بنرهای اصلی، مقالات وبلاگ، کامنت مقالات، و محصولات فروشگاه. برای endpointهای محافظت‌شده هدر Authorization: Bearer <توکن> الزامی است.",
   },
   servers: [
     { url: "/api", description: "API Base" },
@@ -750,6 +750,134 @@ export const openApiDoc = {
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه درخواست" }],
         responses: { "200": { description: "درخواست حذف شد" }, "401": { description: "توکن نامعتبر" }, "403": { description: "دسترسی غیرمجاز" }, "404": { description: "درخواست یافت نشد" } },
+      },
+    },
+    "/addresses": {
+      get: {
+        summary: "لیست آدرس‌های کاربر",
+        description: "**برای چی:** کاربر لاگین‌شده لیست آدرس‌های ثبت‌شده خود را می‌گیرد. نیاز به توکن احراز هویت.",
+        operationId: "listAddresses",
+        tags: ["Addresses"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "لیست آدرس‌ها",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    addresses: {
+                      type: "array",
+                      items: { $ref: "#/components/schemas/Address" },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "توکن نامعتبر" },
+        },
+      },
+      post: {
+        summary: "افزودن آدرس",
+        description: "**برای چی:** کاربر لاگین‌شده آدرس جدید (عنوان، متن آدرس، اختیاری: عرض و طول جغرافیایی) ثبت می‌کند.",
+        operationId: "createAddress",
+        tags: ["Addresses"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["title", "addressText"],
+                properties: {
+                  title: { type: "string", minLength: 1, maxLength: 100, example: "منزل", description: "عنوان آدرس (مثلاً منزل، محل کار)" },
+                  addressText: { type: "string", minLength: 1, maxLength: 2000, example: "تهران، خیابان ولیعصر، پلاک ۱۰", description: "متن کامل آدرس" },
+                  latitude: { type: "number", nullable: true, description: "عرض جغرافیایی (اختیاری؛ برای موقعیت روی نقشه)" },
+                  longitude: { type: "number", nullable: true, description: "طول جغرافیایی (اختیاری؛ برای موقعیت روی نقشه)" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "آدرس ثبت شد",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    address: { $ref: "#/components/schemas/Address" },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "خطای اعتبارسنجی" },
+          "401": { description: "توکن نامعتبر" },
+        },
+      },
+    },
+    "/addresses/{id}": {
+      patch: {
+        summary: "ویرایش آدرس",
+        description: "**برای چی:** کاربر لاگین‌شده آدرس خود را ویرایش می‌کند. فقط آدرس‌های متعلق به خودش.",
+        operationId: "updateAddress",
+        tags: ["Addresses"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه (cuid) آدرس" }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  title: { type: "string", minLength: 1, maxLength: 100, description: "عنوان آدرس" },
+                  addressText: { type: "string", minLength: 1, maxLength: 2000, description: "متن آدرس" },
+                  latitude: { type: "number", nullable: true, description: "عرض جغرافیایی" },
+                  longitude: { type: "number", nullable: true, description: "طول جغرافیایی" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "آدرس بروزرسانی شد",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    address: { $ref: "#/components/schemas/Address" },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "خطای اعتبارسنجی" },
+          "401": { description: "توکن نامعتبر" },
+          "404": { description: "آدرس یافت نشد" },
+        },
+      },
+      delete: {
+        summary: "حذف آدرس",
+        description: "**برای چی:** کاربر لاگین‌شده یکی از آدرس‌های خود را حذف می‌کند.",
+        operationId: "deleteAddress",
+        tags: ["Addresses"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه آدرس" }],
+        responses: {
+          "200": { description: "آدرس حذف شد" },
+          "401": { description: "توکن نامعتبر" },
+          "404": { description: "آدرس یافت نشد" },
+        },
       },
     },
     "/offers": {
@@ -1845,6 +1973,18 @@ export const openApiDoc = {
       },
     },
     schemas: {
+      Address: {
+        description: "آدرس کاربر — شامل عنوان، متن آدرس و موقعیت جغرافیایی (اختیاری)",
+        type: "object",
+        properties: {
+          id: { type: "string", description: "شناسه آدرس (cuid)" },
+          title: { type: "string", description: "عنوان آدرس (مثلاً منزل، محل کار)" },
+          addressText: { type: "string", description: "متن کامل آدرس" },
+          latitude: { type: "number", nullable: true, description: "عرض جغرافیایی" },
+          longitude: { type: "number", nullable: true, description: "طول جغرافیایی" },
+          createdAt: { type: "string", format: "date-time", description: "تاریخ ثبت" },
+        },
+      },
       UserPublic: {
         description: "نمایش عمومی کاربر (پروفایل، لیست کاربران ادمین). در لیست کاربران ممکن است آرایه comments هم برگردد.",
         type: "object",
@@ -1946,6 +2086,7 @@ export const openApiDoc = {
     { name: "Comments", description: "کامنت مقالات — ثبت، لیست، تایید/رد، پاسخ ادمین، پاسخ تو در تو" },
     { name: "ProductComments", description: "کامنت محصولات — ثبت، لیست، تایید/رد، پاسخ ادمین، پاسخ تو در تو (جدا از کامنت مقاله)" },
     { name: "CartRequests", description: "درخواست سبد خرید — کاربر ثبت درخواست (لیست محصول + تعداد)، ادمین مشاهده و بروزرسانی وضعیت؛ ایمیل به کارفرما" },
+    { name: "Addresses", description: "آدرس‌های کاربر — لیست، افزودن، ویرایش، حذف؛ نیاز به توکن احراز هویت" },
     { name: "Products", description: "محصولات فروشگاه — لیست، جستجو، فیلتر، ایجاد، ویرایش، حذف" },
     { name: "Banners", description: "بنرهای اصلی — لیست (عمومی)، افزودن/حذف/ترتیب (ادمین)" },
     { name: "PromotionalBanners", description: "بنرهای تبلیغاتی چپ و راست — position مشخص می‌کند بنر برای کدام سمت است (left/right)" },

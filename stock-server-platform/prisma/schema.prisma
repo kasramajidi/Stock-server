@@ -28,8 +28,24 @@ model User {
   productsCreated  Product[]  @relation("ProductCreatedBy")
   articlesCreated  Article[]  @relation("ArticleCreatedBy")
   supportMessages  SupportMessage[]  // پیام‌های ارسالی این ادمین در چت پشتیبانی
+  addresses       UserAddress[]
 
   @@map("users")
+}
+
+model UserAddress {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  title       String   // نام یا برچسب آدرس
+  addressText String   @map("address_text") @db.Text // متن آدرس
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_addresses")
 }
 
 model ContactInquiry {

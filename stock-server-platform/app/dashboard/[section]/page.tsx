@@ -9,10 +9,7 @@ import DashboardMain from "@/components/Dashboard/DashboardMain";
 import AccountEmptyState from "@/components/Dashboard/AccountEmptyState";
 import AddressesSection from "@/components/Dashboard/AddressesSection";
 import AccountDetailsSection from "@/components/Dashboard/AccountDetailsSection";
-import WalletSection from "@/components/Dashboard/WalletSection";
-import WalletIncreaseSection from "@/components/Dashboard/WalletIncreaseSection";
 import OrdersSection from "@/components/Dashboard/OrdersSection";
-import CryptocurrencySection from "@/components/Dashboard/CryptocurrencySection";
 
 const allowedSections = [
   "dashboard",
@@ -22,16 +19,6 @@ const allowedSections = [
   "downloads",
   "addresses",
   "accountDetails",
-  "wallet",
-  "wallet-increase",
-  "wallet-repay",
-  "wallet-payments",
-  "wallet-transactions",
-  "profile-banks",
-  "profile-password",
-  "profile-invite",
-  "profile-messages",
-  "cryptocurrency",
   "favorites",
 ];
 
@@ -92,13 +79,10 @@ export default function DashboardSectionPage() {
         isComingSoon
       />
     );
-  } else if (activeSection === "wallet") {
-    content = <WalletSection />;
-  } else if (activeSection === "cryptocurrency") {
-    content = <CryptocurrencySection />;
-  } else if (activeSection === "wallet-increase") {
-    content = <WalletIncreaseSection />;
   } else if (
+    activeSection === "wallet" ||
+    activeSection === "cryptocurrency" ||
+    activeSection === "wallet-increase" ||
     activeSection === "wallet-repay" ||
     activeSection === "wallet-payments" ||
     activeSection === "wallet-transactions" ||
@@ -151,11 +135,8 @@ export default function DashboardSectionPage() {
 
   const sectionTitles: Record<string, string> = {
     orders: "سفارش‌های من",
-    "wallet-increase": "افزایش اعتبار",
     accountDetails: "مشخصات فردی",
     addresses: "آدرس‌ها",
-    wallet: "کیف پول",
-    cryptocurrency: "رمزارز",
     favorites: "علاقه‌مندی‌ها",
     downloads: "دانلودها",
   };

@@ -10,10 +10,7 @@ import DashboardCards from "@/components/Dashboard/DashboardCards";
 import AccountEmptyState from "@/components/Dashboard/AccountEmptyState";
 import AddressesSection from "@/components/Dashboard/AddressesSection";
 import AccountDetailsSection from "@/components/Dashboard/AccountDetailsSection";
-import WalletSection from "@/components/Dashboard/WalletSection";
-import WalletIncreaseSection from "@/components/Dashboard/WalletIncreaseSection";
 import OrdersSection from "@/components/Dashboard/OrdersSection";
-import CryptocurrencySection from "@/components/Dashboard/CryptocurrencySection";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -78,12 +75,6 @@ export default function DashboardPage() {
     content = <AddressesSection />;
   } else if (activeSection === "accountDetails") {
     content = <AccountDetailsSection />;
-  } else if (activeSection === "wallet") {
-    content = <WalletSection />;
-  } else if (activeSection === "cryptocurrency") {
-    content = <CryptocurrencySection />;
-  } else if (activeSection === "wallet-increase") {
-    content = <WalletIncreaseSection />;
   } else if (
     activeSection === "wallet-repay" ||
     activeSection === "wallet-payments" ||

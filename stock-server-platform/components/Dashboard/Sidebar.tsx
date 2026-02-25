@@ -8,8 +8,6 @@ const items: { id: string; label: string; href: string }[] = [
   { id: "dashboard", label: "پیشخوان", href: "/dashboard" },
   { id: "orders", label: "سفارش‌های من", href: "/dashboard/orders" },
   { id: "addresses", label: "آدرس‌ها", href: "/dashboard/addresses" },
-  { id: "wallet", label: "کیف پول", href: "/dashboard/wallet" },
-  { id: "cryptocurrency", label: "رمزارز", href: "/dashboard/cryptocurrency" },
 ];
 
 interface SidebarProps {
