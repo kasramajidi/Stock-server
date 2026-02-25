@@ -4,6 +4,10 @@
 
 export interface ShopProduct {
   id: number;
+  /** شناسه محصول در Prisma (cuid) — برای ثبت سفارش در CartRequests */
+  prismaProductId?: string;
+  /** slug برای لینک صفحه محصول — وقتی از API می‌آید */
+  slug?: string;
   name: string;
   price: number;
   image: string;
@@ -183,9 +187,59 @@ const MOCK_PRODUCTS: ShopProduct[] = [
   },
 ];
 
+function mapPrismaToShopProduct(p: {
+  id: string;
+  title: string;
+  slug: string;
+  shortDescription?: string;
+  image?: string | null;
+  category: string;
+  brand: string;
+  price?: number | null;
+  createdAt: Date;
+  viewCount?: number;
+}): ShopProduct {
+  return {
+    id: 0,
+    prismaProductId: p.id,
+    slug: p.slug,
+    name: p.title,
+    price: p.price ?? 0,
+    image: p.image || "",
+    rating: 5,
+    reviews: 0,
+    isNew: false,
+    category: p.category,
+    brand: p.brand,
+    createdAt: p.createdAt.toISOString().slice(0, 10),
+    sales: 0,
+    description: p.shortDescription || "",
+    mainCategoryId: "server",
+    productType: "server",
+  };
+}
+
+function getBaseUrl(): string {
+  if (typeof window !== "undefined") return "";
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+}
+
 export async function fetchShopProducts(): Promise<ShopProduct[]> {
-  // TODO: در صورت داشتن API واقعی، اینجا fetch کنید
-  return Promise.resolve(MOCK_PRODUCTS);
+  try {
+    const base = getBaseUrl();
+    const url = base ? `${base}/api/products?limit=50` : "/api/products?limit=50";
+    const res = await fetch(url, { cache: "no-store" });
+    const data = await res.json();
+    if (data?.success && Array.isArray(data.products) && data.products.length > 0) {
+      return data.products.map((p: { id: string; title: string; slug: string; shortDescription?: string; image?: string | null; category: string; brand: string; price?: number | null; createdAt: string | Date; viewCount?: number }) =>
+        mapPrismaToShopProduct({ ...p, createdAt: new Date(p.createdAt) })
+      );
+    }
+  } catch {
+    // fallback to mock
+  }
+  return MOCK_PRODUCTS;
 }
 
 export async function fetchProductById(id: number | string): Promise<ShopProduct | null> {

@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { useParams, useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import ProductImageGallery from "./ProductImageGallery";
 import ProductInfo from "./ProductInfo";
@@ -20,12 +20,44 @@ interface ProductDetailsProps {
 export default function ProductDetails({ initialProduct }: ProductDetailsProps) {
   const params = useParams();
   const router = useRouter();
-  const id = params?.id ? parseInt(params.id as string, 10) : null;
+  const pathname = usePathname();
+  const [submitting, setSubmitting] = useState(false);
   const product = initialProduct ?? null;
   const productImages = product && product.image ? [product.image] : [];
   const finalPrice = product?.price ?? 0;
 
-  const handleContact = () => router.push("/contact");
+  const handleOrder = async () => {
+    if (!product) return;
+    if (product.prismaProductId) {
+      setSubmitting(true);
+      try {
+        const res = await fetch("/api/cart-requests", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            items: [{ productId: product.prismaProductId, quantity: 1 }],
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 401) {
+          const returnUrl = pathname || `/shop/product/${params?.id}`;
+          router.push(`/auth?redirect=${encodeURIComponent(returnUrl)}`);
+          return;
+        }
+        if (!res.ok) {
+          alert(Array.isArray(data?.errors) ? data.errors.join("\n") : "خطا در ثبت سفارش.");
+          return;
+        }
+        router.push("/dashboard/orders");
+      } catch {
+        alert("خطا در ارتباط با سرور.");
+      } finally {
+        setSubmitting(false);
+      }
+    } else {
+      router.push("/contact");
+    }
+  };
 
   if (!product) {
     return (
@@ -78,7 +110,8 @@ export default function ProductDetails({ initialProduct }: ProductDetailsProps) 
                 selectedWarranty=""
                 setSelectedWarranty={() => {}}
                 finalPrice={finalPrice}
-                onContactRequest={handleContact}
+                onOrderRequest={handleOrder}
+                isSubmitting={submitting}
               />
             </div>
             <div className="lg:col-span-3">
@@ -90,7 +123,11 @@ export default function ProductDetails({ initialProduct }: ProductDetailsProps) 
         <ProductTabs product={product} />
 
         <div className="mt-10 sm:mt-12">
-          <RelatedProducts currentProductId={product.id} category={product.category} />
+          <RelatedProducts
+            currentProductId={product.id}
+            currentPrismaProductId={product.prismaProductId}
+            category={product.category}
+          />
         </div>
       </div>
     </div>

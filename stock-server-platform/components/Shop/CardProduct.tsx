@@ -12,42 +12,27 @@ interface ProductCardProps {
 const formatPrice = (price: number): string =>
   new Intl.NumberFormat("fa-IR").format(price);
 
+const DEFAULT_PRODUCT_IMAGE = "/Images/Menu/cpu.svg";
+
 export default function ProductCard({ product, priority }: ProductCardProps) {
   const { name, price, image, category } = product;
-  const hasImage = Boolean(image?.trim());
+  const imageSrc = image?.trim() || DEFAULT_PRODUCT_IMAGE;
 
   return (
     <Link
-      href={`/shop/product/${product.id}`}
+      href={`/shop/product/${product.slug ?? product.id}`}
       className="group block h-full bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-lg hover:border-slate-300/80 transition-all duration-300"
     >
       <div className="relative aspect-[4/3] bg-slate-50 overflow-hidden">
-        {hasImage ? (
-          <Image
-            src={image}
-            alt={name}
-            fill
-            className="object-contain p-6 group-hover:scale-105 transition-transform duration-500"
-            sizes="(max-width: 768px) 100vw, 33vw"
-            priority={priority}
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <svg
-              className="w-16 h-16 text-slate-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-              />
-            </svg>
-          </div>
-        )}
+        <Image
+          src={imageSrc}
+          alt={name}
+          fill
+          className="object-contain p-6 group-hover:scale-105 transition-transform duration-500"
+          sizes="(max-width: 768px) 100vw, 33vw"
+          priority={priority}
+          unoptimized={imageSrc.startsWith("http")}
+        />
         {category && (
           <span className="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-white/95 text-slate-600 text-xs font-medium shadow-sm border border-slate-100">
             {category}

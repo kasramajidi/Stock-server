@@ -29,6 +29,7 @@ async function getProductById(id: string) {
     if (!p) return null;
     return {
       id: 0,
+      prismaProductId: p.id,
       name: p.title,
       price: 0,
       image: p.image || "",

@@ -7,10 +7,11 @@ import { fetchShopProducts, type ShopProduct } from "@/lib/shop-api";
 
 interface RelatedProductsProps {
   currentProductId: number;
+  currentPrismaProductId?: string;
   category: string;
 }
 
-export default function RelatedProducts({ currentProductId, category }: RelatedProductsProps) {
+export default function RelatedProducts({ currentProductId, currentPrismaProductId, category }: RelatedProductsProps) {
   const [items, setItems] = useState<ShopProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -20,8 +21,12 @@ export default function RelatedProducts({ currentProductId, category }: RelatedP
     fetchShopProducts()
       .then((list) => {
         if (cancelled) return;
+        const excludeCurrent = (p: ShopProduct) =>
+          currentPrismaProductId
+            ? p.prismaProductId !== currentPrismaProductId
+            : p.id !== currentProductId;
         setItems(
-          list.filter((p) => p.id !== currentProductId && p.category === category).slice(0, 4)
+          list.filter((p) => excludeCurrent(p) && p.category === category).slice(0, 4)
         );
       })
       .catch(() => {
@@ -33,7 +38,7 @@ export default function RelatedProducts({ currentProductId, category }: RelatedP
     return () => {
       cancelled = true;
     };
-  }, [currentProductId, category]);
+  }, [currentProductId, currentPrismaProductId, category]);
 
   return (
     <section className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
@@ -64,7 +69,7 @@ export default function RelatedProducts({ currentProductId, category }: RelatedP
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
             {items.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p.prismaProductId ?? p.id} product={p} />
             ))}
           </div>
         )}

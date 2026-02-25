@@ -2,72 +2,56 @@
 
 import React, { useState, useEffect } from "react";
 import { Package } from "lucide-react";
-import type { InvoiceItem } from "@/lib/dashboard-api";
 import AccountEmptyState from "./AccountEmptyState";
 
-/** تبدیل شناسه به عدد برای سازگاری با InvoiceItem.shop.id */
-function toShopId(value: string | number | undefined): number | undefined {
-  if (value == null) return undefined;
-  if (typeof value === "number") return Number.isNaN(value) ? undefined : value;
-  const n = Number(value);
-  return Number.isNaN(n) ? undefined : n;
-}
-
-type OrderItem = {
-  productId?: string | number;
-  productName?: string;
-  finalPrice?: number;
-  quantity?: number;
-  [key: string]: unknown;
+const STATUS_LABELS: Record<string, string> = {
+  pending: "در انتظار بررسی",
+  in_progress: "در حال بررسی",
+  completed: "تکمیل شده",
+  cancelled: "لغو شده",
 };
 
-type Order = {
-  id?: string;
-  items?: OrderItem[];
-  isPaid?: boolean;
-  paymentStatus?: string;
-  price?: number;
-  user?: { name?: string; phone?: string; [key: string]: unknown };
-  [key: string]: unknown;
+const STATUS_BADGE_CLASS: Record<string, string> = {
+  pending: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
+  in_progress: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+  completed: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+  cancelled: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+};
+
+type CartRequestItem = {
+  id: string;
+  productId: string;
+  quantity: number;
+  product: { id: string; title: string; slug: string; category: string; priceLabel: string };
+};
+
+type CartRequest = {
+  id: string;
+  status: string;
+  note: string | null;
+  createdAt: string;
+  updatedAt: string;
+  items: CartRequestItem[];
 };
 
 export default function OrdersSection() {
-  const [invoices, setInvoices] = useState<InvoiceItem[]>([]);
+  const [cartRequests, setCartRequests] = useState<CartRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
     const load = async () => {
       try {
-        const raw = typeof window !== "undefined" ? localStorage.getItem("orders") : null;
-        const orders: Order[] = raw ? (JSON.parse(raw) as Order[]) : [];
+        const res = await fetch("/api/cart-requests", { credentials: "include" });
+        const data = await res.json().catch(() => ({}));
         if (!mounted) return;
-        if (orders.length > 0) {
-          const mapped: InvoiceItem[] = orders.flatMap((order) => {
-            const items = Array.isArray(order.items) ? order.items : [];
-            if (!items.length) return [];
-            const first = items[0];
-            return [
-              {
-                id: order.id,
-                shopid: first.productId,
-                quantity: first.quantity ?? order.price,
-                isPaid: Boolean(order.isPaid),
-                paymentStatus: order.paymentStatus ?? "",
-                price: first.finalPrice ?? order.price,
-                shop: {
-                  id: toShopId(first.productId),
-                  title: first.productName,
-                  price: first.finalPrice,
-                },
-                user: order.user,
-              },
-            ];
-          });
-          setInvoices(mapped);
+        if (data?.success && Array.isArray(data.cartRequests)) {
+          setCartRequests(data.cartRequests);
+        } else {
+          setCartRequests([]);
         }
       } catch {
-        if (mounted) setInvoices([]);
+        if (mounted) setCartRequests([]);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -88,7 +72,7 @@ export default function OrdersSection() {
     );
   }
 
-  if (invoices.length === 0) {
+  if (cartRequests.length === 0) {
     return (
       <div className="flex flex-col gap-6">
         <section className="rounded-xl border border-border bg-muted/30 p-5 sm:p-6">
@@ -113,15 +97,42 @@ export default function OrdersSection() {
           سفارش‌های من
         </p>
         <ul className="flex flex-col gap-3">
-          {invoices.map((inv, i) => (
+          {cartRequests.map((cr) => (
             <li
-              key={inv.id ?? i}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-background p-3 text-sm"
+              key={cr.id}
+              className="rounded-lg border border-border bg-background p-4 text-sm"
             >
-              <span className="font-medium">{inv.shop?.title ?? "سفارش"}</span>
-              <span className="text-muted-foreground">
-                {inv.price != null ? `${inv.price.toLocaleString("fa-IR")} ریال` : ""}
-              </span>
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <span className="text-xs text-muted-foreground">
+                  {new Date(cr.createdAt).toLocaleDateString("fa-IR", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+                <span
+                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                    STATUS_BADGE_CLASS[cr.status] ?? "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {STATUS_LABELS[cr.status] ?? cr.status}
+                </span>
+              </div>
+              <ul className="space-y-1">
+                {cr.items.map((item) => (
+                  <li key={item.id} className="flex justify-between gap-2">
+                    <span className="font-medium">{item.product.title}</span>
+                    <span className="text-muted-foreground">× {item.quantity}</span>
+                  </li>
+                ))}
+              </ul>
+              {cr.note && (
+                <p className="mt-2 text-muted-foreground text-xs border-t border-border pt-2">
+                  {cr.note}
+                </p>
+              )}
             </li>
           ))}
         </ul>

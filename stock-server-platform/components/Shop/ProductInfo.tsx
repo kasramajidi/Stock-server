@@ -10,13 +10,15 @@ interface ProductInfoProps {
   selectedWarranty: string;
   setSelectedWarranty: (w: string) => void;
   finalPrice: number;
-  onContactRequest: () => void;
+  onOrderRequest: () => void;
+  isSubmitting?: boolean;
 }
 
 export default function ProductInfo({
   product,
   finalPrice,
-  onContactRequest,
+  onOrderRequest,
+  isSubmitting = false,
 }: ProductInfoProps) {
   return (
     <div className="flex flex-col">
@@ -57,10 +59,11 @@ export default function ProductInfo({
 
       <button
         type="button"
-        onClick={onContactRequest}
-        className="w-full py-3.5 rounded-2xl font-semibold text-white bg-gray-900 hover:bg-gray-800 transition-colors cursor-pointer"
+        onClick={onOrderRequest}
+        disabled={isSubmitting}
+        className="w-full py-3.5 rounded-2xl font-semibold text-white bg-gray-900 hover:bg-gray-800 transition-colors cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
       >
-        تماس برای استعلام
+        {isSubmitting ? "در حال ثبت..." : "ثبت سفارش"}
       </button>
 
       <p className="mt-4 text-gray-500 text-sm flex items-center gap-2">
