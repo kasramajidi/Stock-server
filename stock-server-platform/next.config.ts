@@ -10,7 +10,13 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
     qualities: [75, 85, 95],
     unoptimized: false,
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.irantarh.com",
+        pathname: "/**",
+      },
+    ],
   },
   output: "standalone",
 };

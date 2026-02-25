@@ -83,24 +83,24 @@ const categories: Category[] = [
 export default function CategoryIcons() {
   return (
     <section className="bg-white rounded-2xl sm:rounded-3xl mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0 overflow-hidden">
-      {/* اول بنرهای تبلیغاتی */}
+      {/* بنر تبلیغاتی و دکمه دسته‌بندی */}
       <div className="-mx-3 min-[400px]:-mx-4 sm:-mx-6 md:-mx-8">
         <PromotionalBanners />
-      </div>
-
-      <div className="container mx-auto px-3 min-[400px]:px-4 sm:px-6 md:px-8 py-4 min-[400px]:py-5 sm:py-6 md:py-8">
-        <div className="text-center mb-4 sm:mb-6 md:mb-8">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#00DDFF] text-white px-4 min-[400px]:px-5 py-2 sm:px-6 sm:py-3 mb-2">
+        <div className="flex justify-center pt-3 sm:pt-4 pb-2">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#00DDFF] text-white px-4 min-[400px]:px-5 py-2 sm:px-6 sm:py-3 shadow-sm hover:bg-[#00ccee] transition-colors">
             <h2 className="text-lg min-[400px]:text-xl sm:text-2xl font-bold">
               دسته بندی محصولات
             </h2>
             <svg className="w-5 h-5 sm:w-6 sm:h-6 shrink-0 opacity-90" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
-              <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z" />
+              <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7zm11 0h7v7h-7v-7z" />
             </svg>
           </div>
-          <div className="relative w-full h-0.5 bg-[#f7f7f7]">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 sm:w-48 md:w-56 h-full bg-[#00DDFF]"></div>
-          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-3 min-[400px]:px-4 sm:px-6 md:px-8 py-4 min-[400px]:py-5 sm:py-6 md:py-8">
+        <div className="relative w-full h-0.5 bg-[#f7f7f7] mb-4 sm:mb-6 md:mb-8">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 sm:w-48 md:w-56 h-full bg-[#00DDFF]"></div>
         </div>
 
         {/* دسته‌بندی محصولات — همه در یک سطر */}

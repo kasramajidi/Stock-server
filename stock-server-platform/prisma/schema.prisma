@@ -112,11 +112,14 @@ model Product {
   brand             String
   partNumbers       String[] @default([]) @map("part_numbers")
   priceLabel        String   @map("price_label") // مثلاً «برای استعلام موجودی تماس بگیرید»
+  price             Int?     // قیمت فعلی به تومان (برای نمایش در آفر)
+  originalPrice     Int?     @map("original_price") // قیمت قبل تخفیف به تومان (اختیاری)
   inStock           Boolean  @default(true) @map("in_stock")
   statusLabel       String   @map("status_label") // مثلاً «آماده ارسال»
   rating            Int?     // امتیاز ۱–۵ یا null
   image             String?
   specs             Json?    // مشخصات فنی (آبجکت یا آرایه key/value)
+  offerDiscountPercent Int?  @map("offer_discount_percent") // درصد تخفیف آفر؛ اگر مقدار داشته باشد در بخش آفرهای ویژه نمایش داده می‌شود
   viewCount         Int      @default(0) @map("view_count")
   createdById       String?  @map("created_by_id") // ادمینی که محصول را ایجاد کرده
   createdAt         DateTime @default(now()) @map("created_at")
@@ -171,6 +174,40 @@ model SupportConversation {
   messages SupportMessage[]
 
   @@map("support_conversations")
+}
+
+model HeroBanner {
+  id        String   @id @default(cuid())
+  imageUrl  String   @map("image_url")
+  alt       String?  @db.Text
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("hero_banners")
+}
+
+/// بنرهای تبلیغاتی گرید وسط صفحه (اسلایدر — امکان افزودن اسلایدهای بیشتر با +)
+model PromoGridBanner {
+  id        String   @id @default(cuid())
+  position  Int      @unique // 1، 2، 3، 4، ... ترتیب نمایش؛ اسلاید جدید = max+1
+  imageUrl  String   @map("image_url")
+  alt       String?  @db.Text
+  link      String?  @db.Text // لینک کلیک (اختیاری)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("promo_grid_banners")
+}
+
+/// بنرهای تبلیغاتی چپ و راست (دو بنر کنار هم)
+model PromotionalBanner {
+  id        String   @id @default(cuid())
+  position  String   @unique // "left" | "right" — مشخص می‌کند بنر سمت چپ است یا راست
+  imageUrl  String   @map("image_url")
+  alt       String?  @db.Text
+  link      String?  @db.Text // لینک کلیک (اختیاری)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("promotional_banners")
 }
 
 model SupportMessage {

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import InputField from "./ui/InputField";
 import SubmitButton from "./ui/SubmitButton";
 import { setAuthCookie, AUTH_USER_KEY, AUTH_TOKEN_KEY } from "@/lib/cookie";
+import { loginSchema } from "@/lib/validations/auth";
 
 function normalizeMobile(value: string): string {
   return value.replace(/\s/g, "").replace(/^\+98/, "0");
@@ -22,21 +23,29 @@ export default function LoginForm({ onSwitchToRegister }: LoginFormProps) {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<{ mobile?: string; password?: string }>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (!phone.trim() || !password) {
-      setError("شماره موبایل و رمز عبور را وارد کنید.");
+    setFieldErrors({});
+
+    const parsed = loginSchema.safeParse({
+      mobile: normalizeMobile(phone.trim()),
+      password,
+    });
+    if (!parsed.success) {
+      const err = parsed.error.flatten().fieldErrors;
+      setFieldErrors({ mobile: err.mobile?.[0], password: err.password?.[0] });
+      setError(Object.values(err).flat().filter(Boolean)[0] ?? "لطفاً فیلدها را بررسی کنید.");
       return;
     }
     setLoading(true);
     try {
-      const mobile = normalizeMobile(phone.trim());
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mobile, password }),
+        body: JSON.stringify({ mobile: parsed.data.mobile, password: parsed.data.password }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -80,8 +89,9 @@ export default function LoginForm({ onSwitchToRegister }: LoginFormProps) {
         label="شماره موبایل"
         type="tel"
         value={phone}
-        onChange={(e) => setPhone(e.target.value)}
+        onChange={(e) => { setPhone(e.target.value); setFieldErrors((p) => ({ ...p, mobile: undefined })); }}
         placeholder="مثلاً ۰۹۱۲۳۴۵۶۷۸۹"
+        error={fieldErrors.mobile}
       />
 
       <InputField
@@ -89,8 +99,10 @@ export default function LoginForm({ onSwitchToRegister }: LoginFormProps) {
         label="رمز عبور"
         type="password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => { setPassword(e.target.value); setFieldErrors((p) => ({ ...p, password: undefined })); }}
         placeholder="رمز عبور"
+        error={fieldErrors.password}
+        showPasswordToggle
       />
 
       <div className="flex items-center justify-between text-xs text-slate-500">

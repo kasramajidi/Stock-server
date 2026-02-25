@@ -6,48 +6,44 @@ import Link from "next/link";
 
 interface PromotionalBanner {
   id: string;
+  position: "left" | "right";
   image: string;
   alt: string;
   link?: string;
 }
 
-const defaultBanners: PromotionalBanner[] = [
-  {
-    id: "1",
-    image: "/Images/PromotionalBanners/Baner.png",
-    alt: "بنر تبلیغاتی HPE - آموزش کامل تجهیزات",
-  },
-  {
-    id: "2",
-    image: "/Images/PromotionalBanners/Baner.png",
-    alt: "بنر گواهینامه‌ها و اعتبارات",
-  },
-];
+const defaultBanner: Omit<PromotionalBanner, "id" | "position"> = {
+  image: "/Images/PromotionalBanners/Baner.png",
+  alt: "بنر تبلیغاتی",
+};
 
 async function fetchPromotionalBanners(): Promise<PromotionalBanner[] | null> {
   try {
-    const response = await fetch("/api/promotional-banners", {
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
+    const response = await fetch("/api/promotional-banners", { cache: "no-store" });
+    if (!response.ok) return null;
     const data = await response.json();
-    return data.banners || null;
+    if (!data?.success || !Array.isArray(data?.banners)) return null;
+    return data.banners;
   } catch {
     return null;
   }
 }
 
 export default function PromotionalBanners() {
-  const [banners, setBanners] = useState<PromotionalBanner[]>(defaultBanners);
+  const [banners, setBanners] = useState<PromotionalBanner[]>([
+    { id: "left", position: "left", ...defaultBanner },
+    { id: "right", position: "right", ...defaultBanner },
+  ]);
 
   useEffect(() => {
     fetchPromotionalBanners().then((apiBanners) => {
-      if (apiBanners && apiBanners.length >= 2) {
-        setBanners(apiBanners);
+      if (apiBanners && apiBanners.length > 0) {
+        const byPos = Object.fromEntries(apiBanners.map((b) => [b.position, b]));
+        const merged: PromotionalBanner[] = [
+          byPos.left ?? { id: "left", position: "left", ...defaultBanner },
+          byPos.right ?? { id: "right", position: "right", ...defaultBanner },
+        ];
+        setBanners(merged);
       }
     });
   }, []);
@@ -57,11 +53,11 @@ export default function PromotionalBanners() {
       className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-0 mb-0"
       aria-label="بنرهای تبلیغاتی"
     >
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:gap-6">
         {banners.map((banner, index) => (
           <article
             key={banner.id}
-            className="relative w-full sm:flex-1 h-[140px] min-[400px]:h-[160px] sm:h-[200px] md:h-[240px] lg:h-[280px] xl:h-[300px] rounded-2xl sm:rounded-3xl overflow-hidden"
+            className="relative w-full sm:flex-1 h-[120px] min-[400px]:h-[140px] sm:h-[200px] md:h-[240px] lg:h-[280px] xl:h-[300px] rounded-2xl sm:rounded-3xl overflow-hidden"
           >
             {banner.link ? (
               <Link

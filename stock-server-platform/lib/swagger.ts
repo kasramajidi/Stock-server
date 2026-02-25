@@ -6,7 +6,7 @@ export const openApiDoc = {
   info: {
     title: "Stock Server API",
     version: "1.0.0",
-    description: "API سامانه استوک سرور. شامل: احراز هویت (ثبت‌نام/ورود)، پرسش و تماس، چت پشتیبانی، مدیریت کاربران، مقالات وبلاگ، کامنت مقالات، و محصولات فروشگاه. برای endpointهای محافظت‌شده هدر Authorization: Bearer <توکن> الزامی است.",
+    description: "API سامانه استوک سرور. شامل: احراز هویت (ثبت‌نام/ورود)، پرسش و تماس، چت پشتیبانی، مدیریت کاربران، بنرهای اصلی، مقالات وبلاگ، کامنت مقالات، و محصولات فروشگاه. برای endpointهای محافظت‌شده هدر Authorization: Bearer <توکن> الزامی است.",
   },
   servers: [
     { url: "/api", description: "API Base" },
@@ -752,6 +752,65 @@ export const openApiDoc = {
         responses: { "200": { description: "درخواست حذف شد" }, "401": { description: "توکن نامعتبر" }, "403": { description: "دسترسی غیرمجاز" }, "404": { description: "درخواست یافت نشد" } },
       },
     },
+    "/offers": {
+      get: {
+        summary: "لیست آفرهای ویژه",
+        description: "**برای چی:** نمایش محصولاتی که درصد تخفیف آفر دارند (offerDiscountPercent > 0). عمومی و بدون نیاز به توکن. برای نمایش در بخش «آفرهای ویژه» صفحه اصلی استفاده می‌شود.",
+        operationId: "listOffers",
+        tags: ["Products"],
+        responses: {
+          "200": {
+            description: "لیست آفرها",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    offers: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string", description: "شناسه محصول" },
+                          title: { type: "string", description: "عنوان محصول" },
+                          image: { type: "string", nullable: true, description: "آدرس تصویر" },
+                          specs: {
+                            type: "array",
+                            items: { type: "string" },
+                            description: "لیست مشخصات (یا shortDescription اگر specs خالی باشد)",
+                          },
+                          shortDescription: { type: "string", description: "معرفی کوتاه" },
+                          offerDiscountPercent: { type: "integer", minimum: 1, maximum: 100, description: "درصد تخفیف (مثلاً ۲۰ برای ۲۰٪)" },
+                          priceLabel: { type: "string", description: "متن قیمت (مثلاً برای استعلام تماس بگیرید)" },
+                          price: { type: "integer", nullable: true, description: "قیمت فعلی به تومان" },
+                          originalPrice: { type: "integer", nullable: true, description: "قیمت قبل تخفیف (برای خط خورده)" },
+                          href: { type: "string", description: "لینک صفحه محصول (/shop/product/[slug])" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "500": {
+            description: "خطای سرور",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: false },
+                    errors: { type: "array", items: { type: "string" } },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/products": {
       get: {
         summary: "لیست محصولات",
@@ -813,11 +872,20 @@ export const openApiDoc = {
                   brand: { type: "string" },
                   partNumbers: { type: "array", items: { type: "string" } },
                   priceLabel: { type: "string" },
+                  price: { type: "integer", nullable: true },
+                  originalPrice: { type: "integer", nullable: true },
                   inStock: { type: "boolean" },
                   statusLabel: { type: "string" },
                   rating: { type: "integer", minimum: 1, maximum: 5 },
                   image: { type: "string" },
                   specs: { type: "object", description: "مشخصات فنی (key/value)" },
+                  offerDiscountPercent: {
+                    type: "integer",
+                    minimum: 1,
+                    maximum: 100,
+                    nullable: true,
+                    description: "درصد تخفیف آفر؛ اگر مقدار داشته باشد محصول در بخش آفرهای ویژه نمایش داده می‌شود؛ null یا حذف = بدون آفر",
+                  },
                 },
               },
             },
@@ -833,6 +901,550 @@ export const openApiDoc = {
         security: [{ bearerAuth: [] }],
         parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه (cuid) محصول" }],
         responses: { "200": { description: "محصول حذف شد" }, "401": { description: "توکن نامعتبر" }, "403": { description: "فقط ادمین" }, "404": { description: "محصول یافت نشد" } },
+      },
+    },
+    "/banners": {
+      get: {
+        summary: "لیست بنرهای اصلی (عمومی)",
+        description: "**برای چی:** نمایش بنرهای اسلایدر بالای صفحه اصلی (Hero). عمومی و بدون نیاز به توکن. بنرها به ترتیب sortOrder برمی‌گردند. **اندازه پیشنهادی تصویر:** ۱۹۲۰ × ۴۸۰ پیکسل (عرض × ارتفاع).",
+        operationId: "listBanners",
+        tags: ["Banners"],
+        responses: {
+          "200": {
+            description: "لیست بنرها",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    banners: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          imageUrl: { type: "string", format: "uri" },
+                          alt: { type: "string", nullable: true },
+                          sortOrder: { type: "integer" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/admin/banners": {
+      get: {
+        summary: "لیست بنرها (ادمین)",
+        description: "**برای چی:** ادمین لیست همه بنرها را می‌بیند. نیاز به توکن ادمین.",
+        operationId: "adminListBanners",
+        tags: ["Banners"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "لیست بنرها",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    banners: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          imageUrl: { type: "string" },
+                          alt: { type: "string", nullable: true },
+                          sortOrder: { type: "integer" },
+                          createdAt: { type: "string", format: "date-time" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+        },
+      },
+      post: {
+        summary: "افزودن بنر (ادمین)",
+        description: "**برای چی:** ادمین بنر جدید اضافه می‌کند. imageUrl الزامی؛ alt اختیاری. **اندازه پیشنهادی:** ۱۹۲۰ × ۴۸۰ پیکسل.",
+        operationId: "adminCreateBanner",
+        tags: ["Banners"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["imageUrl"],
+                properties: {
+                  imageUrl: { type: "string", format: "uri", description: "آدرس تصویر بنر (URL)" },
+                  alt: { type: "string", maxLength: 200, description: "متن جایگزین تصویر (اختیاری)" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "201": {
+            description: "بنر ایجاد شد",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    banner: {
+                      type: "object",
+                      properties: {
+                        id: { type: "string" },
+                        imageUrl: { type: "string" },
+                        alt: { type: "string", nullable: true },
+                        sortOrder: { type: "integer" },
+                        createdAt: { type: "string", format: "date-time" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "خطای اعتبارسنجی (imageUrl نامعتبر)" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+        },
+      },
+      patch: {
+        summary: "تغییر ترتیب بنرها (ادمین)",
+        description: "**برای چی:** ادمین ترتیب نمایش بنرها را با ارسال آرایه idها به ترتیب نهایی تغییر می‌دهد.",
+        operationId: "adminReorderBanners",
+        tags: ["Banners"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["order"],
+                properties: {
+                  order: {
+                    type: "array",
+                    items: { type: "string" },
+                    description: "آرایه id بنرها به ترتیب دلخواه (اولی = نمایش اول، دومی = نمایش دوم و ...)",
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "ترتیب به‌روز شد",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    banners: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          imageUrl: { type: "string" },
+                          alt: { type: "string", nullable: true },
+                          sortOrder: { type: "integer" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "خطای اعتبارسنجی (order خالی)" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+        },
+      },
+    },
+    "/admin/banners/{id}": {
+      delete: {
+        summary: "حذف بنر (ادمین)",
+        description: "**برای چی:** ادمین یک بنر را حذف می‌کند.",
+        operationId: "adminDeleteBanner",
+        tags: ["Banners"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه بنر" }],
+        responses: {
+          "200": { description: "بنر حذف شد" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+          "404": { description: "بنر یافت نشد" },
+        },
+      },
+    },
+    "/promotional-banners": {
+      get: {
+        summary: "لیست بنرهای تبلیغاتی چپ و راست (عمومی)",
+        description: "**برای چی:** نمایش بنرهای تبلیغاتی کنار هم در صفحه اصلی. هر بنر دارای **position** است: `left` (سمت چپ) یا `right` (سمت راست) — مشخص می‌کند بنر کجا نمایش داده می‌شود. **اندازه پیشنهادی:** ۱۲۰۰ × ۳۰۰ پیکسل.",
+        operationId: "listPromotionalBanners",
+        tags: ["PromotionalBanners"],
+        responses: {
+          "200": {
+            description: "لیست بنرها (به ترتیب چپ، راست)",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    banners: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          position: { type: "string", enum: ["left", "right"], description: "سمت چپ یا راست" },
+                          image: { type: "string", description: "آدرس تصویر" },
+                          alt: { type: "string" },
+                          link: { type: "string", nullable: true, description: "لینک کلیک (اختیاری)" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/admin/promotional-banners": {
+      get: {
+        summary: "لیست بنرهای چپ و راست (ادمین)",
+        description: "**برای چی:** ادمین لیست بنرهای تبلیغاتی (چپ و راست) را می‌بیند. نیاز به توکن ادمین.",
+        operationId: "adminListPromotionalBanners",
+        tags: ["PromotionalBanners"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "لیست بنرها",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    banners: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          position: { type: "string", enum: ["left", "right"] },
+                          imageUrl: { type: "string" },
+                          alt: { type: "string", nullable: true },
+                          link: { type: "string", nullable: true },
+                          createdAt: { type: "string", format: "date-time" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+        },
+      },
+      post: {
+        summary: "افزودن یا بروزرسانی بنر چپ/راست (ادمین)",
+        description: "**برای چی:** ادمین بنر سمت **چپ** (`left`) یا **راست** (`right`) را تنظیم می‌کند. با ارسال **position** مشخص می‌شود بنر برای کدام سمت است. اگر آن جایگاه قبلاً پر باشد، بروزرسانی می‌شود (upsert).",
+        operationId: "adminUpsertPromotionalBanner",
+        tags: ["PromotionalBanners"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["position", "imageUrl"],
+                properties: {
+                  position: { type: "string", enum: ["left", "right"], description: "جایگاه: left = سمت چپ، right = سمت راست" },
+                  imageUrl: { type: "string", format: "uri", description: "آدرس تصویر (URL یا مسیر لوکال مثل /Images/...)" },
+                  alt: { type: "string", maxLength: 200, description: "متن جایگزین (اختیاری)" },
+                  link: { type: "string", maxLength: 500, description: "لینک کلیک (اختیاری)" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "201": {
+            description: "بنر ذخیره شد",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    banner: {
+                      type: "object",
+                      properties: {
+                        id: { type: "string" },
+                        position: { type: "string", enum: ["left", "right"] },
+                        imageUrl: { type: "string" },
+                        alt: { type: "string", nullable: true },
+                        link: { type: "string", nullable: true },
+                        createdAt: { type: "string", format: "date-time" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "خطای اعتبارسنجی (position یا imageUrl نامعتبر)" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+        },
+      },
+    },
+    "/admin/promotional-banners/{id}": {
+      patch: {
+        summary: "ویرایش بنر چپ/راست (ادمین)",
+        description: "**برای چی:** ادمین یک بنر را ویرایش می‌کند (position، imageUrl، alt، link).",
+        operationId: "adminUpdatePromotionalBanner",
+        tags: ["PromotionalBanners"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه بنر" }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  position: { type: "string", enum: ["left", "right"] },
+                  imageUrl: { type: "string" },
+                  alt: { type: "string", nullable: true },
+                  link: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "بنر ویرایش شد" },
+          "400": { description: "خطای اعتبارسنجی" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+          "404": { description: "بنر یافت نشد" },
+        },
+      },
+      delete: {
+        summary: "حذف بنر چپ/راست (ادمین)",
+        description: "**برای چی:** ادمین یک بنر تبلیغاتی را حذف می‌کند.",
+        operationId: "adminDeletePromotionalBanner",
+        tags: ["PromotionalBanners"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه بنر" }],
+        responses: {
+          "200": { description: "بنر حذف شد" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+          "404": { description: "بنر یافت نشد" },
+        },
+      },
+    },
+    "/promo-grid-banners": {
+      get: {
+        summary: "لیست بنرهای تبلیغاتی گرید وسط صفحه (عمومی)",
+        description: "**برای چی:** نمایش بنرهای تبلیغاتی در بخش گرید وسط صفحه — سه اسلات ثابت ۱، ۲، ۳.",
+        operationId: "listPromoGridBanners",
+        tags: ["PromoGridBanners"],
+        responses: {
+          "200": {
+            description: "لیست بنرها",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    banners: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          position: { type: "integer", enum: [1, 2, 3] },
+                          image: { type: "string", description: "آدرس تصویر" },
+                          alt: { type: "string" },
+                          link: { type: "string", nullable: true, description: "لینک کلیک (اختیاری)" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/admin/promo-grid-banners": {
+      get: {
+        summary: "لیست بنرهای گرید وسط (ادمین)",
+        description: "**برای چی:** ادمین لیست بنرهای تبلیغاتی گرید وسط (اسلات ۱، ۲، ۳) را می‌بیند. عوض کردن یکی بقیه را پاک نمی‌کند.",
+        operationId: "adminListPromoGridBanners",
+        tags: ["PromoGridBanners"],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "لیست بنرها",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    banners: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          position: { type: "integer", enum: [1, 2, 3] },
+                          imageUrl: { type: "string" },
+                          alt: { type: "string", nullable: true },
+                          link: { type: "string", nullable: true },
+                          createdAt: { type: "string", format: "date-time" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+        },
+      },
+      post: {
+        summary: "افزودن یا عوض کردن بنر اسلات (ادمین)",
+        description: "**برای چی:** ادمین بنر اسلات ۱، ۲ یا ۳ را تنظیم می‌کند. با upsert: اگر اسلات پر باشد عوض می‌شود؛ بقیه دست نخورده می‌مانند.",
+        operationId: "adminCreatePromoGridBanner",
+        tags: ["PromoGridBanners"],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["position", "imageUrl"],
+                properties: {
+                  position: { type: "integer", enum: [1, 2, 3], description: "اسلات ۱، ۲ یا ۳" },
+                  imageUrl: { type: "string", description: "آدرس تصویر (URL یا مسیر لوکال مثل /Images/Baner/...)" },
+                  alt: { type: "string", maxLength: 200, description: "متن جایگزین (اختیاری)" },
+                  link: { type: "string", maxLength: 500, description: "لینک کلیک (اختیاری)" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "201": {
+            description: "بنر ذخیره شد",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    banner: {
+                      type: "object",
+                      properties: {
+                        id: { type: "string" },
+                        position: { type: "integer", enum: [1, 2, 3] },
+                        imageUrl: { type: "string" },
+                        alt: { type: "string", nullable: true },
+                        link: { type: "string", nullable: true },
+                        createdAt: { type: "string", format: "date-time" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "خطای اعتبارسنجی" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+        },
+      },
+    },
+    "/admin/promo-grid-banners/{id}": {
+      patch: {
+        summary: "ویرایش بنر گرید وسط (ادمین)",
+        description: "**برای چی:** ادمین یک بنر را ویرایش می‌کند.",
+        operationId: "adminUpdatePromoGridBanner",
+        tags: ["PromoGridBanners"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه بنر" }],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  imageUrl: { type: "string" },
+                  alt: { type: "string", nullable: true },
+                  link: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": { description: "بنر ویرایش شد" },
+          "400": { description: "خطای اعتبارسنجی" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+          "404": { description: "بنر یافت نشد" },
+        },
+      },
+      delete: {
+        summary: "حذف بنر گرید وسط (ادمین)",
+        description: "**برای چی:** ادمین یک بنر تبلیغاتی گرید وسط را حذف می‌کند.",
+        operationId: "adminDeletePromoGridBanner",
+        tags: ["PromoGridBanners"],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" }, description: "شناسه بنر" }],
+        responses: {
+          "200": { description: "بنر حذف شد" },
+          "401": { description: "توکن نامعتبر" },
+          "403": { description: "فقط ادمین" },
+          "404": { description: "بنر یافت نشد" },
+        },
       },
     },
     "/support/start": {
@@ -1307,11 +1919,20 @@ export const openApiDoc = {
           brand: { type: "string", description: "برند" },
           partNumbers: { type: "array", items: { type: "string" }, default: [], description: "شماره قطعات / مدل‌ها" },
           priceLabel: { type: "string", example: "برای استعلام موجودی تماس بگیرید", description: "متن نمایشی قیمت (مثلاً «تماس بگیرید»)" },
+          price: { type: "integer", minimum: 0, nullable: true, description: "قیمت فعلی به تومان (برای آفر)" },
+          originalPrice: { type: "integer", minimum: 0, nullable: true, description: "قیمت قبل تخفیف به تومان (برای نمایش خط‌خورده)" },
           inStock: { type: "boolean", default: true, description: "آیا موجود است" },
           statusLabel: { type: "string", example: "آماده ارسال", description: "وضعیت نمایشی (مثلاً آماده ارسال)" },
           rating: { type: "integer", minimum: 1, maximum: 5, nullable: true, description: "امتیاز ۱ تا ۵ (اختیاری)" },
           image: { type: "string", nullable: true, description: "آدرس تصویر محصول (اختیاری)" },
           specs: { type: "object", description: "مشخصات فنی به صورت key/value (اختیاری)" },
+          offerDiscountPercent: {
+            type: "integer",
+            minimum: 1,
+            maximum: 100,
+            nullable: true,
+            description: "درصد تخفیف آفر (اختیاری). اگر مقدار بدهید، محصول در بخش آفرهای ویژه صفحه اصلی نمایش داده می‌شود.",
+          },
         },
       },
     },
@@ -1326,5 +1947,8 @@ export const openApiDoc = {
     { name: "ProductComments", description: "کامنت محصولات — ثبت، لیست، تایید/رد، پاسخ ادمین، پاسخ تو در تو (جدا از کامنت مقاله)" },
     { name: "CartRequests", description: "درخواست سبد خرید — کاربر ثبت درخواست (لیست محصول + تعداد)، ادمین مشاهده و بروزرسانی وضعیت؛ ایمیل به کارفرما" },
     { name: "Products", description: "محصولات فروشگاه — لیست، جستجو، فیلتر، ایجاد، ویرایش، حذف" },
+    { name: "Banners", description: "بنرهای اصلی — لیست (عمومی)، افزودن/حذف/ترتیب (ادمین)" },
+    { name: "PromotionalBanners", description: "بنرهای تبلیغاتی چپ و راست — position مشخص می‌کند بنر برای کدام سمت است (left/right)" },
+    { name: "PromoGridBanners", description: "بنرهای تبلیغاتی گرید وسط — سه اسلات ثابت؛ عوض کردن یکی بقیه را پاک نمی‌کند" },
   ],
 } as const;

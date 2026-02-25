@@ -102,6 +102,7 @@ export default function HeroSection({
                     quality={95}
                     sizes="(max-width: 400px) calc(100vw - 24px), (max-width: 640px) calc(100vw - 48px), (max-width: 768px) calc(100vw - 100px), (max-width: 1080px) calc(100vw - 100px), (max-width: 1440px) calc(100vw - 100px), 2400px"
                     className="object-cover"
+                    unoptimized={typeof src === "string" && (src.startsWith("http://") || src.startsWith("https://"))}
                   />
                 </div>
               </CarouselItem>

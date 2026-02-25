@@ -12,8 +12,14 @@ import { webSiteStructuredData, organizationStructuredData } from "@/lib/seo";
 import MemorySection from "@/components/Home/memory/MemorySection";
 import ScrollArrow from "@/components/Layout/ScrollArrow";
 
-async function getBannerImage() {
+async function getBannerImages(): Promise<string[] | null> {
   try {
+    const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const res = await fetch(`${base}/api/banners`, { cache: "no-store" });
+    const data = await res.json();
+    if (data?.success && Array.isArray(data?.banners) && data.banners.length > 0) {
+      return data.banners.map((b: { imageUrl: string }) => b.imageUrl);
+    }
     return null;
   } catch {
     return null;
@@ -34,7 +40,7 @@ export const metadata: Metadata = {
 const sectionClass = "mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] xl:mx-[50px]";
 
 export default async function Home() {
-  const bannerImage = await getBannerImage();
+  const bannerImages = await getBannerImages();
 
   return (
     <main>
@@ -42,7 +48,7 @@ export default async function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData) }} />
       <h1 className="sr-only">استوک سرور - فروش سرور و تجهیزات شبکه</h1>
       <div className="bg-gray-100 relative mb-3 sm:mb-4 min-h-[260px] sm:min-h-[340px] md:h-[500px] rounded-b-2xl sm:rounded-b-3xl">
-        <HeroSection bannerImage={bannerImage} />
+        <HeroSection bannerImage={bannerImages} />
         <div className="flex justify-center items-center absolute bottom-0 left-0 right-0 pb-2 sm:pb-3 md:-bottom-12">
           <ScrollArrow direction="down" className="py-0" />
         </div>

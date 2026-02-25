@@ -7,6 +7,7 @@ import { useAdminTheme } from "@/components/Admin/AdminThemeContext";
 import {
   LayoutDashboard,
   Users,
+  LayoutGrid,
   ShoppingCart,
   MessageSquare,
   MessageCircle,
@@ -16,6 +17,8 @@ import {
   Shield,
   PackagePlus,
   Newspaper,
+  ImageIcon,
+  PanelLeft,
   Sun,
   Moon,
   X,
@@ -23,6 +26,9 @@ import {
 
 const items: { path: string; label: string; icon: React.ElementType }[] = [
   { path: "/admin", label: "پیشخوان", icon: LayoutDashboard },
+  { path: "/admin/banners", label: "بنر اصلی", icon: ImageIcon },
+  { path: "/admin/promotional-banners", label: "بنرهای چپ و راست", icon: PanelLeft },
+  { path: "/admin/promo-grid-banners", label: "بنرهای گرید وسط", icon: LayoutGrid },
   { path: "/admin/users", label: "کاربران", icon: Users },
   { path: "/admin/cart-requests", label: "درخواست‌های سبد", icon: ShoppingCart },
   { path: "/admin/support", label: "چت پشتیبانی", icon: MessageCircle },

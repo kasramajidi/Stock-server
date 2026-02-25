@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ProductDetails from "@/components/Shop/ProductDetails";
 import { fetchShopProducts, fetchProductById } from "@/lib/shop-api";
+import { prisma } from "@/lib/prisma";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -8,17 +9,43 @@ interface ProductPageProps {
 
 async function getProductById(id: string) {
   const productId = parseInt(id, 10);
-  if (Number.isNaN(productId)) return null;
-  try {
-    const apiProducts = await fetchShopProducts();
-    const fromList = apiProducts.find((p) => p.id === productId);
-    if (fromList) return fromList;
-    const fromApi = await fetchProductById(productId);
-    if (fromApi) return fromApi;
-  } catch {
-    // fallback
+  if (!Number.isNaN(productId)) {
+    try {
+      const apiProducts = await fetchShopProducts();
+      const fromList = apiProducts.find((p) => p.id === productId);
+      if (fromList) return fromList;
+      const fromApi = await fetchProductById(productId);
+      if (fromApi) return fromApi;
+    } catch {
+      // fallback
+    }
+    return null;
   }
-  return null;
+  // id ممکن است slug یا cuid محصول Prisma باشد
+  try {
+    const p = await prisma.product.findFirst({
+      where: { OR: [{ id }, { slug: id }] },
+    });
+    if (!p) return null;
+    return {
+      id: 0,
+      name: p.title,
+      price: 0,
+      image: p.image || "",
+      rating: p.rating ?? 5,
+      reviews: 0,
+      isNew: false,
+      category: p.category,
+      brand: p.brand,
+      createdAt: p.createdAt.toISOString().slice(0, 10),
+      sales: 0,
+      description: p.shortDescription,
+      mainCategoryId: "server",
+      productType: "server" as const,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
@@ -47,7 +74,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       type: "website",
       images: productImage ? [{ url: productImage, alt: product.name }] : undefined,
     },
-    alternates: { canonical: `/shop/product/${product.id}` },
+    alternates: { canonical: `/shop/product/${id}` },
   };
 }
 
@@ -56,7 +83,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const product = await getProductById(id);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stock-server.ir";
-  const productUrl = `${siteUrl}/shop/product/${product?.id}`;
+  const productUrl = `${siteUrl}/shop/product/${id}`;
   const productImage = product?.image?.startsWith("/")
     ? `${siteUrl}${product.image}`
     : product?.image ?? "";

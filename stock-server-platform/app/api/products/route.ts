@@ -54,8 +54,12 @@ export async function GET(request: NextRequest) {
     });
   } catch (e) {
     console.error("Products GET error:", e);
+    const msg =
+      String(e).includes("column") || String(e).includes("does not exist")
+        ? "ستون جدید در دیتابیس وجود ندارد. دستور npx prisma migrate deploy را اجرا کنید."
+        : "خطا در دریافت لیست محصولات.";
     return NextResponse.json(
-      { success: false, errors: ["خطا در دریافت لیست محصولات."] },
+      { success: false, errors: [msg] },
       { status: 500 }
     );
   }
@@ -102,11 +106,14 @@ export async function POST(request: NextRequest) {
         brand: data.brand,
         partNumbers: data.partNumbers ?? [],
         priceLabel: data.priceLabel,
+        price: data.price ?? undefined,
+        originalPrice: data.originalPrice ?? undefined,
         inStock: data.inStock ?? true,
         statusLabel: data.statusLabel,
         rating: data.rating ?? undefined,
         image: data.image ?? undefined,
         specs: data.specs ?? undefined,
+        offerDiscountPercent: data.offerDiscountPercent ?? undefined,
         createdById: auth.userId,
       },
     });

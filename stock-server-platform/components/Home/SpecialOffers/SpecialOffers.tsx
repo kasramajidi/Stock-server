@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -16,49 +17,165 @@ export interface SpecialOfferConfig {
   image?: string;
   specs: string[];
   href?: string;
+  offerDiscountPercent?: number;
+  price?: number;
+  originalPrice?: number | null;
+  priceLabel?: string;
 }
 
-const offers: SpecialOfferConfig[] = [
-  { id: "1", title: "کانفیگ ویژه شماره ۱", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
-  { id: "2", title: "کانفیگ ویژه شماره ۲", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
-  { id: "3", title: "کانفیگ ویژه شماره ۳", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
-  { id: "4", title: "کانفیگ ویژه شماره ۴", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
-  { id: "5", title: "کانفیگ ویژه شماره ۵", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
-  { id: "6", title: "کانفیگ ویژه شماره ۶", specs: ["این یک متن است", "این یک متن است", "این یک متن است", "این یک متن است"], image: "/Images/PromotionalBanners/Baner.png" },
-];
+const formatPrice = (n: number) =>
+  new Intl.NumberFormat("fa-IR").format(n) + " تومان";
 
-function OfferCard({ config }: { config: SpecialOfferConfig }) {
+// آیکون سرور (سه رک روی هم)
+function ServerStackIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="8" y="6" width="32" height="10" rx="1" />
+      <line x1="8" y1="12" x2="40" y2="12" />
+      <rect x="8" y="20" width="32" height="10" rx="1" />
+      <line x1="8" y1="26" x2="40" y2="26" />
+      <rect x="8" y="34" width="32" height="10" rx="1" />
+      <line x1="8" y1="40" x2="40" y2="40" />
+      <circle cx="14" cy="9" r="0.8" fill="currentColor" />
+      <circle cx="14" cy="23" r="0.8" fill="currentColor" />
+      <circle cx="14" cy="37" r="0.8" fill="currentColor" />
+    </svg>
+  );
+}
+
+function OfferCard({ config, index }: { config: SpecialOfferConfig; index: number }) {
+  const hasPrice = (config.price ?? 0) > 0;
+  const showStrikethrough = hasPrice && (config.originalPrice ?? 0) > 0 && (config.originalPrice ?? 0) > (config.price ?? 0);
+
   const content = (
-    <>
-      <p className="text-base min-[400px]:text-lg sm:text-xl md:text-xl font-bold text-gray-800 text-center">{config.title}</p>
-      <div className="relative w-full aspect-video min-h-[100px] min-[400px]:min-h-[120px] sm:min-h-[140px] md:min-h-[160px] lg:min-h-[180px] bg-gray-100 rounded-lg overflow-hidden">
-        {config.image ? (
-          <Image src={config.image} alt={config.title} fill className="object-cover" sizes="(max-width: 480px) 100vw, (max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
-        ) : (
-          <div className="absolute inset-0 bg-gray-200" />
+    <div
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-lg shadow-slate-200/60 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+      style={{
+        animation: "offerCardEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards",
+        animationDelay: `${index * 80}ms`,
+      }}
+    >
+      {/* بخش بالایی — پس‌زمینه فیروزه‌ای با تصویر */}
+      <div className="relative flex flex-col items-center justify-center rounded-b-3xl bg-cyan-500 px-4 pt-6 pb-5 min-h-[140px] sm:min-h-[160px]">
+        {config.offerDiscountPercent != null && config.offerDiscountPercent > 0 && (
+          <span className="absolute top-3 end-3 rounded-full bg-amber-400 px-3 py-1 text-sm font-bold text-slate-900 shadow-md">
+            {config.offerDiscountPercent}٪ تخفیف
+          </span>
         )}
+        {config.image ? (
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0">
+            <Image
+              src={config.image}
+              alt={config.title}
+              fill
+              className="object-contain"
+              sizes="96px"
+            />
+          </div>
+        ) : (
+          <div className="text-slate-800/90">
+            <ServerStackIcon className="w-16 h-16 sm:w-20 sm:h-20" />
+          </div>
+        )}
+        <span className="mt-2 text-sm font-medium text-white">استوک سرور</span>
       </div>
-      <ul className="flex flex-col gap-2 sm:gap-3 w-full">
-        {config.specs.map((spec, i) => (
-          <li key={i} className="flex items-center gap-2 sm:gap-3 text-xs min-[400px]:text-sm">
-            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#00DDFF] shrink-0" />
-            <span>{spec}</span>
-          </li>
-        ))}
-      </ul>
-    </>
+
+      {/* بخش سفید — نام و قیمت */}
+      <div className="flex flex-1 flex-col p-4 pt-5">
+        <h3 className="text-center text-base font-bold text-slate-800 leading-snug mb-4 line-clamp-2 min-h-[2.5rem]">
+          {config.title}
+        </h3>
+
+        {/* قیمت‌ها */}
+        <div className="flex flex-col items-center gap-0.5 mb-4">
+          {showStrikethrough && (
+            <span className="text-sm text-slate-400 line-through">
+              {formatPrice(config.originalPrice!)}
+            </span>
+          )}
+          {hasPrice ? (
+            <span className="text-lg sm:text-xl font-bold text-slate-900">
+              {formatPrice(config.price!)}
+            </span>
+          ) : (
+            <span className="text-sm text-slate-600 font-medium">
+              {config.priceLabel || "برای استعلام تماس بگیرید"}
+            </span>
+          )}
+        </div>
+
+        {/* دکمه افزودن به سبد */}
+        <span
+          className="mx-auto flex size-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500 text-white transition-colors group-hover:bg-cyan-600"
+          aria-hidden
+        >
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+        </span>
+      </div>
+    </div>
   );
 
-  const className = "border-2 border-[#00DDFF]/40 hover:border-[#00DDFF] rounded-xl bg-white p-3 min-[400px]:p-4 sm:p-5 md:p-5 flex flex-col items-center gap-3 min-[400px]:gap-4 sm:gap-5 transition-colors w-full";
-
+  const wrapperClass = "block h-full w-full";
   if (config.href) {
-    return <Link href={config.href} className={className}>{content}</Link>;
+    return <Link href={config.href} className={wrapperClass}>{content}</Link>;
   }
-
-  return <div className={className}>{content}</div>;
+  return <div className={wrapperClass}>{content}</div>;
 }
 
 export default function SpecialOffers() {
+  const [offers, setOffers] = useState<SpecialOfferConfig[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/offers")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.success && Array.isArray(data.offers)) {
+          setOffers(data.offers);
+        }
+      })
+      .catch(() => setOffers([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0">
+        <div
+          className="flex flex-col lg:flex-row items-center lg:items-stretch rounded-xl sm:rounded-2xl gap-4 min-[400px]:gap-5 sm:gap-6 md:gap-8 p-3 min-[400px]:p-4 sm:p-5 md:p-6 shadow-lg overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, #0c1929 0%, #0f2847 25%, #0d3d5c 50%, #0a4d6e 75%, #00DDFF 100%)",
+          }}
+        >
+          <h2 className="text-xl min-[400px]:text-2xl sm:text-2xl md:text-3xl text-white font-bold shrink-0">آفرهای ویژه</h2>
+          <div className="flex-1 flex items-center justify-center min-h-[240px]">
+            <div className="w-10 h-10 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0">
       <div
@@ -70,27 +187,38 @@ export default function SpecialOffers() {
         <h2 className="text-xl min-[400px]:text-2xl sm:text-2xl md:text-3xl text-white font-bold shrink-0 text-center lg:text-right">آفرهای ویژه</h2>
 
         <div className="relative w-full min-w-0 flex-1 max-w-[300px] min-[400px]:max-w-[624px] sm:max-w-[948px] md:max-w-[1272px] lg:max-w-[1432px] mx-auto px-0 sm:px-12 md:px-16 lg:px-20">
+          {offers.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-white/90">
+              <p className="text-center text-base sm:text-lg font-medium">در حال حاضر آفری موجود نیست</p>
+              <p className="text-center text-sm text-white/70 mt-1">محصولات را در پنل ادمین با درصد تخفیف آفر ثبت کنید</p>
+            </div>
+          ) : (
           <Carousel
             opts={{ align: "start", loop: false, containScroll: "trimSnaps" }}
             className="w-full"
           >
             <CarouselContent className="-ms-4 min-[400px]:-ms-5 sm:-ms-6 md:-ms-8">
-              {offers.map((config) => (
+              {offers.map((config, idx) => (
                 <CarouselItem
                   key={config.id}
                   className="ps-4 min-[400px]:ps-5 sm:ps-6 md:ps-8 basis-full min-[500px]:basis-1/2 md:basis-1/3 lg:basis-1/3"
                 >
                   <div className="flex justify-center w-full sm:justify-start">
-                    <div className="w-[280px] min-[400px]:w-[300px] sm:w-[320px] lg:w-[340px]">
-                      <OfferCard config={config} />
+                    <div className="w-[260px] min-[400px]:w-[280px] sm:w-[300px] h-full">
+                      <OfferCard config={config} index={idx} />
                     </div>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="right-auto -left-5 sm:-left-12 md:-left-16 lg:-left-20 z-10 size-10 sm:size-11 bg-white text-gray-900 border-2 border-white shadow-lg hover:bg-gray-100 hover:border-gray-200 [&_svg]:size-5 sm:[&_svg]:size-6" />
-            <CarouselNext className=" -right-5 sm:-right-12 md:-right-16 lg:-right-20 z-10 size-10 sm:size-11 bg-white text-gray-900 border-2 border-white shadow-lg hover:bg-gray-100 hover:border-gray-200 [&_svg]:size-5 sm:[&_svg]:size-6" />
+            {offers.length > 1 && offers.length <= 4 && (
+              <>
+                <CarouselPrevious className="right-auto -left-5 sm:-left-12 md:-left-16 lg:-left-20 z-10 size-10 sm:size-11 bg-white text-gray-900 border-2 border-white shadow-lg hover:bg-gray-100 hover:border-gray-200 [&_svg]:size-5 sm:[&_svg]:size-6" />
+                <CarouselNext className="-right-5 sm:-right-12 md:-right-16 lg:-right-20 z-10 size-10 sm:size-11 bg-white text-gray-900 border-2 border-white shadow-lg hover:bg-gray-100 hover:border-gray-200 [&_svg]:size-5 sm:[&_svg]:size-6" />
+              </>
+            )}
           </Carousel>
+          )}
         </div>
       </div>
     </section>

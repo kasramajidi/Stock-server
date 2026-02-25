@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { adminFetch, getAuthHeaders } from "@/lib/admin-api";
-import { PackagePlus, RefreshCw, ChevronRight, ChevronLeft, Pencil, Trash2, Search } from "lucide-react";
+import { PackagePlus, RefreshCw, ChevronRight, ChevronLeft, Pencil, Trash2, Search, Tag, Percent } from "lucide-react";
 
 const PER_PAGE = 10;
 
@@ -18,6 +18,7 @@ interface Product {
   viewCount: number;
   createdAt: string;
   image?: string | null;
+  offerDiscountPercent?: number | null;
 }
 
 export default function AdminProductsPage() {
@@ -33,6 +34,8 @@ export default function AdminProductsPage() {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
   const [appliedCategory, setAppliedCategory] = useState("");
+  const [bulkOfferPercent, setBulkOfferPercent] = useState("");
+  const [bulkOfferLoading, setBulkOfferLoading] = useState(false);
 
   const load = useCallback(
     (p: number) => {
@@ -79,6 +82,38 @@ export default function AdminProductsPage() {
   const goToPage = (p: number) => {
     if (p < 1 || p > totalPages) return;
     load(p);
+  };
+
+  const handleBulkOffer = async () => {
+    if (!appliedCategory.trim()) return;
+    const raw = bulkOfferPercent.trim();
+    if (raw === "") {
+      alert("لطفاً درصد تخفیف را وارد کنید (۰ برای حذف آفر).");
+      return;
+    }
+    const percent = parseInt(raw, 10);
+    if (isNaN(percent) || percent < 0 || percent > 99) {
+      alert("درصد تخفیف باید بین ۰ تا ۹۹ باشد.");
+      return;
+    }
+    setBulkOfferLoading(true);
+    try {
+      const res = await fetch("/api/admin/products/bulk-offer", {
+        method: "POST",
+        credentials: "include",
+        headers: { ...getAuthHeaders(), "Content-Type": "application/json" },
+        body: JSON.stringify({ category: appliedCategory.trim(), offerDiscountPercent: percent }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        setBulkOfferPercent("");
+        load(page);
+      } else {
+        alert(data?.errors?.[0] || "خطا در اعمال آفر.");
+      }
+    } finally {
+      setBulkOfferLoading(false);
+    }
   };
 
   const deleteProduct = async (id: string, title: string) => {
@@ -167,6 +202,7 @@ export default function AdminProductsPage() {
                 setCategoryFilter("");
                 setAppliedSearch("");
                 setAppliedCategory("");
+                setBulkOfferPercent("");
                 setPage(1);
               }}
               className="text-sm text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
@@ -175,6 +211,36 @@ export default function AdminProductsPage() {
             </button>
           )}
         </div>
+
+        {appliedCategory && (
+          <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-amber-500/40 bg-amber-500/10 dark:bg-amber-500/5 p-4">
+            <span className="text-sm font-medium text-amber-700 dark:text-amber-400">آفر به دستهٔ «{appliedCategory}»</span>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-800/50 px-3 py-2 focus-within:ring-2 focus-within:ring-amber-500/50 w-32">
+                <Percent className="h-4 w-4 shrink-0 text-slate-500" />
+                <input
+                  type="number"
+                  min={0}
+                  max={99}
+                  value={bulkOfferPercent}
+                  onChange={(e) => setBulkOfferPercent(e.target.value)}
+                  placeholder="۰–۹۹"
+                  className="w-full bg-transparent text-sm text-slate-800 dark:text-slate-200 placeholder:text-slate-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+              </div>
+              <span className="text-xs text-slate-500 dark:text-slate-400">٪ (۰=حذف آفر)</span>
+            </div>
+            <button
+              type="button"
+              onClick={handleBulkOffer}
+              disabled={bulkOfferLoading}
+              className="flex items-center gap-2 rounded-lg bg-amber-500/30 px-4 py-2 text-sm font-medium text-amber-600 dark:text-amber-400 hover:bg-amber-500/40 border border-amber-500/50 transition-colors disabled:opacity-50"
+            >
+              <Tag className="h-4 w-4" />
+              {bulkOfferLoading ? "در حال اعمال..." : "اعمال آفر"}
+            </button>
+          </div>
+        )}
 
         {error && (
           <div className="mb-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 text-sm">
@@ -203,6 +269,7 @@ export default function AdminProductsPage() {
                       <th className="p-3 font-medium">دسته</th>
                       <th className="p-3 font-medium">برند</th>
                       <th className="p-3 font-medium">قیمت</th>
+                      <th className="p-3 font-medium">آفر</th>
                       <th className="p-3 font-medium">موجودی</th>
                       <th className="p-3 font-medium">بازدید</th>
                       <th className="p-3 font-medium">عملیات</th>
@@ -218,6 +285,23 @@ export default function AdminProductsPage() {
                         <td className="p-3 text-slate-500 dark:text-slate-400">{p.category}</td>
                         <td className="p-3 text-slate-500 dark:text-slate-400">{p.brand}</td>
                         <td className="p-3 text-slate-500 dark:text-slate-400">{p.priceLabel}</td>
+                        <td className="p-3">
+                          {p.offerDiscountPercent ? (
+                            <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/20 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400">
+                              <Tag className="h-3 w-3" />
+                              {p.offerDiscountPercent}٪
+                            </span>
+                          ) : (
+                            <Link
+                              href={`/admin/products/${p.id}/edit#offer`}
+                              className="inline-flex items-center gap-1 rounded-md border border-dashed border-slate-400 dark:border-slate-500 px-2 py-0.5 text-xs text-slate-500 dark:text-slate-400 hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+                              title="افزودن به آفرهای ویژه"
+                            >
+                              <Tag className="h-3 w-3" />
+                              آفر بزن
+                            </Link>
+                          )}
+                        </td>
                         <td className="p-3">
                           {p.inStock ? (
                             <span className="text-emerald-400/90 text-xs">موجود</span>

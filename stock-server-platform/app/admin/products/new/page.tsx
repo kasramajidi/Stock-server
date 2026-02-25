@@ -18,9 +18,12 @@ export default function AdminNewProductPage() {
     category: "",
     brand: "",
     priceLabel: "برای استعلام موجودی تماس بگیرید",
+    price: "" as string | number,
+    originalPrice: "" as string | number,
     statusLabel: "آماده ارسال",
     inStock: true,
     image: "",
+    offerDiscountPercent: "" as string | number,
   });
 
   const slugFromTitle = (title: string) => title.trim().replace(/\s+/g, "-");
@@ -54,9 +57,15 @@ export default function AdminNewProductPage() {
         category: form.category.trim(),
         brand: form.brand.trim(),
         priceLabel: form.priceLabel.trim(),
+        price: form.price !== "" ? Number(form.price) : undefined,
+        originalPrice: form.originalPrice !== "" ? Number(form.originalPrice) : undefined,
         statusLabel: form.statusLabel.trim(),
         inStock: form.inStock,
         image: form.image.trim() || undefined,
+        offerDiscountPercent:
+          form.offerDiscountPercent !== "" && form.offerDiscountPercent != null
+            ? Math.min(100, Math.max(0, Number(form.offerDiscountPercent)))
+            : undefined,
       };
       const res = await fetch("/api/products", {
         method: "POST",
@@ -185,6 +194,33 @@ export default function AdminNewProductPage() {
             />
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">قیمت فعلی (تومان) — برای آفر</label>
+              <input
+                type="number"
+                name="price"
+                min={0}
+                value={form.price}
+                onChange={handleChange}
+                className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+                placeholder="مثلاً 1499000000"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">قیمت قبل تخفیف (تومان) — اختیاری</label>
+              <input
+                type="number"
+                name="originalPrice"
+                min={0}
+                value={form.originalPrice}
+                onChange={handleChange}
+                className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+                placeholder="برای نمایش خط خورده"
+              />
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">وضعیت ارسال *</label>
             <input
@@ -208,6 +244,21 @@ export default function AdminNewProductPage() {
               className="w-full rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
               placeholder="https://..."
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">درصد تخفیف آفر (اختیاری)</label>
+            <input
+              type="number"
+              name="offerDiscountPercent"
+              min={0}
+              max={100}
+              value={form.offerDiscountPercent}
+              onChange={handleChange}
+              className="w-full max-w-[120px] rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-3 py-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none"
+              placeholder="مثلاً ۲۰"
+            />
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">اگر مقدار بدهید، این محصول در بخش آفرهای ویژه صفحه اصلی نمایش داده می‌شود.</p>
           </div>
 
           <label className="flex items-center gap-2 cursor-pointer">

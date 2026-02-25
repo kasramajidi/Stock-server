@@ -31,11 +31,21 @@ export const productCreateSchema = z.object({
     .default([])
     .transform((t) => (Array.isArray(t) ? t : [])),
   priceLabel: z.string().min(1, "متن قیمت الزامی است.").max(200).transform((s) => s.trim()),
+  price: z.number().int().min(0).optional().nullable(),
+  originalPrice: z.number().int().min(0).optional().nullable(),
   inStock: z.boolean().default(true),
   statusLabel: z.string().min(1, "وضعیت ارسال الزامی است.").max(100).transform((s) => s.trim()),
   rating: z.number().int().min(1).max(5).optional().nullable(),
   image: optionalImage,
   specs: specsSchema,
+  offerDiscountPercent: z
+    .number()
+    .int()
+    .min(1)
+    .max(100)
+    .optional()
+    .nullable()
+    .transform((v) => (v === 0 ? null : v)),
 });
 
 export type ProductCreateInput = z.infer<typeof productCreateSchema>;
