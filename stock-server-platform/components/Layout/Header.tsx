@@ -1,11 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import SearchBar from "./SearchBar";
-import { MdOutlineShoppingBag, MdOutlineFavoriteBorder } from "react-icons/md";
-import { clearAuth } from "@/lib/cookie";
+import { MdOutlineShoppingBag, MdOutlineFavoriteBorder, MdPersonOutline } from "react-icons/md";
+import { clearAuth, getAuthCookie } from "@/lib/cookie";
 
 interface HeaderProps {
   cartCount?: number;
@@ -24,9 +25,28 @@ export default function Header({
   cartTotal = 0,
   currency = "تومان",
   balance,
-  isAuthenticated = false,
+  isAuthenticated: isAuthenticatedProp,
 }: HeaderProps = {}) {
   const router = useRouter();
+  const pathname = usePathname();
+  const [isAuthenticated, setIsAuthenticated] = useState(isAuthenticatedProp ?? false);
+
+  useEffect(() => {
+    if (isAuthenticatedProp !== undefined) {
+      setIsAuthenticated(isAuthenticatedProp);
+      return;
+    }
+    const check = () => {
+      const hasToken = !!getAuthCookie();
+      try {
+        const user = typeof window !== "undefined" && localStorage.getItem("user");
+        setIsAuthenticated(hasToken || !!user);
+      } catch {
+        setIsAuthenticated(hasToken);
+      }
+    };
+    check();
+  }, [isAuthenticatedProp, pathname]);
 
   const handleLogout = () => {
     clearAuth();
@@ -69,6 +89,13 @@ export default function Header({
                 </Link>
               ) : (
                 <>
+                  <Link
+                    href="/dashboard"
+                    className="text-gray-700 hover:text-[#17e2fe] transition-colors p-1"
+                    aria-label="حساب کاربری"
+                  >
+                    <MdPersonOutline className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </Link>
                   {balance !== undefined && (
                     <div className="hidden sm:flex items-center gap-1.5">
                       <span className="text-gray-700 font-medium text-sm md:text-base">
