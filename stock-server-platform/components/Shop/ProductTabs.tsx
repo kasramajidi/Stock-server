@@ -15,9 +15,10 @@ const TABS = [
 
 interface ProductTabsProps {
   product: ShopProduct;
+  productIdOrSlug?: string;
 }
 
-export default function ProductTabs({ product }: ProductTabsProps) {
+export default function ProductTabs({ product, productIdOrSlug }: ProductTabsProps) {
   const [active, setActive] = useState("introduction");
 
   return (
@@ -26,7 +27,9 @@ export default function ProductTabs({ product }: ProductTabsProps) {
       <div className="bg-white rounded-b-2xl border border-t-0 border-slate-200/80 p-6 sm:p-8 min-h-[240px]">
         {active === "introduction" && <ProductIntroduction product={product} />}
         {active === "specifications" && <SpecificationsSection product={product} />}
-        {active === "reviews" && <ReviewsSection product={product} />}
+        {active === "reviews" && (
+          <ReviewsSection product={product} productIdOrSlug={productIdOrSlug} />
+        )}
       </div>
     </div>
   );

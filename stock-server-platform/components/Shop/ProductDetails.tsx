@@ -120,7 +120,7 @@ export default function ProductDetails({ initialProduct }: ProductDetailsProps) 
           </div>
         </div>
 
-        <ProductTabs product={product} />
+        <ProductTabs product={product} productIdOrSlug={params?.id as string} />
 
         <div className="mt-10 sm:mt-12">
           <RelatedProducts
