@@ -1,36 +1,68 @@
 "use client";
 
-import { useState } from "react";
-import { blogPosts, type BlogPost } from "@/lib/blogData";
+import { useState, useEffect } from "react";
 import { BlogHero } from "@/components/Blog/BlogHero";
 import { BlogCategoryFilter } from "@/components/Blog/BlogCategoryFilter";
 import { BlogList } from "@/components/Blog/BlogList";
 import { BlogSidebar } from "@/components/Blog/BlogSidebar";
 import { BlogPagination } from "@/components/Blog/BlogPagination";
-
-const categories: { key: string | null; label: string }[] = [
-  { key: null, label: "همه مطالب" },
-  { key: "راهنمای خرید", label: "راهنمای خرید" },
-  { key: "زیرساخت و استوریج", label: "زیرساخت و استوریج" },
-  { key: "عیب‌یابی و نگه‌داری", label: "عیب‌یابی و نگه‌داری" },
-  { key: "مجازی‌سازی", label: "مجازی‌سازی" },
-];
+import type { ArticleListItem } from "@/lib/article-types";
 
 const ITEMS_PER_PAGE = 6;
 
-function shufflePosts(items: BlogPost[]): BlogPost[] {
-  const shuffled = [...items];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
+function mapApiArticle(a: {
+  id: string;
+  title: string;
+  excerpt?: string | null;
+  image?: string | null;
+  category: string;
+  publishedAt: string;
+  viewCount?: number;
+  comments?: unknown[];
+}): ArticleListItem {
+  const commentCount = Array.isArray(a.comments) ? a.comments.length : 0;
+  return {
+    id: a.id,
+    articleId: a.id,
+    title: a.title,
+    summary: a.excerpt ?? "",
+    image: a.image ?? "/Images/Baner/Layer 5.png",
+    category: a.category,
+    date: new Date(a.publishedAt).toLocaleDateString("fa-IR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }),
+    comments: commentCount,
+    readTime: "۵ دقیقه مطالعه",
+  };
 }
 
 export default function BlogPage() {
+  const [posts, setPosts] = useState<ArticleListItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [posts] = useState<BlogPost[]>(() => shufflePosts(blogPosts));
+
+  useEffect(() => {
+    fetch("/api/articles")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.success && Array.isArray(data.articles)) {
+          setPosts(data.articles.map(mapApiArticle));
+        } else {
+          setPosts([]);
+        }
+      })
+      .catch(() => setPosts([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const categoryKeys = [...new Set(posts.map((p) => p.category).filter(Boolean))].sort();
+  const categories: { key: string | null; label: string }[] = [
+    { key: null, label: "همه مطالب" },
+    ...categoryKeys.map((cat) => ({ key: cat, label: cat })),
+  ];
 
   const filteredPosts =
     selectedCategory === null
@@ -56,6 +88,14 @@ export default function BlogPage() {
     setCurrentPage(0);
   };
 
+  if (loading && posts.length === 0) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <div className="w-10 h-10 rounded-full border-2 border-[#17e2fe]/30 border-t-[#17e2fe] animate-spin" />
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen">
       <div className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k py-8 sm:py-10 space-y-8 md:space-y-10">
@@ -76,7 +116,7 @@ export default function BlogPage() {
               onPageChange={handlePageChange}
             />
           </div>
-          <BlogSidebar categories={categories} posts={blogPosts} />
+          <BlogSidebar categories={categories} posts={posts} />
         </section>
       </div>
     </main>

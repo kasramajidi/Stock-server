@@ -300,3 +300,131 @@ body {
     transform: translateX(0);
   }
 }
+
+/* صفحه مقاله — انیمیشن‌ها */
+@keyframes articleHeroFade {
+  from {
+    opacity: 0;
+    transform: scale(1.03);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes articleContentIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes articleStagger {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes articleShine {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* استایل محتوای مقاله — نسخه روشن (بکس روشن) */
+.article-prose-light {
+  color: #374151;
+  font-size: 1.0625rem;
+  line-height: 2;
+}
+.article-prose-light p {
+  margin-bottom: 1.5rem;
+}
+.article-prose-light p:last-child {
+  margin-bottom: 0;
+}
+.article-prose-light h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.6rem;
+}
+.article-prose-light h2:first-child { margin-top: 0; }
+.article-prose-light h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+.article-prose-light ul, .article-prose-light ol {
+  margin: 1.25rem 0;
+  padding-right: 1.75rem;
+}
+.article-prose-light li {
+  margin-bottom: 0.6rem;
+}
+.article-prose-light strong {
+  color: #111827;
+  font-weight: 600;
+}
+.article-prose-light a {
+  color: #0891b2;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+.article-prose-light a:hover {
+  color: #0e7490;
+}
+.article-prose-light img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+}
+.article-prose-light blockquote {
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem;
+  border-right: 4px solid #17e2fe;
+  background: #f8fafc;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: #4b5563;
+  font-style: italic;
+}
+.article-prose-light table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+.article-prose-light th, .article-prose-light td {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  border-bottom: 1px solid #e5e7eb;
+}
+.article-prose-light th {
+  background: #f9fafb;
+  color: #374151;
+  font-weight: 600;
+}
+.article-prose-light tr:last-child td { border-bottom: none; }
+.article-prose-light code {
+  font-size: 0.9em;
+  padding: 0.2rem 0.45rem;
+  border-radius: 0.25rem;
+  background: #f3f4f6;
+  color: #0891b2;
+  font-family: var(--font-geist-mono), monospace;
+}

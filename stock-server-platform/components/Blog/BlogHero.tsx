@@ -1,8 +1,8 @@
 import Image from "next/image";
-import type { BlogPost } from "@/lib/blogData";
+import type { ArticleListItem } from "@/lib/article-types";
 
 type BlogHeroProps = {
-  featured: BlogPost[];
+  featured: ArticleListItem[];
 };
 
 export function BlogHero({ featured }: BlogHeroProps) {

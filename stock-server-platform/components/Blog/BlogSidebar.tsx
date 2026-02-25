@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { BlogPost } from "@/lib/blogData";
+import { getArticleHref, type ArticleListItem } from "@/lib/article-types";
 
 type Category = {
   key: string | null;
@@ -9,10 +9,10 @@ type Category = {
 
 type BlogSidebarProps = {
   categories: Category[];
-  posts: BlogPost[];
+  posts: ArticleListItem[];
 };
 
-const getCategoryPostCount = (posts: BlogPost[], key: string | null) =>
+const getCategoryPostCount = (posts: ArticleListItem[], key: string | null) =>
   posts.filter((p) => p.category === key).length;
 
 export function BlogSidebar({ categories, posts }: BlogSidebarProps) {
@@ -56,7 +56,7 @@ export function BlogSidebar({ categories, posts }: BlogSidebarProps) {
           {posts.slice(0, 3).map((post) => (
             <li key={post.id} className="flex flex-col gap-0.5">
               <Link
-                href={`/blog/${post.slug}`}
+                href={getArticleHref(post)}
                 className="text-right text-[11px] text-[#e8f3ff] hover:text-[#17e2fe]"
               >
                 {post.title}
