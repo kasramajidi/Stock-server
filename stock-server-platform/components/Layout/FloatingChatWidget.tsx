@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 const STORAGE_KEY = "support_chat";
+const CHAT_EXPIRE_MS = 30 * 60 * 1000; // ۳۰ دقیقه
 
-type StoredChat = { conversationId: string; clientToken: string };
+type StoredChat = { conversationId: string; clientToken: string; startedAt?: number };
 
 type Message = {
   id: string;
@@ -34,6 +35,21 @@ export default function FloatingChatWidget() {
   const [input, setInput] = useState("");
   const [sendLoading, setSendLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const startedAtRef = useRef<number | null>(null);
+
+  const clearChatAndShowForm = useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+    startedAtRef.current = null;
+    setConversationId(null);
+    setClientToken(null);
+    setMessages([]);
+    setSupportSeenAt(null);
+    setStep("form");
+  }, []);
 
   useEffect(() => {
     try {
@@ -41,6 +57,14 @@ export default function FloatingChatWidget() {
       if (raw) {
         const data = JSON.parse(raw) as StoredChat;
         if (data.conversationId && data.clientToken) {
+          const startedAt = data.startedAt ?? Date.now();
+          if (Date.now() - startedAt >= CHAT_EXPIRE_MS) {
+            clearChatAndShowForm();
+            return;
+          }
+          const toStore: StoredChat = { ...data, startedAt };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
+          startedAtRef.current = startedAt;
           setConversationId(data.conversationId);
           setClientToken(data.clientToken);
           setStep("chat");
@@ -49,7 +73,31 @@ export default function FloatingChatWidget() {
     } catch {
       // ignore
     }
-  }, []);
+  }, [clearChatAndShowForm]);
+
+  // هر نیم ساعت: پاک کردن چت و باز کردن فرم جدید
+  useEffect(() => {
+    if (!conversationId || !clientToken || step !== "chat") return;
+    if (startedAtRef.current === null) {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const data = JSON.parse(raw) as StoredChat;
+          startedAtRef.current = data.startedAt ?? Date.now();
+        }
+      } catch {
+        startedAtRef.current = Date.now();
+      }
+    }
+    const check = () => {
+      const started = startedAtRef.current;
+      if (started !== null && Date.now() - started >= CHAT_EXPIRE_MS) {
+        clearChatAndShowForm();
+      }
+    };
+    const interval = setInterval(check, 60_000); // هر دقیقه چک کن
+    return () => clearInterval(interval);
+  }, [conversationId, clientToken, step, clearChatAndShowForm]);
 
   const fetchMessages = async (
     overrideId?: string,
@@ -109,8 +157,10 @@ export default function FloatingChatWidget() {
       if (json.success && json.conversationId && json.clientToken) {
         const cid = json.conversationId as string;
         const tok = json.clientToken as string;
-        const data: StoredChat = { conversationId: cid, clientToken: tok };
+        const now = Date.now();
+        const data: StoredChat = { conversationId: cid, clientToken: tok, startedAt: now };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        startedAtRef.current = now;
         setConversationId(cid);
         setClientToken(tok);
         setStep("chat");
@@ -128,6 +178,8 @@ export default function FloatingChatWidget() {
       setLoading(false);
     }
   };
+
+  const handleStartNewChat = clearChatAndShowForm;
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -183,16 +235,28 @@ export default function FloatingChatWidget() {
               </span>
               <span className="font-bold">پشتیبانی استوک سرور</span>
             </div>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="بستن چت"
-              className="flex h-8 w-8 items-center justify-center rounded-full text-white/90 transition hover:bg-white/20 hover:text-white"
-            >
+            <div className="flex items-center gap-1">
+              {step === "chat" && (
+                <button
+                  type="button"
+                  onClick={handleStartNewChat}
+                  className="rounded-lg px-2 py-1.5 text-xs font-medium text-white/90 transition hover:bg-white/20"
+                  title="شروع چت جدید و پاک کردن پیام‌ها"
+                >
+                  چت جدید
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="بستن چت"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white/90 transition hover:bg-white/20 hover:text-white"
+              >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
               </svg>
             </button>
+            </div>
           </div>
 
           {/* محتوا: فرم شروع یا چت */}

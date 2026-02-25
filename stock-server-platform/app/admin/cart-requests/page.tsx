@@ -23,6 +23,14 @@ interface CartRequest {
   items?: CartRequestItem[];
 }
 
+const STATUS_OPTIONS = [
+  { value: "", label: "همه وضعیت‌ها" },
+  { value: "pending", label: "در انتظار" },
+  { value: "in_progress", label: "در حال انجام" },
+  { value: "completed", label: "تکمیل شده" },
+  { value: "cancelled", label: "لغو شده" },
+] as const;
+
 export default function AdminCartRequestsPage() {
   const [list, setList] = useState<CartRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,6 +38,11 @@ export default function AdminCartRequestsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [editNote, setEditNote] = useState<{ id: string; adminNote: string } | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>("");
+
+  const filteredList = statusFilter
+    ? list.filter((req) => req.status === statusFilter)
+    : list;
 
   const load = () => {
     setLoading(true);
@@ -99,15 +112,28 @@ export default function AdminCartRequestsPage() {
             <h1 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">درخواست‌های سبد خرید</h1>
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">مدیریت وضعیت و یادداشت ادمین</p>
           </div>
-          <button
-            type="button"
-            onClick={load}
-            disabled={loading}
-            className="flex items-center gap-2 rounded-lg bg-slate-300 dark:bg-slate-700 px-4 py-2 text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-400 dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
-          >
-            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-            بروزرسانی
-          </button>
+          <div className="flex items-center gap-3">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="min-w-[150px] rounded-lg border border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-700/50 px-4 py-2 pr-10 text-sm text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+            >
+              {STATUS_OPTIONS.map(({ value, label }) => (
+                <option key={value || "all"} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={load}
+              disabled={loading}
+              className="flex items-center gap-2 rounded-lg bg-slate-300 dark:bg-slate-700 px-4 py-2 text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-400 dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
+            >
+              <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+              بروزرسانی
+            </button>
+          </div>
         </div>
 
         {error && (
@@ -124,7 +150,7 @@ export default function AdminCartRequestsPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {list.map((req, i) => (
+            {filteredList.map((req, i) => (
               <div
                 key={req.id}
                 className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200/80 dark:bg-slate-800/30 overflow-hidden transition-all duration-200"
@@ -170,9 +196,9 @@ export default function AdminCartRequestsPage() {
                       ))}
                     </select>
                     {expandedId === req.id ? (
-<ChevronUp className="h-4 w-4 text-slate-500 dark:text-slate-400" />
-                      ) : (
-                        <ChevronDown className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                      <ChevronUp className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4 text-slate-500 dark:text-slate-400" />
                     )}
                   </div>
                 </div>
@@ -237,9 +263,9 @@ export default function AdminCartRequestsPage() {
                 )}
               </div>
             ))}
-            {list.length === 0 && !loading && (
+            {filteredList.length === 0 && !loading && (
               <div className="rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200/80 dark:bg-slate-800/30 p-12 text-center text-slate-500 dark:text-slate-400">
-                درخواستی یافت نشد.
+                {statusFilter ? "با این وضعیت درخواستی یافت نشد." : "درخواستی یافت نشد."}
               </div>
             )}
           </div>

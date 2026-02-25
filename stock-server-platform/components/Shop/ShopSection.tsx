@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import SearchFilter from "./filters/SearchFilter";
 import PriceRangeFilter from "./filters/PriceRangeFilter";
@@ -8,13 +8,18 @@ import CategoryFilter from "./filters/CategoryFilter";
 import BrandFilter from "./filters/BrandFilter";
 import ShopCategoryMenu from "./ShopCategoryMenu";
 import ShopMainContent from "./ShopMainContent";
+import SyncFiltersFromUrl from "./SyncFiltersFromUrl";
 
 export default function ShopSection() {
   const pageMargin =
     "mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k";
 
   return (
-    <div className="min-h-screen bg-slate-50/80">
+    <>
+      <Suspense fallback={null}>
+        <SyncFiltersFromUrl />
+      </Suspense>
+      <div className="min-h-screen bg-slate-50/80">
       <div className={`${pageMargin} pt-6 pb-4 sm:pt-8 sm:pb-6`}>
         <nav className="mb-6 text-center" aria-label="مسیر صفحه">
           <div className="flex items-center justify-center gap-2 text-sm text-slate-500 flex-wrap">
@@ -67,6 +72,7 @@ export default function ShopSection() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

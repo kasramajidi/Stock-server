@@ -147,6 +147,16 @@ export default function SpecialOffers() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#special-offers") {
+      const el = document.getElementById("special-offers");
+      if (el) {
+        const t = setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 100);
+        return () => clearTimeout(t);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     fetch("/api/offers")
       .then((res) => res.json())
       .then((data) => {
@@ -160,7 +170,7 @@ export default function SpecialOffers() {
 
   if (loading) {
     return (
-      <section className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0">
+      <section id="special-offers" className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0 scroll-mt-24">
         <div
           className="flex flex-col lg:flex-row items-center lg:items-stretch rounded-xl sm:rounded-2xl gap-4 min-[400px]:gap-5 sm:gap-6 md:gap-8 p-3 min-[400px]:p-4 sm:p-5 md:p-6 shadow-lg overflow-hidden"
           style={{
@@ -177,7 +187,7 @@ export default function SpecialOffers() {
   }
 
   return (
-    <section className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0">
+    <section id="special-offers" className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0 scroll-mt-24">
       <div
         className="flex flex-col lg:flex-row items-center lg:items-stretch rounded-xl sm:rounded-2xl gap-4 min-[400px]:gap-5 sm:gap-6 md:gap-8 p-3 min-[400px]:p-4 sm:p-5 md:p-6 shadow-lg overflow-hidden"
         style={{

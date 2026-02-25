@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
@@ -145,7 +145,9 @@ export default function Header({
               />
             </Link>
             <div className="flex-1 flex justify-center lg:px-6 xl:px-8">
-              <SearchBar />
+              <Suspense fallback={<div className="h-10 w-full max-w-2xl rounded-3xl bg-gray-100 animate-pulse" />}>
+                <SearchBar />
+              </Suspense>
             </div>
           </div>
         </div>

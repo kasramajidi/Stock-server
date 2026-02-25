@@ -81,7 +81,13 @@ export default function Navigation() {
             </div>
           </div>
           <Link
-            href="/harajestoon"
+            href="/#special-offers"
+            onClick={(e) => {
+              if (pathname === "/") {
+                e.preventDefault();
+                document.getElementById("special-offers")?.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
             className="hidden sm:inline-block bg-[#f6cfd4] hover:bg-[#f1b8bf] text-[#d00219] font-bold px-2.5 md:px-3 lg:px-4 xl:px-5 py-2 md:py-2.5 rounded-3xl transition-colors text-xs md:text-sm lg:text-base text-center whitespace-nowrap shrink-0"
           >
             حراجستون
