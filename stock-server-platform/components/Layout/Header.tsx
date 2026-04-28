@@ -54,7 +54,7 @@ export default function Header({
   };
 
   return (
-    <div className="bg-white shadow-md rounded-2xl sm:rounded-3xl z-50 mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k border border-gray-200 relative -mt-[5px]">
+    <div className="bg-white shadow-md rounded-2xl sm:rounded-3xl z-50 mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 header-1080 xl:mx-12 header-4k border border-gray-200 relative -mt-[5px]">
       <div className="container mx-auto px-3 min-[400px]:px-4 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-5">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center justify-between w-full lg:w-auto lg:order-3">

@@ -21,7 +21,7 @@ export default function BlogSection() {
       </div>
 
       {/* Slider - فضای کناری برای دکمه‌های چپ/راست */}
-      <div className="relative px-0 sm:px-12 md:px-16 lg:px-20">
+      <div className="relative px-1 sm:px-3 md:px-6 lg:px-10">
         <BlogSlider />
       </div>
     </section>

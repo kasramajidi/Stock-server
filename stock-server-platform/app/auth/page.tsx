@@ -18,7 +18,7 @@ function AuthContent() {
 
   return (
     <main className="min-h-screen bg-slate-50/80 py-10 sm:py-14">
-      <div className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k flex justify-center">
+      <div className="mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 header-1080 xl:mx-12 header-4k flex justify-center">
         <div className="w-full max-w-md">
           <AuthCard title={title} description={description}>
             {isLogin ? (

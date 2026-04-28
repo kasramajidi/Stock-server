@@ -22,7 +22,7 @@ export default function MemorySlider() {
   return (
     <Carousel
       opts={{ align: "start", loop: false, containScroll: "trimSnaps" }}
-      className="relative w-full max-w-[280px] sm:max-w-[584px] md:max-w-[888px] lg:max-w-[1192px] mx-auto min-w-0"
+      className="relative w-full mx-auto min-w-0"
     >
       <CarouselContent className="-ms-4">
         {memories.map((item, index) => (
@@ -36,8 +36,8 @@ export default function MemorySlider() {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="right-auto -left-8 sm:-left-12 md:-left-16 lg:-left-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
-      <CarouselNext className=" -right-8 sm:-right-12 md:-right-16 lg:-right-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+      <CarouselPrevious className="right-auto -left-2 sm:-left-4 md:-left-6 lg:-left-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+      <CarouselNext className="-right-2 sm:-right-4 md:-right-6 lg:-right-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
     </Carousel>
   );
 }

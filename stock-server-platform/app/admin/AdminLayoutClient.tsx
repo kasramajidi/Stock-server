@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { adminFetch, type MeResponse } from "@/lib/admin-api";
 import { AdminThemeProvider } from "@/components/Admin/AdminThemeContext";
 import AdminSidebar from "@/components/Admin/AdminSidebar";
-import AdminLoginForm from "@/components/Admin/AdminLoginForm";
 import { Menu } from "lucide-react";
 
 export default function AdminLayoutClient({
@@ -64,13 +63,13 @@ export default function AdminLayoutClient({
     );
   }
 
-  if (status === "forbidden") {
+ {/* if (status === "forbidden") {
     return (
       <AdminThemeProvider>
         <AdminLoginForm onSuccess={handleLoginSuccess} />
       </AdminThemeProvider>
     );
-  }
+  } */}
 
   return (
     <AdminThemeProvider>

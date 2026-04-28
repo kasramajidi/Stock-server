@@ -34,7 +34,7 @@ export default function BlogSlider() {
         {blogs.map((title, index) => (
           <CarouselItem
             key={index}
-            className="ps-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/5"
+            className="ps-4 basis-[88%] min-[560px]:basis-[70%] md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
           >
             <div className="flex justify-center w-full">
               <BlogCard title={title} />
@@ -42,8 +42,8 @@ export default function BlogSlider() {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="right-auto left-3 sm:left-0 sm:-left-12 md:-left-16 lg:-left-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
-      <CarouselNext className="right-3 sm:right-0 sm:-right-12 md:-right-16 lg:-right-20 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+      <CarouselPrevious className="right-auto -left-2 sm:-left-4 md:-left-6 lg:-left-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+      <CarouselNext className="-right-2 sm:-right-4 md:-right-6 lg:-right-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
     </Carousel>
   );
 }

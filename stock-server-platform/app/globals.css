@@ -89,6 +89,13 @@ body {
   direction: rtl;
 }
 
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -403,10 +410,12 @@ body {
 }
 .article-prose-light table {
   width: 100%;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
   border-collapse: collapse;
   margin: 1.5rem 0;
   border-radius: 0.5rem;
-  overflow: hidden;
   border: 1px solid #e5e7eb;
 }
 .article-prose-light th, .article-prose-light td {

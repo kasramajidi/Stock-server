@@ -48,11 +48,11 @@ export default function FloatingCategoryMenu() {
         <button
           type="button"
           onClick={toggle}
-          className="w-12 h-12 rounded-xl bg-[#17e2fe] text-white flex items-center justify-center shadow-lg hover:bg-[#14c8e0] transition shrink-0 cursor-pointer"
+          className="w-12 h-12 rounded-full bg-[#17e2fe] text-white flex items-center justify-center shadow-[0_10px_24px_rgba(23,226,254,0.35)] hover:bg-[#14c8e0] hover:scale-105 transition shrink-0 cursor-pointer"
           aria-expanded={isOpen}
           aria-label={isOpen ? "بستن منو" : "باز کردن منو"}
         >
-          <BiCategoryAlt className="text-xl" />
+          <BiCategoryAlt className="text-[18px]" />
         </button>
 
         <div
@@ -65,7 +65,7 @@ export default function FloatingCategoryMenu() {
             key={item.label}
             href={item.href}
             scroll={false}
-            className="group relative w-11 h-11 shrink-0 rounded-xl bg-white border border-gray-200 shadow-sm flex items-center justify-center hover:bg-[#17e2fe] hover:border-[#17e2fe] transition"
+            className="group relative w-11 h-11 shrink-0 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center hover:bg-[#17e2fe] hover:border-[#17e2fe] transition"
           >
             <Image
               src={item.image}

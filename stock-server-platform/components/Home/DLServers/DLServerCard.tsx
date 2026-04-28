@@ -16,7 +16,7 @@ export default function DLServerCard({
 }: DLServerCardProps) {
   return (
     <div
-      className="flex p-5 flex-col items-center justify-between text-center shrink-0 w-[250px] sm:w-[270px] md:w-[290px] lg:w-[300px] min-h-[380px] sm:min-h-[400px]
+      className="flex w-full max-w-[320px] p-4 sm:p-5 flex-col items-center justify-between text-center min-h-[360px] sm:min-h-[390px]
       bg-white rounded-xl border border-gray-100 shadow hover:shadow-lg transition-shadow duration-200"
       style={{ scrollSnapAlign: "start" }}
     >

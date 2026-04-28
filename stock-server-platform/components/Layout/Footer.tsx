@@ -98,7 +98,7 @@ export default function Footer(): JSX.Element {
       <div className="flex justify-center border-b border-gray-100">
         <ScrollArrow direction="up" label="برگشت به بالای صفحه" className="!pb-2" />
       </div>
-      <div className="mx-3 sm:mx-[30px] md:mx-[50px] xl:mx-[50px] pt-10 sm:pt-12 lg:pt-14">
+      <div className="mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12 pt-10 sm:pt-12 lg:pt-14">
         {/*
           چیدمان دو بخشی:
           - راست (در RTL اول DOM): لوگو، متن، شبکه‌های اجتماعی — از ابتدای فوتر
@@ -159,18 +159,18 @@ export default function Footer(): JSX.Element {
 
           {/* ستون چپ: بالا آیکن‌ها، پایین لینک‌ها */}
           <div className="flex min-w-0 flex-1 flex-col gap-10">
-            <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-5">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-5 lg:gap-x-5">
               {serviceItems.map((item) => {
                 const Icon = item.icon;
                 return (
                   <div
                     key={item.title}
-                    className="flex items-center justify-end gap-2.5 sm:gap-3"
+                    className="flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-xl bg-slate-50/70 px-2 py-3 text-center md:min-h-0 md:flex-row md:justify-start md:bg-transparent md:px-0 md:py-0"
                   >
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#17e2fe]/10 sm:h-12 sm:w-12">
                       <Icon className="h-5 w-5 text-[#17e2fe] sm:h-6 sm:w-6" />
                     </div>
-                    <span className="text-right text-sm font-medium leading-snug text-gray-700">
+                    <span className="text-center md:text-right text-xs sm:text-sm font-medium leading-snug text-gray-700">
                       {item.title}
                     </span>
                   </div>

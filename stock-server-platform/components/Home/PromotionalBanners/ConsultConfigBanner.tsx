@@ -2,11 +2,11 @@ import Image from "next/image";
 
 export default function ConsultConfigBanner() {
   return (
-    <section className="mx-3 sm:mx-[30px] md:mx-[50px] my-10">
-      <div className="bg-[#062C3D] rounded-xl overflow-hidden flex flex-col md:flex-row items-center">
+    <section className="mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12 my-8 sm:my-10">
+      <div className="bg-[#062C3D] rounded-xl overflow-hidden flex flex-col lg:flex-row items-center">
 
         {/* Image - Left */}
-        <div className="w-full md:w-[40%] flex justify-center">
+        <div className="w-full lg:w-[40%] flex justify-center">
           <Image
             src="/Images/Baner/Layer 5.png"
             alt="استعلام کانفیگ سرور"
@@ -19,7 +19,7 @@ export default function ConsultConfigBanner() {
         </div>
 
         {/* Content - Right */}
-        <div className="w-full md:w-[60%] px-6 py-8 text-right">
+        <div className="w-full lg:w-[60%] px-4 sm:px-6 py-6 sm:py-8 text-right">
           <h3 className="text-xl font-semibold text-[#00DDFF] mb-4">
             برای کانفیگ و استعلام قیمت به راهنمایی نیاز دارید؟
           </h3>

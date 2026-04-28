@@ -90,7 +90,7 @@ function OfferCard({ config, index }: { config: SpecialOfferConfig; index: numbe
 
       {/* بخش سفید — نام و قیمت */}
       <div className="flex flex-1 flex-col p-4 pt-5">
-        <h3 className="text-center text-base font-bold text-slate-800 leading-snug mb-4 line-clamp-2 min-h-[2.5rem]">
+        <h3 className="text-center text-base font-bold text-slate-800 leading-snug mb-4 line-clamp-2 min-h-10">
           {config.title}
         </h3>
 
@@ -170,7 +170,7 @@ export default function SpecialOffers() {
 
   if (loading) {
     return (
-      <section id="special-offers" className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0 scroll-mt-24">
+      <section id="special-offers" className="mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 header-1080 xl:mx-12 header-4k mt-4 sm:mt-6 mb-0 scroll-mt-24">
         <div
           className="flex flex-col lg:flex-row items-center lg:items-stretch rounded-xl sm:rounded-2xl gap-4 min-[400px]:gap-5 sm:gap-6 md:gap-8 p-3 min-[400px]:p-4 sm:p-5 md:p-6 shadow-lg overflow-hidden"
           style={{
@@ -187,7 +187,7 @@ export default function SpecialOffers() {
   }
 
   return (
-    <section id="special-offers" className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0 scroll-mt-24">
+    <section id="special-offers" className="mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 header-1080 xl:mx-12 header-4k mt-4 sm:mt-6 mb-0 scroll-mt-24">
       <div
         className="flex flex-col lg:flex-row items-center lg:items-stretch rounded-xl sm:rounded-2xl gap-4 min-[400px]:gap-5 sm:gap-6 md:gap-8 p-3 min-[400px]:p-4 sm:p-5 md:p-6 shadow-lg overflow-hidden"
         style={{
@@ -196,7 +196,7 @@ export default function SpecialOffers() {
       >
         <h2 className="text-xl min-[400px]:text-2xl sm:text-2xl md:text-3xl text-white font-bold shrink-0 text-center lg:text-right">آفرهای ویژه</h2>
 
-        <div className="relative w-full min-w-0 flex-1 max-w-[300px] min-[400px]:max-w-[624px] sm:max-w-[948px] md:max-w-[1272px] lg:max-w-[1432px] mx-auto px-0 sm:px-12 md:px-16 lg:px-20">
+        <div className="relative w-full min-w-0 flex-1 mx-auto px-1 sm:px-4 md:px-8 lg:px-10">
           {offers.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-white/90">
               <p className="text-center text-base sm:text-lg font-medium">در حال حاضر آفری موجود نیست</p>
@@ -207,14 +207,14 @@ export default function SpecialOffers() {
             opts={{ align: "start", loop: false, containScroll: "trimSnaps" }}
             className="w-full"
           >
-            <CarouselContent className="-ms-4 min-[400px]:-ms-5 sm:-ms-6 md:-ms-8">
+            <CarouselContent className="-ms-4 sm:-ms-6 md:-ms-8">
               {offers.map((config, idx) => (
                 <CarouselItem
                   key={config.id}
-                  className="ps-4 min-[400px]:ps-5 sm:ps-6 md:ps-8 basis-full min-[500px]:basis-1/2 md:basis-1/3 lg:basis-1/3"
+                  className="ps-4 sm:ps-6 md:ps-8 basis-[88%] min-[500px]:basis-[70%] sm:basis-1/2 lg:basis-1/3"
                 >
                   <div className="flex justify-center w-full sm:justify-start">
-                    <div className="w-[260px] min-[400px]:w-[280px] sm:w-[300px] h-full">
+                    <div className="w-full max-w-[340px] h-full">
                       <OfferCard config={config} index={idx} />
                     </div>
                   </div>

@@ -13,7 +13,7 @@ export default function ProductsTabsSection() {
   const [activeTab, setActiveTab] = useState("ram");
 
   return (
-    <section className="bg-white mx-[20px] sm:mx-[30px] md:mx-[50px] mt-8 mb-10">
+    <section className="bg-white mt-6 mb-8 sm:mt-8 sm:mb-10">
 
       {/* Title */}
       <h2 className="text-center text-base font-semibold text-gray-800 mb-6">

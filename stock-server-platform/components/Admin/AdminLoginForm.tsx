@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Shield } from "lucide-react";
 import { setAuthCookie, AUTH_USER_KEY, AUTH_TOKEN_KEY } from "@/lib/cookie";
+import Link from "next/link";
 
 function normalizeMobile(value: string): string {
   return value.replace(/\s/g, "").replace(/^\+98/, "0");
@@ -119,9 +120,9 @@ export default function AdminLoginForm({ onSuccess }: AdminLoginFormProps) {
         </form>
 
         <p className="text-center mt-4">
-          <a href="/" className="text-sm text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
+          <Link href="/" className="text-sm text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
             بازگشت به سایت
-          </a>
+          </Link>
         </p>
       </div>
     </div>

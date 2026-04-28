@@ -50,14 +50,14 @@ export default function PromotionalBanners() {
 
   return (
     <section
-      className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-0 mb-0"
+      className="mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 header-1080 xl:mx-12 header-4k mt-0 mb-0"
       aria-label="بنرهای تبلیغاتی"
     >
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:gap-6">
+      <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-6">
         {banners.map((banner, index) => (
           <article
             key={banner.id}
-            className="relative w-full sm:flex-1 h-[120px] min-[400px]:h-[140px] sm:h-[200px] md:h-[240px] lg:h-[280px] xl:h-[300px] rounded-2xl sm:rounded-3xl overflow-hidden"
+            className="relative w-full lg:flex-1 h-[120px] min-[400px]:h-[140px] sm:h-[200px] md:h-[240px] lg:h-[280px] xl:h-[300px] rounded-2xl sm:rounded-3xl overflow-hidden"
           >
             {banner.link ? (
               <Link
@@ -72,7 +72,7 @@ export default function PromotionalBanners() {
                   fill
                   className="object-cover-1440 object-cover-4k"
                   quality={index === 0 ? 95 : 85}
-                  sizes="(max-width: 640px) 100vw, 50vw"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   unoptimized
                 />
               </Link>
@@ -83,7 +83,7 @@ export default function PromotionalBanners() {
                 fill
                 className="object-cover-1440 object-cover-4k"
                 quality={index === 0 ? 95 : 85}
-                sizes="(max-width: 640px) 100vw, 50vw"
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 unoptimized
               />
             )}

@@ -64,7 +64,7 @@ export default function Baner() {
   }, [api, showNav]);
 
   return (
-    <div className="relative px-0 sm:px-12 md:px-16 lg:px-20">
+    <div className="relative px-1 sm:px-3 md:px-6 lg:px-10">
       <Carousel
         setApi={setApi}
         opts={{
@@ -74,13 +74,13 @@ export default function Baner() {
         }}
         className="w-full"
       >
-        <CarouselContent className="-ms-4 sm:-ms-6 md:-ms-8">
+        <CarouselContent className="-ms-4 sm:-ms-5 md:-ms-6">
           {slots.map((banner, index) => (
             <CarouselItem
               key={banner.position}
-              className="ps-4 sm:ps-6 md:ps-8 basis-full sm:basis-1/2 xl:basis-1/3"
+              className="ps-4 sm:ps-5 md:ps-6 basis-[88%] min-[560px]:basis-[70%] lg:basis-1/2 xl:basis-1/3"
             >
-              <div className="relative w-full h-[160px] sm:h-[180px] xl:h-[200px] rounded-xl overflow-hidden">
+              <div className="relative w-full h-[150px] sm:h-[170px] xl:h-[200px] rounded-xl overflow-hidden">
                 {banner.link ? (
                   <Link href={banner.link} className="block w-full h-full" aria-label={banner.alt}>
                     <Image

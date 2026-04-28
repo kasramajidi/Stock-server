@@ -12,7 +12,7 @@ export default function MemorySection() {
       </div>
 
       {/* Slider - فاصله فلش‌ها از کارت در دسکتاپ بیشتر */}
-      <div className="relative px-0 sm:px-12 md:px-16 lg:px-20">
+      <div className="relative px-1 sm:px-3 md:px-6 lg:px-10">
         <MemorySlider />
       </div>
     </section>

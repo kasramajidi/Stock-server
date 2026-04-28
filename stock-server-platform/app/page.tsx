@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const sectionClass = "mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] xl:mx-[50px]";
+const sectionClass = "mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12";
 
 export default async function Home() {
   const bannerImages = await getBannerImages();

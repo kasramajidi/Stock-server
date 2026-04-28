@@ -98,7 +98,7 @@ export default function BlogPage() {
 
   return (
     <main className="min-h-screen">
-      <div className="mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k py-8 sm:py-10 space-y-8 md:space-y-10">
+      <div className="mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 header-1080 xl:mx-12 header-4k py-8 sm:py-10 space-y-8 md:space-y-10">
         <BlogHero featured={posts.slice(0, 2)} />
 
         <BlogCategoryFilter

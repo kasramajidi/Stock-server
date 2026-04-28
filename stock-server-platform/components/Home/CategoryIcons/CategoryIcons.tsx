@@ -82,9 +82,9 @@ const categories: Category[] = [
 
 export default function CategoryIcons() {
   return (
-    <section className="bg-white rounded-2xl sm:rounded-3xl mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-4 sm:mt-6 mb-0 overflow-hidden">
+    <section className="bg-white rounded-2xl sm:rounded-3xl mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 header-1080 xl:mx-12 header-4k mt-4 sm:mt-6 mb-0 overflow-hidden">
       {/* بنر تبلیغاتی و دکمه دسته‌بندی */}
-      <div className="-mx-3 min-[400px]:-mx-4 sm:-mx-6 md:-mx-8">
+      <div className="-mx-2 min-[400px]:-mx-3 sm:-mx-4 md:-mx-5">
         <PromotionalBanners />
         <div className="flex justify-center pt-3 sm:pt-4 pb-2">
           <div className="inline-flex items-center gap-2 rounded-full bg-[#00DDFF] text-white px-4 min-[400px]:px-5 py-2 sm:px-6 sm:py-3 shadow-sm hover:bg-[#00ccee] transition-colors">

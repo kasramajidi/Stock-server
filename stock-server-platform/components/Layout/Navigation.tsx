@@ -32,10 +32,10 @@ export default function Navigation() {
   ];
 
   return (
-    <div className="bg-white border-b rounded-2xl sm:rounded-3xl border-gray-200 z-10 relative mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-[80px] lg:mx-[80px] navigation-1080 xl:mx-[80px] navigation-4k -mt-2">
+    <div className="bg-white border-b rounded-2xl sm:rounded-3xl border-gray-200 z-10 relative mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 navigation-1080 xl:mx-12 navigation-4k -mt-2">
       <div className="container mx-auto px-3 min-[400px]:px-4 sm:px-4 md:px-6 lg:px-8 py-2.5 sm:py-3 md:py-3.5">
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3 md:gap-4">
-          <div className="flex items-center justify-between sm:justify-end gap-1 sm:gap-2 md:gap-3 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3 md:gap-4 min-w-0">
+          <div className="flex items-center justify-between sm:justify-end gap-1 sm:gap-2 md:gap-3 w-full sm:w-auto min-w-0">
             {/* دکمه دسته‌بندی — فقط با کلیک منوی فیکس سمت راست باز می‌شود */}
             <button
               type="button"
@@ -49,7 +49,7 @@ export default function Navigation() {
               </span>
             </button>
 
-            <div className="flex items-center justify-end gap-0.5 sm:gap-1 md:gap-1.5 lg:gap-2 overflow-x-auto scrollbar-hide flex-1 sm:flex-initial">
+            <div className="flex items-center justify-end gap-0.5 sm:gap-1 md:gap-1.5 lg:gap-2 overflow-x-auto scrollbar-hide flex-1 sm:flex-initial min-w-0">
               {navItems.map((item, index) => {
                 const isActive = pathname === item.href;
                 return (

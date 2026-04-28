@@ -83,7 +83,7 @@ export default function DLServersSection() {
       </div>
 
       {/* کاروسل — موبایل ۱ کارت، دسکتاپ ۴ کارت در هر اسلاید */}
-      <div className="relative w-full max-w-[1260px] mx-auto">
+      <div className="relative w-full mx-auto px-1 sm:px-2 md:px-4">
         <Carousel
           opts={{ align: "start", loop: false, containScroll: "trimSnaps" }}
           className="relative w-full"
@@ -100,8 +100,8 @@ export default function DLServersSection() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="right-auto left-0 sm:-left-12 md:-left-16 lg:-left-20 z-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
-          <CarouselNext className="right-0 sm:-right-12 md:-right-16 lg:-right-20 z-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+          <CarouselPrevious className="right-auto -left-2 sm:-left-4 md:-left-6 lg:-left-10 z-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
+          <CarouselNext className="-right-2 sm:-right-4 md:-right-6 lg:-right-10 z-10 border-gray-200 bg-white hover:bg-[#00DDFF] hover:text-white hover:border-[#00DDFF]" />
         </Carousel>
       </div>
     </section>

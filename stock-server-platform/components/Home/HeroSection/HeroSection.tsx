@@ -69,7 +69,7 @@ export default function HeroSection({
 
   return (
     <section
-      className="relative mx-3 min-[400px]:mx-4 sm:mx-[30px] md:mx-[50px] lg:mx-[50px] header-1080 xl:mx-[50px] header-4k mt-0"
+      className="relative mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 header-1080 xl:mx-12 header-4k mt-0"
       aria-label="بخش اصلی - بنر استوک سرور"
     >
       <svg width="0" height="0" className="absolute" aria-hidden>
@@ -80,7 +80,7 @@ export default function HeroSection({
         </defs>
       </svg>
 
-      <div className="relative px-8 min-[400px]:px-10 sm:px-14 md:px-16 lg:px-20 pt-6 sm:pt-8 md:pt-12">
+      <div className="relative px-2 min-[400px]:px-3 sm:px-6 md:px-8 lg:px-10 pt-4 sm:pt-6 md:pt-8">
         <div className="relative w-full">
           <Carousel
             setApi={setApi}
@@ -100,7 +100,7 @@ export default function HeroSection({
                     fill
                     priority={index === 0}
                     quality={95}
-                    sizes="(max-width: 400px) calc(100vw - 24px), (max-width: 640px) calc(100vw - 48px), (max-width: 768px) calc(100vw - 100px), (max-width: 1080px) calc(100vw - 100px), (max-width: 1440px) calc(100vw - 100px), 2400px"
+                    sizes="(max-width: 400px) calc(100vw - 40px), (max-width: 640px) calc(100vw - 48px), (max-width: 768px) calc(100vw - 64px), (max-width: 1080px) calc(100vw - 96px), (max-width: 1440px) calc(100vw - 120px), 2400px"
                     className="object-cover"
                     unoptimized={typeof src === "string" && (src.startsWith("http://") || src.startsWith("https://"))}
                   />
