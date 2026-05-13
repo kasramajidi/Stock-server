@@ -64,12 +64,12 @@ export default function HeroSection({
     (index: number) => {
       api?.scrollTo(index);
     },
-    [api]
+    [api],
   );
 
   return (
     <section
-      className="relative mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 header-1080 xl:mx-12 header-4k mt-0"
+      className="relative  mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 header-1080 xl:mx-12 header-4k mt-0"
       aria-label="بخش اصلی - بنر استوک سرور"
     >
       <svg width="0" height="0" className="absolute" aria-hidden>
@@ -88,34 +88,46 @@ export default function HeroSection({
             className="relative w-full"
           >
             <CarouselContent>
-            {images.map((src, index) => (
-              <CarouselItem key={index} className="basis-full pl-0">
-                <div
-                  className="relative w-full h-[120px] min-[400px]:h-[180px] sm:h-[220px] md:h-[250px] lg:h-[300px] xl:h-[340px] 2xl:h-[380px] overflow-hidden rounded-2xl sm:rounded-3xl"
-                  style={{ clipPath: "url(#hero-side-notch-clip)" }}
-                >
-                  <Image
-                    src={src}
-                    alt={`${bannerAlt} - اسلاید ${index + 1}`}
-                    fill
-                    priority={index === 0}
-                    quality={95}
-                    sizes="(max-width: 400px) calc(100vw - 40px), (max-width: 640px) calc(100vw - 48px), (max-width: 768px) calc(100vw - 64px), (max-width: 1080px) calc(100vw - 96px), (max-width: 1440px) calc(100vw - 120px), 2400px"
-                    className="object-cover"
-                    unoptimized={typeof src === "string" && (src.startsWith("http://") || src.startsWith("https://"))}
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
+              {images.map((src, index) => (
+                <CarouselItem key={index} className="basis-full pl-0">
+                  <div
+                    className="relative w-full 
+h-[150px] 
+min-[400px]:h-[250px] 
+sm:h-[240px] 
+md:h-[270px] 
+lg:h-[300px] 
+xl:h-[340px] 
+2xl:h-[380px] 
+overflow-hidden rounded-2xl sm:rounded-3xl"
+                    style={{ clipPath: "url(#hero-side-notch-clip)" }}
+                  >
+                    <Image
+                      src={src}
+                      alt={`${bannerAlt} - اسلاید ${index + 1}`}
+                      fill
+                      priority={index === 0}
+                      quality={95}
+                      sizes="(max-width: 400px) calc(100vw - 40px), (max-width: 640px) calc(100vw - 48px), (max-width: 768px) calc(100vw - 64px), (max-width: 1080px) calc(100vw - 96px), (max-width: 1440px) calc(100vw - 120px), 2400px"
+                      className="object-cover"
+                      unoptimized={
+                        typeof src === "string" &&
+                        (src.startsWith("http://") ||
+                          src.startsWith("https://"))
+                      }
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
 
-          {images.length > 1 && (
-            <>
-              <CarouselPrevious className="right-auto -left-2 sm:-left-4 md:-left-6 size-9 sm:size-10 rounded-full border-0 bg-white shadow-lg text-gray-500 hover:bg-[#00DDFF] hover:text-white transition-colors [&_svg]:size-5" />
-              <CarouselNext className="-right-2 sm:-right-4 md:-right-6 size-9 sm:size-10 rounded-full border-0 bg-white shadow-lg text-gray-500 hover:bg-[#00DDFF] hover:text-white transition-colors [&_svg]:size-5" />
-            </>
-          )}
-        </Carousel>
+            {images.length > 1 && (
+              <>
+                <CarouselPrevious className="right-auto -left-6 sm:-left-8 md:-left-8 size-8 sm:size-10 rounded-full border-0 bg-white shadow-lg text-gray-500 hover:bg-[#00DDFF] hover:text-white transition-colors [&_svg]:size-5" />
+                <CarouselNext className="-right-6 sm:-right-8 md:-right-8 size-8 sm:size-10 rounded-full border-0 bg-white shadow-lg text-gray-500 hover:bg-[#00DDFF] hover:text-white transition-colors [&_svg]:size-5" />
+              </>
+            )}
+          </Carousel>
 
           {/* نشانگر روی تصویر (گوشه بالا چپ): نقطه برای غیرفعال، خط برای اسلاید فعال ( . _ . _ ) */}
           {images.length > 1 && (

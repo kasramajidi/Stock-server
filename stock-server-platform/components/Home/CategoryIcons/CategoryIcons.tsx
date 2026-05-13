@@ -82,7 +82,11 @@ const categories: Category[] = [
 
 export default function CategoryIcons() {
   return (
-    <section className="bg-white rounded-2xl sm:rounded-3xl mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 header-1080 xl:mx-12 header-4k mt-4 sm:mt-6 mb-0 overflow-hidden">
+    <section
+      className="bg-white rounded-2xl sm:rounded-3xl 
+mx-3 xs:mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12
+mt-4 sm:mt-6 overflow-hidden"
+    >
       {/* بنر تبلیغاتی و دکمه دسته‌بندی */}
       <div className="-mx-2 min-[400px]:-mx-3 sm:-mx-4 md:-mx-5">
         <PromotionalBanners />
@@ -91,7 +95,12 @@ export default function CategoryIcons() {
             <h2 className="text-lg min-[400px]:text-xl sm:text-2xl font-bold">
               دسته بندی محصولات
             </h2>
-            <svg className="w-5 h-5 sm:w-6 sm:h-6 shrink-0 opacity-90" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+            <svg
+              className="w-5 h-5 sm:w-6 sm:h-6 shrink-0 opacity-90"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden
+            >
               <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7zm11 0h7v7h-7v-7z" />
             </svg>
           </div>
@@ -105,29 +114,36 @@ export default function CategoryIcons() {
 
         {/* دسته‌بندی محصولات — همه در یک سطر */}
         <div className="w-full max-w-[1260px] mx-auto overflow-x-auto scrollbar-hide">
-          <div className="flex flex-nowrap items-stretch justify-between gap-1 sm:gap-2 md:gap-4 min-w-max md:min-w-0">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={category.href}
-              className="flex flex-1 min-w-0 flex-col items-center gap-1.5 sm:gap-2 md:gap-3 group hover:scale-105 transition-transform duration-200"
-            >
-              <div className="relative w-10 h-10 min-[400px]:w-12 min-[400px]:h-12 sm:w-14 sm:h-14 md:w-20 md:h-20 flex items-center justify-center shrink-0">
-                <Image
-                  src={category.image}
-                  alt={category.name}
-                  fill
-                  className="object-contain group-hover:opacity-80 transition-opacity"
-                  sizes="(max-width: 640px) 56px, (max-width: 768px) 64px, 80px"
-                  quality={75}
-                  loading="lazy"
-                />
-              </div>
-              <span className="text-[8px] min-[400px]:text-[9px] sm:text-[10px] md:text-xs text-center text-gray-700 font-medium max-w-[70px] min-[400px]:max-w-[80px] sm:max-w-[90px] leading-tight">
-                {category.name}
-              </span>
-            </Link>
-          ))}
+          <div className="grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:flex lg:flex-nowrap gap-3 sm:gap-4 md:gap-5">
+            {categories.map((category) => (
+              <Link
+                key={category.id}
+                href={category.href}
+                className="flex flex-1 min-w-0 flex-col items-center gap-1.5 sm:gap-2 md:gap-3 group hover:scale-105 transition-transform duration-200"
+              >
+                <div
+                  className="relative 
+w-12 h-12 
+min-[400px]:w-14 min-[400px]:h-14
+sm:w-16 sm:h-16
+md:w-20 md:h-20
+flex items-center justify-center shrink-0"
+                >
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    fill
+                    className="object-contain group-hover:opacity-80 transition-opacity"
+                    sizes="(max-width: 640px) 56px, (max-width: 768px) 64px, 80px"
+                    quality={75}
+                    loading="lazy"
+                  />
+                </div>
+                <span className="text-[10px] min-[400px]:text-[11px] sm:text-xs md:text-sm text-center text-gray-700 font-medium max-w-[70px] min-[400px]:max-w-[80px] sm:max-w-[90px] leading-tight">
+                  {category.name}
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

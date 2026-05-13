@@ -17,7 +17,11 @@ async function getBannerImages(): Promise<string[] | null> {
     const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     const res = await fetch(`${base}/api/banners`, { cache: "no-store" });
     const data = await res.json();
-    if (data?.success && Array.isArray(data?.banners) && data.banners.length > 0) {
+    if (
+      data?.success &&
+      Array.isArray(data?.banners) &&
+      data.banners.length > 0
+    ) {
       return data.banners.map((b: { imageUrl: string }) => b.imageUrl);
     }
     return null;
@@ -28,7 +32,8 @@ async function getBannerImages(): Promise<string[] | null> {
 
 export const metadata: Metadata = {
   title: "صفحه اصلی",
-  description: "فروش سرور و تجهیزات شبکه با بهترین قیمت و کیفیت. خرید سرور، تجهیزات شبکه، رم سرور، هارد سرور و پردازنده با گارانتی معتبر.",
+  description:
+    "فروش سرور و تجهیزات شبکه با بهترین قیمت و کیفیت. خرید سرور، تجهیزات شبکه، رم سرور، هارد سرور و پردازنده با گارانتی معتبر.",
   openGraph: {
     title: "استوک سرور | Stock Server - فروش سرور و تجهیزات شبکه",
     description: "فروش سرور و تجهیزات شبکه با بهترین قیمت و کیفیت",
@@ -37,19 +42,41 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const sectionClass = "mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12";
+const sectionClass =
+  "mx-3 xs:mx-4 sm:mx-6 md:mx-8 lg:mx-10 xl:mx-12 2xl:mx-auto 2xl:max-w-[1400px]";
 
 export default async function Home() {
   const bannerImages = await getBannerImages();
 
   return (
     <main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteStructuredData) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webSiteStructuredData),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationStructuredData),
+        }}
+      />
       <h1 className="sr-only">استوک سرور - فروش سرور و تجهیزات شبکه</h1>
-      <div className="bg-gray-100 relative mb-3 sm:mb-4 min-h-[260px] sm:min-h-[340px] md:h-[500px] rounded-b-2xl sm:rounded-b-3xl">
+
+      <div
+  className="bg-gray-100 relative mb-3 sm:mb-4
+min-h-[200px]
+min-[400px]:min-h-[300px]
+sm:min-h-[350px]
+md:h-[400px]
+min-[1024px]:h-[420px]
+xl:h-[500px]
+rounded-b-2xl sm:rounded-b-3xl"
+>
+
         <HeroSection bannerImage={bannerImages} />
-        <div className="flex justify-center items-center absolute bottom-0 left-0 right-0 pb-2 sm:pb-3 md:-bottom-12">
+        <div className="flex justify-center items-center absolute  left-0 right-0 pb-2 sm:pb-3 -bottom-12">
           <ScrollArrow direction="down" className="py-0" />
         </div>
       </div>

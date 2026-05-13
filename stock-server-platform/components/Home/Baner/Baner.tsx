@@ -80,7 +80,7 @@ export default function Baner() {
               key={banner.position}
               className="ps-4 sm:ps-5 md:ps-6 basis-[88%] min-[560px]:basis-[70%] lg:basis-1/2 xl:basis-1/3"
             >
-              <div className="relative w-full h-[150px] sm:h-[170px] xl:h-[200px] rounded-xl overflow-hidden">
+              <div className="relative  w-full h-[150px] sm:h-[170px] xl:h-[200px] rounded-xl overflow-hidden">
                 {banner.link ? (
                   <Link href={banner.link} className="block w-full h-full" aria-label={banner.alt}>
                     <Image

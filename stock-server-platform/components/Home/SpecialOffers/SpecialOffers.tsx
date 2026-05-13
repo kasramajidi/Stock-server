@@ -211,8 +211,12 @@ export default function SpecialOffers() {
               {offers.map((config, idx) => (
                 <CarouselItem
                   key={config.id}
-                  className="ps-4 sm:ps-6 md:ps-8 basis-[88%] min-[500px]:basis-[70%] sm:basis-1/2 lg:basis-1/3"
-                >
+                  className="ps-4 sm:ps-6 md:ps-8 
+                  basis-[85%] 
+                  xs:basis-[70%] 
+                  sm:basis-1/2 
+                  lg:basis-1/3"
+                                  >
                   <div className="flex justify-center w-full sm:justify-start">
                     <div className="w-full max-w-[340px] h-full">
                       <OfferCard config={config} index={idx} />

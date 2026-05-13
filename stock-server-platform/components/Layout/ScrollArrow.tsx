@@ -50,7 +50,7 @@ export default function ScrollArrow({
       }}
       aria-label={ariaLabel}
       title={ariaLabel}
-      className={`flex justify-center items-center cursor-pointer min-h-[44px] py-4 select-none ${className}`}
+      className={`flex  justify-center items-center cursor-pointer min-h-[44px] py-4 select-none ${className}`}
     >
       <span className="relative w-10 sm:w-16 h-5 sm:h-9 flex items-center justify-center">
         <span
