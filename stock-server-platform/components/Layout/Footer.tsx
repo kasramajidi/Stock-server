@@ -45,11 +45,11 @@ Data
 ======================= */
 
 const importantLinks: SimpleLink[] = [
-  { name: "سرور اچ پی", href: "/category/server" },
+  { name: "سرور اچ پی", href: "/shop?search=سرور" },
   { name: "خرید سرور استوک", href: "/shop" },
-  { name: "خرید رم سرور", href: "/category/ram" },
-  { name: "هارد سرور HP", href: "/category/hdd" },
-  { name: "قیمت باتری سرور", href: "/category/battery" },
+  { name: "خرید رم سرور", href: "/shop?search=رم" },
+  { name: "هارد سرور HP", href: "/shop?search=هارد" },
+  { name: "قیمت باتری سرور", href: "/shop?search=باتری" },
   { name: "فرم ثبت شکایات", href: "#" },
   { name: "فرم نظر سنجی", href: "#" },
 ];

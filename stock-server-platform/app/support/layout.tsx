@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "چت پشتیبانی",
   description: "چت آنلاین با پشتیبانی استوک سرور — سوالات خود را بپرسید.",
-  openGraph: { title: "چت پشتیبانی | استوک سرور", url: "/support" },
-  alternates: { canonical: "/support" },
+  robots: { index: false, follow: false },
 };
 
 export default function SupportLayout({

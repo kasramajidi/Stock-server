@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { BiCategoryAlt } from "react-icons/bi";
 import { useFloatingMenu } from "@/components/Layout/FloatingMenuContext";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const HIDDEN_PATHS = ["/auth", "/contact", "/dashboard"];
 
@@ -18,7 +18,7 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   { href: "/shop", image: "/Images/Menu/laptop.svg", label: "لپ‌تاپ" },
   { href: "/shop", image: "/Images/Menu/mouse.svg", label: "ماوس" },
-  { href: "/category/cpu", image: "/Images/Menu/cpu.svg", label: "پردازنده" },
+  { href: "/shop?search=پردازنده", image: "/Images/Menu/cpu.svg", label: "پردازنده" },
   { href: "/shop", image: "/Images/Menu/smartphone.svg", label: "موبایل" },
   { href: "/shop", image: "/Images/Menu/gamepad.svg", label: "گیم پد" },
   { href: "/shop", image: "/Images/Menu/camera.svg", label: "دوربین" },
@@ -32,35 +32,56 @@ export default function FloatingCategoryMenu() {
   const { isOpen, open, toggle, scheduleClose, cancelScheduledClose } =
     useFloatingMenu();
 
-  const [isNearFooter, setIsNearFooter] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inlineTop, setInlineTop] = useState<number | undefined>(undefined);
 
   const shouldHide =
     HIDDEN_PATHS.some((path) => pathname?.startsWith(path)) ?? false;
-  if (shouldHide) return null;
 
   useEffect(() => {
-    const handleScroll = () => {
+    const updatePosition = () => {
       const footer = document.querySelector("footer");
-      if (!footer) return;
+      const el = containerRef.current;
+      if (!footer || !el) {
+        setInlineTop(undefined);
+        return;
+      }
 
-      const footerRect = footer.getBoundingClientRect();
-      setIsNearFooter(footerRect.top < window.innerHeight - 80);
+      const footerTop = footer.getBoundingClientRect().top;
+      const defaultTop = parseFloat(getComputedStyle(el).top) || 90;
+      const height = el.offsetHeight;
+      const gap = 16;
+      const maxTop = footerTop - height - gap;
+
+      if (footerTop < window.innerHeight && maxTop < defaultTop) {
+        setInlineTop(Math.max(gap, maxTop));
+      } else {
+        setInlineTop(undefined);
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", updatePosition, { passive: true });
+    window.addEventListener("resize", updatePosition);
+    updatePosition();
+    return () => {
+      window.removeEventListener("scroll", updatePosition);
+      window.removeEventListener("resize", updatePosition);
+    };
   }, []);
+
+  if (shouldHide) return null;
 
   return (
     <div
-      className={`hidden md:flex z-50 w-12 flex-col items-center transition-all duration-300
-        ${
-          isNearFooter
-            ? "absolute bottom-[100px] right-1"
-            : "fixed -right-3 top-[90px] md:-right-3 md:top-[90px] lg:-right-1 lg:top-[90px] xl:right-2 xl:top-[110px] 2xl:right-2 2xl:top-[100px]"
-        }
-            `}
+      ref={containerRef}
+      style={inlineTop !== undefined ? { top: inlineTop } : undefined}
+      className="hidden md:flex fixed z-50 w-10 sm:w-11 lg:w-12 flex-col items-center transition-[top] duration-200
+        -right-1 top-[72px]
+        sm:-right-1.5 sm:top-[80px]
+        md:-right-2 md:top-[88px]
+        lg:right-0 lg:top-[90px]
+        xl:right-1 xl:top-[100px]
+        2xl:right-2 2xl:top-[100px]"
     >
       <div
         className="relative"
@@ -73,11 +94,11 @@ export default function FloatingCategoryMenu() {
         <button
           type="button"
           onClick={toggle}
-          className="w-8 h-8 rounded-full bg-[#17e3fe] text-white flex items-center justify-center shadow-md hover:bg-[#14c8e0] hover:scale-105 transition shrink-0 cursor-pointer"
+          className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 rounded-full bg-[#17e3fe] text-white flex items-center justify-center shadow-md hover:bg-[#14c8e0] hover:scale-105 transition shrink-0 cursor-pointer"
           aria-expanded={isOpen}
           aria-label={isOpen ? "بستن منو" : "باز کردن منو"}
         >
-          <BiCategoryAlt className="text-[16px]" />
+          <BiCategoryAlt className="text-sm sm:text-base lg:text-lg" />
         </button>
 
         <div
@@ -92,14 +113,14 @@ export default function FloatingCategoryMenu() {
               key={item.label}
               href={item.href}
               scroll={false}
-              className="group relative w-9 h-9 shrink-0 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center hover:bg-[#17e2fe] hover:border-[#17e2fe] transition"
+              className="group relative w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 shrink-0 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center hover:bg-[#17e2fe] hover:border-[#17e2fe] transition"
             >
               <Image
                 src={item.image}
                 alt={item.label}
-                width={18}
-                height={18}
-                className="object-contain group-hover:brightness-0 group-hover:invert"
+                width={20}
+                height={20}
+                className="w-4 h-4 sm:w-[18px] sm:h-[18px] lg:w-5 lg:h-5 object-contain group-hover:brightness-0 group-hover:invert"
               />
 
               <span className="absolute right-full mr-2 whitespace-nowrap rounded-md bg-gray-800 px-2 py-1 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow">

@@ -28,10 +28,8 @@ export default function SiteShellOrAdmin({
       <div className="bg-gray-100 pt-1 pb-0">
         <Navigation />
       </div>
-      <div className="relative">
-        <FloatingCategoryMenu />
-        {children}
-      </div>
+      <FloatingCategoryMenu />
+      <div className="relative">{children}</div>
       <Footer />
       {!isSupportPage && <FloatingChatWidget />}
     </>

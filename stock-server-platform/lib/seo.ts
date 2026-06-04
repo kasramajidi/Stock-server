@@ -10,10 +10,73 @@ export const webSiteStructuredData = {
   inLanguage: "fa-IR",
   potentialAction: {
     "@type": "SearchAction",
-    target: { "@type": "EntryPoint", urlTemplate: `${baseUrl}/search?q={search_term_string}` },
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${baseUrl}/shop?search={search_term_string}`,
+    },
     "query-input": "required name=search_term_string",
   },
 };
+
+export function buildArticleJsonLd(article: {
+  id: string;
+  title: string;
+  excerpt: string;
+  image?: string | null;
+  publishedAt: Date;
+  createdByName?: string | null;
+}) {
+  const url = `${baseUrl}/article/${article.id}`;
+  const image = article.image?.startsWith("/")
+    ? `${baseUrl}${article.image}`
+    : article.image ?? `${baseUrl}/Images/Baner/Layer 5.png`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.excerpt,
+    image,
+    datePublished: article.publishedAt.toISOString(),
+    author: article.createdByName
+      ? { "@type": "Person", name: article.createdByName }
+      : { "@type": "Organization", name: "استوک سرور" },
+    publisher: {
+      "@type": "Organization",
+      name: "استوک سرور",
+      logo: { "@type": "ImageObject", url: `${baseUrl}/Images/Baner/Layer 5.png` },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  };
+}
+
+export function buildBlogPostJsonLd(post: {
+  slug: string;
+  title: string;
+  summary: string;
+  image: string;
+  date: string;
+}) {
+  const url = `${baseUrl}/blog/${post.slug}`;
+  const image = post.image.startsWith("/")
+    ? `${baseUrl}${post.image}`
+    : post.image;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.summary,
+    image,
+    author: { "@type": "Organization", name: "استوک سرور" },
+    publisher: {
+      "@type": "Organization",
+      name: "استوک سرور",
+      logo: { "@type": "ImageObject", url: `${baseUrl}/Images/Baner/Layer 5.png` },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  };
+}
 
 export const organizationStructuredData = {
   "@context": "https://schema.org",

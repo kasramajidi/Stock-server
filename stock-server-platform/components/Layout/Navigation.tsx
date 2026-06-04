@@ -42,7 +42,7 @@ export default function Navigation() {
   const mobileCategoryItems: MobileCategoryItem[] = [
     { label: "لپ‌تاپ", href: "/shop" },
     { label: "ماوس", href: "/shop" },
-    { label: "پردازنده", href: "/category/cpu" },
+    { label: "پردازنده", href: "/shop?search=پردازنده" },
     { label: "موبایل", href: "/shop" },
     { label: "گیم پد", href: "/shop" },
     { label: "دوربین", href: "/shop" },
@@ -59,8 +59,8 @@ export default function Navigation() {
 
   return (
     <>
-      <div className="bg-white border-b rounded-2xl sm:rounded-3xl border-gray-200 z-10 relative mx-3 min-[400px]:mx-4 sm:mx-6 md:mx-8 lg:mx-10 navigation-1080 xl:mx-12 2xl:mx-14 min-[1700px]:mx-16 min-[1920px]:mx-20 navigation-4k -mt-2">
-        <div className="container mx-auto px-3 min-[400px]:px-4 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12 min-[1700px]:px-14 min-[1920px]:px-16 py-2.5 sm:py-3 md:py-3.5 xl:py-4 2xl:py-4.5 min-[1700px]:py-5">
+      <div className="header-strip bg-white border-b rounded-2xl sm:rounded-3xl border-gray-200 z-10 relative mx-4 min-[400px]:mx-5 sm:mx-8 md:mx-10 lg:mx-14 header-strip-1080 xl:mx-16 2xl:mx-20 min-[1700px]:mx-24 min-[1920px]:mx-28 header-strip-4k -mt-2 flex items-center">
+        <div className="container mx-auto px-3 min-[400px]:px-4 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12 min-[1700px]:px-14 min-[1920px]:px-16 py-2.5 sm:py-2.5 md:py-2.5 w-full">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3 md:gap-4 xl:gap-5 2xl:gap-6 min-w-0">
             <div className="flex items-center justify-between sm:justify-end gap-1 sm:gap-2 md:gap-3 xl:gap-4 2xl:gap-5 w-full sm:w-auto min-w-0">
 
@@ -68,11 +68,11 @@ export default function Navigation() {
               <button
                 type="button"
                 onClick={handleCategoryClick}
-                className="flex items-center font-semibold hover:bg-[#14c8e0] transition-colors cursor-pointer gap-1 sm:gap-1.5 md:gap-2 xl:gap-2.5 2xl:gap-3 bg-[#17e2fe] text-white rounded-2xl sm:rounded-3xl px-3 min-[400px]:px-2.5 sm:px-2.5 md:px-2.5 lg:px-3 xl:px-4 2xl:px-5 min-[1700px]:px-6 py-2.5 sm:py-1.5 md:py-2 lg:py-3 xl:py-3.5 2xl:py-4 shrink-0 min-h-[44px] sm:min-h-0"
+                className="flex items-center font-semibold hover:bg-[#14c8e0] transition-colors cursor-pointer gap-1 sm:gap-1.5 md:gap-2 bg-[#17e2fe] text-white rounded-2xl sm:rounded-3xl px-3 sm:px-3 md:px-3.5 lg:px-4 py-2 sm:py-2 md:py-2 shrink-0 min-h-[44px] sm:min-h-0"
               >
-                <BiCategoryAlt className="text-sm sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-[22px] shrink-0" />
+                <BiCategoryAlt className="text-sm sm:text-base md:text-lg shrink-0" />
 
-                <span className="text-[10px] sm:text-[10px] md:text-xs lg:text-sm xl:text-base 2xl:text-[17px] whitespace-nowrap hidden sm:inline">
+                <span className="text-[10px] sm:text-xs md:text-sm whitespace-nowrap hidden sm:inline">
                   دسته بندی محصولات
                 </span>
               </button>
@@ -86,13 +86,13 @@ export default function Navigation() {
                     <div key={item.href} className="flex items-center">
                       <Link
                         href={item.href}
-                        className={`flex items-center gap-0.5 sm:gap-1 md:gap-1.5 lg:gap-2 xl:gap-2.5 px-2 sm:px-1 md:px-1.5 lg:px-2 xl:px-3 2xl:px-4 min-[1700px]:px-5 py-2 sm:py-1 md:py-1.5 lg:py-2 xl:py-2.5 2xl:py-3 transition-colors font-medium text-[10px] sm:text-[10px] md:text-xs lg:text-sm xl:text-base 2xl:text-[17px] whitespace-nowrap min-h-[44px] sm:min-h-0 ${
+                        className={`flex items-center gap-0.5 sm:gap-1 md:gap-1.5 px-2 sm:px-2 md:px-2.5 lg:px-3 py-2 sm:py-2 md:py-2 transition-colors font-medium text-[10px] sm:text-xs md:text-sm whitespace-nowrap min-h-[44px] sm:min-h-0 ${
                           isActive
                             ? "text-[#17e2fe]"
                             : "text-[#585858] hover:text-[#17e2fe]"
                         }`}
                       >
-                        <span className="text-sm sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-[22px] shrink-0">
+                        <span className="text-sm sm:text-base md:text-lg shrink-0">
                           {item.icon}
                         </span>
 
@@ -103,7 +103,7 @@ export default function Navigation() {
                       </Link>
 
                       {index < navItems.length - 1 && (
-                        <span className="text-[#eeeeee] hidden sm:inline text-[8px] sm:text-[10px] md:text-xs xl:text-sm 2xl:text-base">
+                        <span className="text-[#eeeeee] hidden sm:inline text-[8px] sm:text-[10px] md:text-xs">
                           |
                         </span>
                       )}
@@ -124,7 +124,7 @@ export default function Navigation() {
                   });
                 }
               }}
-              className="hidden sm:inline-block bg-[#f6cfd4] hover:bg-[#f1b8bf] text-[#d00219] font-bold px-2.5 md:px-3 lg:px-4 xl:px-5 2xl:px-6 min-[1700px]:px-7 py-2 md:py-2.5 xl:py-3 2xl:py-3.5 rounded-3xl transition-colors text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-[19px] text-center whitespace-nowrap shrink-0"
+              className="hidden sm:inline-block bg-[#f6cfd4] hover:bg-[#f1b8bf] text-[#d00219] font-bold px-3 md:px-3.5 lg:px-4 py-2 md:py-2 rounded-3xl transition-colors text-xs md:text-sm text-center whitespace-nowrap shrink-0"
             >
               حراجستون
             </Link>

@@ -66,13 +66,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     : product.image ?? "";
 
   return {
-    title: `${product.name} | استوک سرور`,
+    title: product.name,
     description: product.description || `${product.name} از برند ${product.brand}`,
     keywords: [product.name, product.brand, product.category, "سرور", "استوک سرور"],
     openGraph: {
-      title: `${product.name} | استوک سرور`,
+      title: product.name,
       description: product.description || `${product.name} از برند ${product.brand}`,
-      type: "website",
+      type: "website" as const,
       images: productImage ? [{ url: productImage, alt: product.name }] : undefined,
     },
     alternates: { canonical: `/shop/product/${id}` },

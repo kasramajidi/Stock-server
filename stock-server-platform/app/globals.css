@@ -114,10 +114,9 @@ body {
     margin-left: 50px;
     margin-right: 50px;
   }
-}
 
-@media (min-width: 1080px) {
-  .topbar-1080 {
+  /* نوار بالا و پایین — عرض کمتر از هدر وسط */
+  .header-strip-1080 {
     margin-left: 80px;
     margin-right: 80px;
   }
@@ -131,15 +130,34 @@ body {
     padding-left: 50px;
     padding-right: 50px;
   }
+
+  .header-strip-4k {
+    max-width: 2200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
-@media (min-width: 2160px) {
-  .topbar-4k {
-    max-width: 2600px;
-    margin-left: 120px;
-    margin-right: 120px;
-    padding-left: 80px;
-    padding-right: 80px;
+/* نوار بالا (TopBar) و نوار پایین (Navigation) — ارتفاع و padding یکسان */
+.header-strip {
+  min-height: 2.75rem;
+}
+
+@media (min-width: 640px) {
+  .header-strip {
+    min-height: 3rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .header-strip {
+    min-height: 3.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .header-strip {
+    min-height: 3.5rem;
   }
 }
 

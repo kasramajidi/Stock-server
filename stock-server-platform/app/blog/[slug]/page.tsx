@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blogPosts, getPostBySlug } from "@/lib/blogData";
+import { buildBlogPostJsonLd } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -22,7 +23,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: post.summary,
       type: "article",
       publishedTime: post.date,
+      url: `/blog/${slug}`,
+      images: [{ url: post.image, alt: post.title }],
     },
+    alternates: { canonical: `/blog/${slug}` },
   };
 }
 
@@ -35,7 +39,14 @@ export default async function BlogPostPage({ params }: Props) {
     .filter((p) => p.category === post.category && p.id !== post.id)
     .slice(0, 4);
 
+  const jsonLd = buildBlogPostJsonLd(post);
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     <main className="min-h-screen">
       {/* Breadcrumb */}
       <div className="mx-auto w-[92%] max-w-5xl">
@@ -62,7 +73,7 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="relative h-[280px] sm:h-[340px] md:h-[400px]">
           <Image
             src={post.image}
-            alt=""
+            alt={post.title}
             fill
             className="object-cover opacity-50"
             priority
@@ -241,5 +252,6 @@ export default async function BlogPostPage({ params }: Props) {
         )}
       </div>
     </main>
+    </>
   );
 }
